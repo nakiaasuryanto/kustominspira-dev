@@ -192,7 +192,7 @@ export default function EnhancedRichTextEditor({
           <li><code>- item</code> for bullet points</li>
           <li><code>[link text](url)</code> for links</li>
           <li><code>![alt text](image-url)</code> for images</li>
-          <li><strong>Click "Add Image" button</strong> to upload images directly</li>
+          <li><strong>Click &quot;Add Image&quot; button</strong> to upload images directly</li>
         </ul>
       </div>
     </div>

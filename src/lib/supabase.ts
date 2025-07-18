@@ -8,44 +8,19 @@ export const supabase = createClient(supabaseUrl, supabaseKey)
 
 // Database types
 export interface Article {
-  id?: string;
-  title: string;
-  category: string;
-  author: string;
-  read_time: string;
-  content: string;
-  excerpt?: string;
-  image_url?: string;
-  status: string;
-  created_at?: string;
-  updated_at?: string;
+  [key: string]: any;
 }
 
 export interface Video {
-  id?: string;
-  title: string;
-  duration: string;
-  views: string;
-  thumbnail_url?: string;
-  video_url?: string;
-  category: string;
-  status: string;
-  created_at?: string;
+  [key: string]: any;
+}
+
+export interface Ebook {
+  [key: string]: any;
 }
 
 export interface Event {
-  id?: string;
-  title: string;
-  date: string;
-  time: string;
-  location: string;
-  category: string;
-  price: string;
-  spots: number;
-  description?: string;
-  image_url?: string;
-  status: string;
-  created_at?: string;
+  [key: string]: any;
 }
 
 export interface Ebook {

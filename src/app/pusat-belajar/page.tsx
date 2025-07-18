@@ -3,14 +3,15 @@ import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { gsap } from 'gsap';
 import { supabaseDataManager as dataManager } from '@/lib/supabaseDataManager';
+import { Article, Video, Ebook } from '@/lib/supabase';
 
 export default function PusatBelajar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const logosRef = useRef<HTMLDivElement>(null);
   const logoRefs = useRef<(HTMLImageElement | null)[]>([]);
-  const [articles, setArticles] = useState<any[]>([]);
-  const [videos, setVideos] = useState<any[]>([]);
-  const [ebooks, setEbooks] = useState<any[]>([]);
+  const [articles, setArticles] = useState<Article[]>([]);
+  const [videos, setVideos] = useState<Video[]>([]);
+  const [ebooks, setEbooks] = useState<Ebook[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {

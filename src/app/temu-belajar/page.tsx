@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { supabaseDataManager as dataManager } from '@/lib/supabaseDataManager';
+import { Event } from '@/lib/supabase';
 
 export default function TemuBelajar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -9,7 +10,7 @@ export default function TemuBelajar() {
   const [activeFilter, setActiveFilter] = useState('all');
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
-  const [events, setEvents] = useState<any[]>([]);
+  const [events, setEvents] = useState<(Event & { dateObj: Date })[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {

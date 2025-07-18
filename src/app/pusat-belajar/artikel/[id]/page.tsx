@@ -5,13 +5,14 @@ import Link from 'next/link';
 import Head from 'next/head';
 import { supabaseDataManager as dataManager } from '@/lib/supabaseDataManager';
 import ArticleRenderer from '@/components/ArticleRenderer';
+import { Article } from '@/lib/supabase';
 
 export default function ArticlePage() {
   const params = useParams();
-  const [article, setArticle] = useState<any>(null);
+  const [article, setArticle] = useState<Article | null>(null);
   const [loading, setLoading] = useState(true);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [relatedArticles, setRelatedArticles] = useState<any[]>([]);
+  const [relatedArticles, setRelatedArticles] = useState<Article[]>([]);
 
   useEffect(() => {
     const loadArticle = async () => {

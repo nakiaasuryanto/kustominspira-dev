@@ -1,6 +1,7 @@
 'use client';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -119,12 +120,12 @@ export default function Login() {
 
         {/* Back to Home */}
         <div className="text-center mt-6">
-          <a 
+          <Link 
             href="/" 
             className="text-white hover:text-white/80 transition-colors"
           >
             ← Kembali ke Beranda
-          </a>
+          </Link>
         </div>
       </div>
     </div>
