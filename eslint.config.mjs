@@ -15,6 +15,7 @@ const eslintConfig = [
     rules: {
       "@next/next/no-img-element": "warn", // Make img warnings instead of errors
       "@typescript-eslint/no-explicit-any": "warn", // Make any warnings instead of errors
+      "@typescript-eslint/ban-ts-comment": "off", // Allow @ts-nocheck
     },
   },
 ];

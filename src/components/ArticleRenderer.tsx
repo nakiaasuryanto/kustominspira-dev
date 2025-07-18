@@ -35,7 +35,7 @@ export default function ArticleRenderer({ content, className = '' }: ArticleRend
       .replace(/\n/g, '<br>')
       // Convert bullet points
       .replace(/^- (.*$)/gm, '<li class="text-black mb-2">$1</li>')
-      .replace(/(<li.*<\/li>)/s, '<ul class="list-disc list-inside mb-4 space-y-2">$1</ul>')
+      .replace(/(<li.*<\/li>)/g, '<ul class="list-disc list-inside mb-4 space-y-2">$1</ul>')
       // Convert bold
       .replace(/\*\*(.*?)\*\*/g, '<strong class="font-bold text-black">$1</strong>')
       // Convert italic
