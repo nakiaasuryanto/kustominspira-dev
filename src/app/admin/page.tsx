@@ -156,6 +156,8 @@ export default function AdminDashboard() {
             item.id === id ? result : item
           )
         }));
+        // Refresh data to ensure consistency
+        await loadData();
       }
     } catch (error) {
       console.error(`Error updating ${type}:`, error);
