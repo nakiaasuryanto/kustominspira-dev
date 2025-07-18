@@ -383,6 +383,75 @@ export default function ArticlePage() {
           </div>
         </main>
 
+        {/* Part of Kustompedia Section */}
+        <section className="py-20 bg-gradient-to-br from-[#1ca4bc] to-[#159bb3] overflow-hidden">
+          <div className="max-w-6xl mx-auto px-6 text-center">
+            <div className="mb-16">
+              <div className="flex items-center justify-center gap-4 mb-6">
+                <h2 className="text-4xl md:text-5xl font-bold text-white">
+                  Part of
+                </h2>
+                <img 
+                  src="/assets/Kustompedia.png" 
+                  alt="Kustompedia" 
+                  className="h-12 md:h-16 w-auto"
+                />
+              </div>
+              <p className="text-white text-xl md:text-2xl max-w-3xl mx-auto leading-relaxed font-medium">
+                Kami membangun <span className="font-bold text-white">ekosistem</span> yang mendukung <span className="font-bold text-white">penjahit lokal</span>, mendorong <span className="font-bold text-white">inovasi produk</span>, dan mengutamakan <span className="font-bold text-white">keberlanjutan</span> di setiap langkah
+              </p>
+            </div>
+
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12 items-center justify-items-center">
+              <div className="relative group cursor-pointer">
+                <div className="relative bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20 hover:border-white/30 transition-all duration-300">
+                  <img 
+                    src="/assets/Kustom Inspira - putih.png" 
+                    alt="Kustom Inspira" 
+                    className="h-28 w-28 mx-auto object-contain filter brightness-0 invert"
+                  />
+                </div>
+              </div>
+
+              <div className="relative group cursor-pointer">
+                <div className="relative bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20 hover:border-white/30 transition-all duration-300">
+                  <img 
+                    src="/assets/KG.png" 
+                    alt="Kustom Gallery" 
+                    className="h-28 w-28 mx-auto object-contain"
+                  />
+                </div>
+              </div>
+
+              <div className="relative group cursor-pointer">
+                <div className="relative bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20 hover:border-white/30 transition-all duration-300">
+                  <img 
+                    src="/assets/KP.png" 
+                    alt="Kustom Pedia" 
+                    className="h-28 w-28 mx-auto object-contain"
+                  />
+                </div>
+              </div>
+
+              <div className="relative group cursor-pointer">
+                <div className="relative bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20 hover:border-white/30 transition-all duration-300">
+                  <img 
+                    src="/assets/KC.png" 
+                    alt="Kustom Care" 
+                    className="h-28 w-28 mx-auto object-contain"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-20">
+              <h3 className="text-2xl md:text-3xl font-bold text-white text-center mb-8 tracking-wide">
+                <span className="font-bold text-white">Inovasi</span> di Setiap <span className="font-bold text-white">Jahitan</span>
+              </h3>
+            </div>
+          </div>
+        </section>
+
         {/* Footer */}
         <footer className="py-12 text-white" style={{backgroundColor: '#021013'}}>
           <div className="max-w-7xl mx-auto px-6">
@@ -394,12 +463,12 @@ export default function ArticlePage() {
                   className="h-12 w-auto mb-4"
                 />
                 <p className="text-gray-400">
-                  <span style={{color: '#FF4B00'}}>#DariKainJadiKarya</span><br />
+                  <span className="font-bold text-white">#DariKainJadiKarya</span><br />
                   Belajar dan praktek langsung di Kustominspira.
                 </p>
               </div>
               <div>
-                <h3 className="font-semibold mb-4"><span style={{color: '#FF4B00'}}>Pusat Belajar</span></h3>
+                <h3 className="font-bold mb-4 text-white">Pusat Belajar</h3>
                 <ul className="space-y-2 text-gray-400">
                   <li><Link href="/pusat-belajar" className="hover:text-white transition-colors">Artikel</Link></li>
                   <li><Link href="/pusat-belajar" className="hover:text-white transition-colors">Video Tutorial</Link></li>
@@ -407,7 +476,7 @@ export default function ArticlePage() {
                 </ul>
               </div>
               <div>
-                <h3 className="font-semibold mb-4"><span style={{color: '#FF4B00'}}>Temu Belajar</span></h3>
+                <h3 className="font-bold mb-4 text-white">Temu Belajar</h3>
                 <ul className="space-y-2 text-gray-400">
                   <li><Link href="/temu-belajar" className="hover:text-white transition-colors">Workshop</Link></li>
                   <li><Link href="/temu-belajar" className="hover:text-white transition-colors">Seminar</Link></li>

@@ -120,52 +120,52 @@ export default function Home() {
         </button>
       </nav>
 
-      {/* Slide-out Menu */}
-      <div className={`fixed inset-0 z-50 transition-transform duration-500 ${isMenuOpen ? 'translate-x-0' : 'translate-x-full'}`}>
-        <div className="flex h-full flex-col lg:flex-row">
-          <div className="w-full lg:w-1/2 p-4 sm:p-6 lg:p-12 text-white overflow-y-auto" style={{backgroundColor: '#021012'}}>
+      {/* Modern Mobile Menu */}
+      <div className={`fixed top-0 right-0 h-full w-80 max-w-[90vw] z-50 bg-white shadow-2xl transform transition-transform duration-300 ${isMenuOpen ? 'translate-x-0' : 'translate-x-full'}`}>
+        <div className="h-full flex flex-col">
+          {/* Header */}
+          <div className="flex items-center justify-between p-6 border-b border-gray-200">
+            <img src="/assets/Kustom Inspira.png" alt="Kustom Inspira" className="h-8 w-auto" />
             <button 
               onClick={() => setIsMenuOpen(false)}
-              className="absolute top-4 right-4 text-white text-2xl sm:text-3xl hover:rotate-90 transition-transform duration-300 z-10"
+              className="w-8 h-8 flex items-center justify-center text-gray-500 hover:text-gray-900 transition-colors"
             >
-              ×
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
             </button>
-            
-            <h2 className="text-xl sm:text-2xl lg:text-4xl font-bold mb-4 sm:mb-6 lg:mb-8 mt-12 sm:mt-14 lg:mt-16">Berikan kami<br />saran dan kritik</h2>
-            
-            <a href="mailto:kustompedia@gmail.com" className="border border-white px-3 sm:px-4 lg:px-6 py-2 lg:py-3 text-xs sm:text-sm tracking-wider mb-6 sm:mb-8 lg:mb-16 hover:bg-white hover:text-gray-900 transition-colors inline-block">
-              Hubungi Kami
-            </a>
-            
-            <div className="space-y-4 sm:space-y-6 lg:space-y-12">
-              <div>
-                <h3 className="text-xs tracking-wider text-gray-400 mb-2 sm:mb-4">MAIN OFFICE</h3>
-                <p className="text-sm lg:text-lg">Jl. Sidosermo Indah Gg. III No. 37,<br />Surabaya, 60239</p>
-                <p className="text-sm lg:text-lg mt-2">+62 (851) 7311-2499</p>
-              </div>
-              
-              <div>
-                <h3 className="text-xs tracking-wider text-gray-400 mb-2 sm:mb-4">OUR BRANDS</h3>
-                <div className="grid grid-cols-2 gap-2 sm:gap-4 mt-2 sm:mt-4">
-                  <img src="/assets/Kustom Inspira - putih.png" alt="Kustom Inspira" className="h-8 sm:h-12 lg:h-16 w-auto hover:scale-110 transition-transform duration-300 cursor-pointer" />
-                  <img src="/assets/KG.png" alt="KG" className="h-8 sm:h-12 lg:h-16 w-auto hover:scale-110 transition-transform duration-300 cursor-pointer" />
-                  <img src="/assets/KP.png" alt="KP" className="h-8 sm:h-12 lg:h-16 w-auto hover:scale-110 transition-transform duration-300 cursor-pointer" />
-                  <img src="/assets/KC.png" alt="KC" className="h-8 sm:h-12 lg:h-16 w-auto hover:scale-110 transition-transform duration-300 cursor-pointer" />
-                </div>
-              </div>
-            </div>
           </div>
-          
-          <div className="w-full lg:w-1/2 p-4 sm:p-6 lg:p-12 flex flex-col justify-center overflow-y-auto" style={{backgroundColor: '#1ca4bc'}}>
-            <nav className="space-y-3 sm:space-y-4 lg:space-y-8">
-              <a href="#" className="block text-2xl sm:text-3xl lg:text-6xl font-bold text-white hover:font-black transition-all" onClick={() => setIsMenuOpen(false)}>Home</a>
-              <a href="/pusat-belajar" className="block text-2xl sm:text-3xl lg:text-6xl font-bold text-gray-300 hover:text-white hover:font-black transition-all" onClick={() => setIsMenuOpen(false)}>Pusat Belajar</a>
-              <a href="/temu-belajar" className="block text-2xl sm:text-3xl lg:text-6xl font-bold text-gray-300 hover:text-white hover:font-black transition-all" onClick={() => setIsMenuOpen(false)}>Temu Belajar</a>
-              <a href="https://kustompedia.com" target="_blank" rel="noopener noreferrer" className="block text-2xl sm:text-3xl lg:text-6xl font-bold text-gray-300 hover:text-white hover:font-black transition-all">Kustompedia</a>
+
+          {/* Navigation */}
+          <div className="flex-1 py-6">
+            <nav className="space-y-2 px-6">
+              <a href="#" className="block py-3 text-lg font-semibold text-gray-900 hover:text-[#1ca4bc] transition-colors" onClick={() => setIsMenuOpen(false)}>Home</a>
+              <a href="/pusat-belajar" className="block py-3 text-lg font-semibold text-gray-600 hover:text-[#1ca4bc] transition-colors" onClick={() => setIsMenuOpen(false)}>Pusat Belajar</a>
+              <a href="/temu-belajar" className="block py-3 text-lg font-semibold text-gray-600 hover:text-[#1ca4bc] transition-colors" onClick={() => setIsMenuOpen(false)}>Temu Belajar</a>
+              <a href="https://kustompedia.com" target="_blank" rel="noopener noreferrer" className="block py-3 text-lg font-semibold text-gray-600 hover:text-[#1ca4bc] transition-colors">Kustompedia</a>
             </nav>
+          </div>
+
+          {/* Contact Info */}
+          <div className="border-t border-gray-200 p-6 bg-gray-50">
+            <h3 className="text-sm font-semibold text-gray-900 mb-3">HUBUNGI KAMI</h3>
+            <div className="space-y-2 text-sm text-gray-600">
+              <p>Jl. Sidosermo Indah Gg. III No. 37</p>
+              <p>Surabaya, 60239</p>
+              <p>+62 (851) 7311-2499</p>
+              <a href="mailto:kustompedia@gmail.com" className="text-[#1ca4bc] hover:underline">kustompedia@gmail.com</a>
+            </div>
           </div>
         </div>
       </div>
+
+      {/* Overlay */}
+      {isMenuOpen && (
+        <div 
+          className="fixed inset-0 z-40 bg-black/50" 
+          onClick={() => setIsMenuOpen(false)}
+        ></div>
+      )}
 
       {/* Fixed Description Text */}
       <div className="fixed top-16 md:top-24 left-1/2 transform -translate-x-1/2 z-40 text-center text-white px-4">

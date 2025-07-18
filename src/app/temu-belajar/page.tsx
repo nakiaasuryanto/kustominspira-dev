@@ -145,6 +145,18 @@ export default function TemuBelajar() {
         </div>
       </nav>
 
+      {/* Mobile Menu */}
+      <div className={`fixed top-16 left-0 right-0 z-40 bg-white shadow-lg border-b border-gray-200 transform transition-transform duration-300 md:hidden ${isMenuOpen ? 'translate-y-0' : '-translate-y-full'}`}>
+        <div className="max-w-7xl mx-auto px-4 py-4">
+          <div className="flex flex-col space-y-4">
+            <Link href="/" className="text-gray-700 hover:text-[#1ca4bc] transition-colors font-medium" onClick={() => setIsMenuOpen(false)}>Home</Link>
+            <Link href="/pusat-belajar" className="text-gray-700 hover:text-[#1ca4bc] transition-colors font-medium" onClick={() => setIsMenuOpen(false)}>Pusat Belajar</Link>
+            <Link href="/temu-belajar" className="text-[#1ca4bc] font-bold" onClick={() => setIsMenuOpen(false)}>Temu Belajar</Link>
+            <a href="https://kustompedia.com" target="_blank" rel="noopener noreferrer" className="text-gray-700 hover:text-[#1ca4bc] transition-colors font-medium">Kustompedia</a>
+          </div>
+        </div>
+      </div>
+
       {/* Hero Section */}
       <section className="pt-20 md:pt-24 pb-12 md:pb-16 relative overflow-hidden">
         <div className="absolute inset-0">
@@ -157,12 +169,12 @@ export default function TemuBelajar() {
         </div>
         <div className="relative max-w-7xl mx-auto px-4 md:px-6">
           <div className="text-left max-w-3xl py-12 md:py-20">
-            <span className="text-[#FF4B00] text-sm md:text-lg font-semibold tracking-wide">#DariKainJadiKarya</span>
+            <span className="text-white font-bold text-sm md:text-lg tracking-wide">#DariKainJadiKarya</span>
             <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mt-2 mb-4 md:mb-6">
               <span className="text-[#1ca4bc]">Temu</span> Belajar
             </h1>
             <p className="text-base md:text-xl text-white/90 leading-relaxed mb-6 md:mb-8">
-              Bergabunglah dalam <span className="font-semibold text-[#FF4B00]">workshop</span> praktis, <span className="font-semibold text-[#FF4B00]">seminar</span> inspiratif, dan <span className="font-semibold text-[#FF4B00]">webinar</span> interaktif bersama komunitas penjahit dan desainer fashion terbaik.
+              Bergabunglah dalam <span className="font-bold text-white">workshop</span> praktis, <span className="font-bold text-white">seminar</span> inspiratif, dan <span className="font-bold text-white">webinar</span> interaktif bersama komunitas penjahit dan desainer fashion terbaik.
             </p>
             <div className="flex flex-wrap gap-3 md:gap-4">
               <button 
@@ -273,7 +285,7 @@ export default function TemuBelajar() {
                         <span className={`px-3 py-1 rounded-full text-sm font-medium ${getCategoryColor(event.category)}`}>
                           {getCategoryLabel(event.category)}
                         </span>
-                        <span className="text-[#FF4B00] font-semibold text-lg">
+                        <span className="text-white font-bold text-lg">
                           {event.price}
                         </span>
                       </div>
@@ -383,7 +395,7 @@ export default function TemuBelajar() {
                               isSelected
                                 ? 'bg-[#1ca4bc] text-white'
                                 : isToday
-                                ? 'bg-[#FF4B00] text-white'
+                                ? 'bg-white text-black font-bold'
                                 : hasEvent
                                 ? 'bg-blue-50 text-blue-600 hover:bg-blue-100'
                                 : 'hover:bg-gray-100 text-gray-700'
@@ -423,7 +435,7 @@ export default function TemuBelajar() {
                               <span className={`px-2 py-1 rounded-full text-xs font-medium ${getCategoryColor(event.category)}`}>
                                 {getCategoryLabel(event.category)}
                               </span>
-                              <span className="text-[#FF4B00] font-semibold text-sm">
+                              <span className="text-white font-bold text-sm">
                                 {event.price}
                               </span>
                             </div>
@@ -486,7 +498,7 @@ export default function TemuBelajar() {
               />
             </div>
             <p className="text-white text-xl md:text-2xl max-w-3xl mx-auto leading-relaxed font-medium">
-              Kami membangun <span className="font-semibold" style={{color: '#FF4B00'}}>ekosistem</span> yang mendukung <span className="font-semibold" style={{color: '#FF4B00'}}>penjahit lokal</span>, mendorong <span className="font-semibold" style={{color: '#FF4B00'}}>inovasi produk</span>, dan mengutamakan <span className="font-semibold" style={{color: '#FF4B00'}}>keberlanjutan</span> di setiap langkah
+              Kami membangun <span className="font-bold text-white">ekosistem</span> yang mendukung <span className="font-bold text-white">penjahit lokal</span>, mendorong <span className="font-bold text-white">inovasi produk</span>, dan mengutamakan <span className="font-bold text-white">keberlanjutan</span> di setiap langkah
             </p>
           </div>
 
@@ -534,7 +546,7 @@ export default function TemuBelajar() {
 
           <div className="mt-20">
             <h3 className="text-2xl md:text-3xl font-bold text-white text-center mb-8 tracking-wide">
-              <span style={{color: '#FF4B00'}}>Inovasi</span> di Setiap <span style={{color: '#FF4B00'}}>Jahitan</span>
+              <span className="font-bold text-white">Inovasi</span> di Setiap <span className="font-bold text-white">Jahitan</span>
             </h3>
           </div>
         </div>
@@ -551,12 +563,12 @@ export default function TemuBelajar() {
                 className="h-12 w-auto mb-4"
               />
               <p className="text-gray-400">
-                <span style={{color: '#FF4B00'}}>#DariKainJadiKarya</span><br />
+                <span className="font-bold text-white">#DariKainJadiKarya</span><br />
                 Belajar dan praktek langsung di Kustominspira.
               </p>
             </div>
             <div>
-              <h3 className="font-semibold mb-4"><span style={{color: '#FF4B00'}}>Pusat Belajar</span></h3>
+              <h3 className="font-bold mb-4 text-white">Pusat Belajar</h3>
               <ul className="space-y-2 text-gray-400">
                 <li><a href="#" className="hover:text-white transition-colors">Artikel</a></li>
                 <li><a href="#" className="hover:text-white transition-colors">Video Tutorial</a></li>
@@ -564,7 +576,7 @@ export default function TemuBelajar() {
               </ul>
             </div>
             <div>
-              <h3 className="font-semibold mb-4"><span style={{color: '#FF4B00'}}>Temu Belajar</span></h3>
+              <h3 className="font-bold mb-4 text-white">Temu Belajar</h3>
               <ul className="space-y-2 text-gray-400">
                 <li><a href="#" className="hover:text-white transition-colors">Workshop</a></li>
                 <li><a href="#" className="hover:text-white transition-colors">Seminar</a></li>

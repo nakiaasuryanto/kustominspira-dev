@@ -133,6 +133,18 @@ export default function PusatBelajar() {
         </div>
       </nav>
 
+      {/* Mobile Menu */}
+      <div className={`fixed top-16 left-0 right-0 z-40 bg-white shadow-lg border-b border-gray-200 transform transition-transform duration-300 md:hidden ${isMenuOpen ? 'translate-y-0' : '-translate-y-full'}`}>
+        <div className="max-w-7xl mx-auto px-4 py-4">
+          <div className="flex flex-col space-y-4">
+            <Link href="/" className="text-gray-700 hover:text-[#1ca4bc] transition-colors font-medium" onClick={() => setIsMenuOpen(false)}>Home</Link>
+            <Link href="/pusat-belajar" className="text-[#1ca4bc] font-bold" onClick={() => setIsMenuOpen(false)}>Pusat Belajar</Link>
+            <Link href="/temu-belajar" className="text-gray-700 hover:text-[#1ca4bc] transition-colors font-medium" onClick={() => setIsMenuOpen(false)}>Temu Belajar</Link>
+            <a href="https://kustompedia.com" target="_blank" rel="noopener noreferrer" className="text-gray-700 hover:text-[#1ca4bc] transition-colors font-medium">Kustompedia</a>
+          </div>
+        </div>
+      </div>
+
       {/* Hero Section */}
       <section className="pt-20 md:pt-24 pb-12 md:pb-16 relative overflow-hidden">
         <div className="absolute inset-0">
@@ -145,12 +157,12 @@ export default function PusatBelajar() {
         </div>
         <div className="relative max-w-7xl mx-auto px-4 md:px-6">
           <div className="text-left max-w-3xl py-12 md:py-20">
-            <span className="text-[#FF4B00] text-sm md:text-lg font-semibold tracking-wide">#DariKainJadiKarya</span>
+            <span className="text-white font-bold text-sm md:text-lg tracking-wide">#DariKainJadiKarya</span>
             <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mt-2 mb-4 md:mb-6">
               <span className="text-[#1ca4bc]">Pusat</span> Belajar
             </h1>
             <p className="text-base md:text-xl text-white/90 leading-relaxed mb-6 md:mb-8">
-              Di <span className="font-semibold text-[#FF4B00]">Pusat Belajar Kustominspira</span>, kamu bisa belajar dengan cara yang kamu suka. Mulai dari membaca <span className="font-semibold text-[#FF4B00]">artikel ringan</span>, menonton <span className="font-semibold text-[#FF4B00]">video tutorial</span>, sampai mengunduh <span className="font-semibold text-[#FF4B00]">panduan (e-book)</span> yang bisa dipelajari kapan saja.
+              Di <span className="font-bold text-white">Pusat Belajar Kustominspira</span>, kamu bisa belajar dengan cara yang kamu suka. Mulai dari membaca <span className="font-bold text-white">artikel ringan</span>, menonton <span className="font-bold text-white">video tutorial</span>, sampai mengunduh <span className="font-bold text-white">panduan (e-book)</span> yang bisa dipelajari kapan saja.
             </p>
             <div className="flex flex-wrap gap-3 md:gap-4">
               <a href="#articles" className="bg-[#1ca4bc] text-white px-4 md:px-8 py-2 md:py-3 rounded-lg hover:bg-[#159bb3] transition-colors text-sm md:text-base">
@@ -469,7 +481,7 @@ export default function PusatBelajar() {
               />
             </div>
             <p className="text-white text-xl md:text-2xl max-w-3xl mx-auto leading-relaxed font-medium">
-              Kami membangun <span className="font-semibold" style={{color: '#FF4B00'}}>ekosistem</span> yang mendukung <span className="font-semibold" style={{color: '#FF4B00'}}>penjahit lokal</span>, mendorong <span className="font-semibold" style={{color: '#FF4B00'}}>inovasi produk</span>, dan mengutamakan <span className="font-semibold" style={{color: '#FF4B00'}}>keberlanjutan</span> di setiap langkah
+              Kami membangun <span className="font-bold text-white">ekosistem</span> yang mendukung <span className="font-bold text-white">penjahit lokal</span>, mendorong <span className="font-bold text-white">inovasi produk</span>, dan mengutamakan <span className="font-bold text-white">keberlanjutan</span> di setiap langkah
             </p>
           </div>
 
@@ -521,7 +533,7 @@ export default function PusatBelajar() {
 
           <div className="mt-20">
             <h3 className="text-2xl md:text-3xl font-bold text-white text-center mb-8 tracking-wide">
-              <span style={{color: '#FF4B00'}}>Inovasi</span> di Setiap <span style={{color: '#FF4B00'}}>Jahitan</span>
+              <span className="font-bold text-white">Inovasi</span> di Setiap <span className="font-bold text-white">Jahitan</span>
             </h3>
           </div>
         </div>
@@ -538,12 +550,12 @@ export default function PusatBelajar() {
                 className="h-12 w-auto mb-4"
               />
               <p className="text-gray-400">
-                <span style={{color: '#FF4B00'}}>#DariKainJadiKarya</span><br />
+                <span className="font-bold text-white">#DariKainJadiKarya</span><br />
                 Belajar dan praktek langsung di Kustominspira.
               </p>
             </div>
             <div>
-              <h3 className="font-semibold mb-4"><span style={{color: '#FF4B00'}}>Pusat Belajar</span></h3>
+              <h3 className="font-bold mb-4 text-white">Pusat Belajar</h3>
               <ul className="space-y-2 text-gray-400">
                 <li><a href="#" className="hover:text-white transition-colors">Artikel</a></li>
                 <li><a href="#" className="hover:text-white transition-colors">Video Tutorial</a></li>
@@ -551,7 +563,7 @@ export default function PusatBelajar() {
               </ul>
             </div>
             <div>
-              <h3 className="font-semibold mb-4"><span style={{color: '#FF4B00'}}>Temu Belajar</span></h3>
+              <h3 className="font-bold mb-4 text-white">Temu Belajar</h3>
               <ul className="space-y-2 text-gray-400">
                 <li><a href="#" className="hover:text-white transition-colors">Workshop</a></li>
                 <li><a href="#" className="hover:text-white transition-colors">Seminar</a></li>
