@@ -301,7 +301,9 @@ export default function PusatBelajar() {
               <div 
                 onClick={() => {
                   const videoUrl = videos[0].videoUrl || videos[0].video_url;
-                  videoUrl && window.open(videoUrl, '_blank');
+                  if (videoUrl) {
+                    window.open(videoUrl, '_blank');
+                  }
                 }}
                 className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow cursor-pointer"
               >
@@ -350,7 +352,9 @@ export default function PusatBelajar() {
                   key={video.id} 
                   onClick={() => {
                     const videoUrl = video.videoUrl || video.video_url;
-                    videoUrl && window.open(videoUrl, '_blank');
+                    if (videoUrl) {
+                      window.open(videoUrl, '_blank');
+                    }
                   }}
                   className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow cursor-pointer flex"
                 >

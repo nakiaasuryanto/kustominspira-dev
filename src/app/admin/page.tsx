@@ -11,7 +11,7 @@ import SimpleUsersContent from '@/components/admin/SimpleUsersContent';
 // Utility function to generate slug from title
 const generateSlug = (title: string): string => {
   // Convert to lowercase and remove special characters
-  let slug = title
+  const slug = title
     .toLowerCase()
     .replace(/[^\w\s-]/g, '') // Remove special characters except spaces and hyphens
     .replace(/\s+/g, '-') // Replace spaces with hyphens
@@ -84,9 +84,9 @@ interface EventsContentProps extends ContentProps<Event> {
   events: Event[];
 }
 
-interface UsersContentProps extends ContentProps<User> {
-  users: User[];
-}
+// interface UsersContentProps extends ContentProps<User> {
+//   users: User[];
+// }
 
 
 // Mock data storage (in production, this would be a database)

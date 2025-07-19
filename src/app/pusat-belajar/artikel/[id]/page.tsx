@@ -560,7 +560,7 @@ export default function ArticlePage() {
                 </div>
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                  {relatedArticles.slice(0, 4).map((relatedArticle, index) => (
+                  {relatedArticles.slice(0, 4).map((relatedArticle) => (
                     <Link 
                       key={relatedArticle.id}
                       href={`/pusat-belajar/artikel/${relatedArticle.slug || relatedArticle.id}`}

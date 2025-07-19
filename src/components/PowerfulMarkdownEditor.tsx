@@ -141,7 +141,7 @@ export default function PowerfulMarkdownEditor({
     fileInputRef.current?.click();
   };
 
-  const insertMarkdown = (markdownText: string, placeholder = '') => {
+  const insertMarkdown = (markdownText: string) => {
     console.log('Inserting markdown:', markdownText);
     
     // Add appropriate spacing based on content
@@ -218,8 +218,8 @@ export default function PowerfulMarkdownEditor({
     },
     {
       label: 'Quote/Kutipan',
-      icon: '"',
-      action: () => insertMarkdown('\n> "Kutipan penting atau highlight informasi"\n\n'),
+      icon: '&quot;',
+      action: () => insertMarkdown('\n> &quot;Kutipan penting atau highlight informasi&quot;\n\n'),
       description: 'Untuk kutipan atau informasi penting'
     },
     {
