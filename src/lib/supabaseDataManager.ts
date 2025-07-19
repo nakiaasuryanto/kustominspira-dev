@@ -1,6 +1,6 @@
 // @ts-nocheck
 import { supabase } from './supabase';
-import type { Article, Video, Event, Ebook, GalleryItem } from './supabase';
+import type { Article, Video, Event, Ebook, User } from './supabase';
 
 export class SupabaseDataManager {
   private static instance: SupabaseDataManager;
@@ -130,16 +130,24 @@ export class SupabaseDataManager {
 
   async addVideo(video: Omit<Video, 'id' | 'created_at' | 'updated_at'>): Promise<Video> {
     try {
+      console.log('Adding video with data:', video);
       const { data, error } = await supabase
         .from('videos')
         .insert([video])
         .select()
         .single();
 
-      if (error) throw error;
+      if (error) {
+        console.error('Supabase error details:', error);
+        console.error('Error message:', error.message);
+        console.error('Error code:', error.code);
+        console.error('Error hint:', error.hint);
+        throw error;
+      }
       return data;
     } catch (error) {
       console.error('Error adding video:', error);
+      console.error('Error details:', JSON.stringify(error, null, 2));
       throw error;
     }
   }
@@ -336,66 +344,66 @@ export class SupabaseDataManager {
     }
   }
 
-  // Gallery
-  async getGalleryItems(): Promise<GalleryItem[]> {
+  // Users
+  async getAllUsers(): Promise<User[]> {
     try {
       const { data, error } = await supabase
-        .from('gallery')
-        .select('*')
-        .order('uploaded_at', { ascending: false });
+        .from('users')
+        .select('id, username, first_name, last_name, full_name, role, created_at, is_active')
+        .order('created_at', { ascending: false });
 
       if (error) throw error;
       return data || [];
     } catch (error) {
-      console.error('Error getting gallery items:', error);
+      console.error('Error getting users:', error);
       return [];
     }
   }
 
-  async addGalleryItem(item: Omit<GalleryItem, 'id' | 'uploaded_at'>): Promise<GalleryItem> {
+  async addUser(user: Omit<User, 'id' | 'created_at' | 'updated_at' | 'full_name'>): Promise<User> {
     try {
       const { data, error } = await supabase
-        .from('gallery')
-        .insert([item])
-        .select()
+        .from('users')
+        .insert([user])
+        .select('id, username, first_name, last_name, full_name, role, created_at, is_active')
         .single();
 
       if (error) throw error;
       return data;
     } catch (error) {
-      console.error('Error adding gallery item:', error);
+      console.error('Error adding user:', error);
       throw error;
     }
   }
 
-  async updateGalleryItem(id: string, updates: Partial<GalleryItem>): Promise<GalleryItem | null> {
+  async updateUser(id: string, updates: Partial<User>): Promise<User | null> {
     try {
       const { data, error } = await supabase
-        .from('gallery')
+        .from('users')
         .update(updates)
         .eq('id', id)
-        .select()
+        .select('id, username, first_name, last_name, full_name, role, created_at, is_active')
         .single();
 
       if (error) throw error;
       return data;
     } catch (error) {
-      console.error('Error updating gallery item:', error);
+      console.error('Error updating user:', error);
       return null;
     }
   }
 
-  async deleteGalleryItem(id: string): Promise<boolean> {
+  async deleteUser(id: string): Promise<boolean> {
     try {
       const { error } = await supabase
-        .from('gallery')
+        .from('users')
         .delete()
         .eq('id', id);
 
       if (error) throw error;
       return true;
     } catch (error) {
-      console.error('Error deleting gallery item:', error);
+      console.error('Error deleting user:', error);
       return false;
     }
   }

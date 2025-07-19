@@ -8,15 +8,62 @@ export const supabase = createClient(supabaseUrl, supabaseKey)
 
 // Database types
 export interface Article {
-  [key: string]: any;
+  id?: string;
+  title: string;
+  slug?: string;
+  content: string;
+  excerpt?: string;
+  category: string;
+  tags?: string[];
+  seo_tags?: string[];
+  meta_description?: string;
+  meta_keywords?: string;
+  author: string;
+  image_url?: string;
+  image?: string;
+  read_time?: string;
+  status: 'draft' | 'published' | 'archived';
+  views?: number;
+  likes?: number;
+  created_at?: string;
+  updated_at?: string;
+  published_at?: string;
+  featured?: boolean;
+  difficulty_level?: 'beginner' | 'intermediate' | 'advanced';
+  estimated_duration?: string;
+  materials_needed?: string[];
+  tools_required?: string[];
 }
 
 export interface Video {
-  [key: string]: any;
+  id?: string;
+  title: string;
+  duration: string;
+  category: string;
+  videoUrl?: string;
+  video_url?: string; // snake_case alternative
+  thumbnail?: string;
+  views?: string;
+  status: string;
+  created_at?: string;
+  updated_at?: string;
 }
 
 export interface Ebook {
   [key: string]: any;
+}
+
+export interface User {
+  id?: string;
+  username: string;
+  password_hash?: string;
+  first_name: string;
+  last_name: string;
+  full_name?: string;
+  role: 'admin' | 'writer';
+  created_at?: string;
+  updated_at?: string;
+  is_active?: boolean;
 }
 
 export interface Event {
@@ -27,6 +74,7 @@ export interface Ebook {
   id?: string;
   title: string;
   description: string;
+  category?: string;
   pages: string;
   format: string;
   size: string;

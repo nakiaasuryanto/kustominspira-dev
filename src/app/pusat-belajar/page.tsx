@@ -118,7 +118,6 @@ export default function PusatBelajar() {
             <Link href="/" className="text-gray-600 hover:text-gray-900 transition-colors text-sm lg:text-base">Home</Link>
             <Link href="/pusat-belajar" className="text-[#1ca4bc] font-medium text-sm lg:text-base">Pusat Belajar</Link>
             <Link href="/temu-belajar" className="text-gray-600 hover:text-gray-900 transition-colors text-sm lg:text-base">Temu Belajar</Link>
-            <Link href="/gallery" className="text-gray-600 hover:text-gray-900 transition-colors text-sm lg:text-base">Gallery</Link>
             <a href="https://kustompedia.com" target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-gray-900 transition-colors text-sm lg:text-base">Kustompedia</a>
           </div>
 
@@ -221,7 +220,7 @@ export default function PusatBelajar() {
                       Oleh {articles[0].author}
                     </span>
                     <button 
-                      onClick={() => window.location.href = `/pusat-belajar/artikel/${articles[0].id}`}
+                      onClick={() => window.location.href = `/pusat-belajar/artikel/${articles[0].slug || articles[0].id}`}
                       className="bg-[#1ca4bc] text-white px-4 md:px-6 py-2 md:py-3 rounded-lg hover:bg-[#159bb3] transition-colors font-medium text-sm md:text-base"
                     >
                       Baca Artikel →
@@ -269,7 +268,7 @@ export default function PusatBelajar() {
                         Oleh {article.author}
                       </span>
                       <button 
-                        onClick={() => window.location.href = `/pusat-belajar/artikel/${article.id}`}
+                        onClick={() => window.location.href = `/pusat-belajar/artikel/${article.slug || article.id}`}
                         className="text-[#1ca4bc] hover:text-[#159bb3] font-medium text-sm"
                       >
                         Baca →
@@ -299,7 +298,13 @@ export default function PusatBelajar() {
           <div className="grid lg:grid-cols-2 gap-8">
             {/* Spotlight Video */}
             {videos.length > 0 ? (
-              <div className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow cursor-pointer">
+              <div 
+                onClick={() => {
+                  const videoUrl = videos[0].videoUrl || videos[0].video_url;
+                  videoUrl && window.open(videoUrl, '_blank');
+                }}
+                className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow cursor-pointer"
+              >
                 <div className="aspect-video bg-gray-200 relative overflow-hidden">
                   <img 
                     src={videos[0].thumbnail} 
@@ -307,7 +312,7 @@ export default function PusatBelajar() {
                     className="w-full h-full object-cover"
                   />
                   <div className="absolute inset-0 bg-black/30 flex items-center justify-center">
-                    <div className="w-20 h-20 bg-white/90 rounded-full flex items-center justify-center">
+                    <div className="w-20 h-20 bg-white/90 rounded-full flex items-center justify-center hover:bg-white transition-colors">
                       <div className="w-0 h-0 border-l-6 border-l-gray-900 border-t-4 border-t-transparent border-b-4 border-b-transparent ml-1"></div>
                     </div>
                   </div>
@@ -341,7 +346,14 @@ export default function PusatBelajar() {
             {/* Regular Videos */}
             <div className="space-y-6">
               {videos.slice(1).map((video) => (
-                <div key={video.id} className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow cursor-pointer flex">
+                <div 
+                  key={video.id} 
+                  onClick={() => {
+                    const videoUrl = video.videoUrl || video.video_url;
+                    videoUrl && window.open(videoUrl, '_blank');
+                  }}
+                  className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow cursor-pointer flex"
+                >
                   <div className="w-48 aspect-video bg-gray-200 relative overflow-hidden flex-shrink-0">
                     <img 
                       src={video.thumbnail} 
@@ -477,7 +489,8 @@ export default function PusatBelajar() {
               <img 
                 src="/assets/Kustompedia.png" 
                 alt="Kustompedia" 
-                className="h-12 md:h-16 w-auto"
+                className="h-12 md:h-16 w-auto cursor-pointer hover:scale-105 transition-transform duration-300"
+                onClick={() => window.open('https://kustompedia.com', '_blank')}
               />
             </div>
             <p className="text-white text-xl md:text-2xl max-w-3xl mx-auto leading-relaxed font-medium">
@@ -497,7 +510,7 @@ export default function PusatBelajar() {
               </div>
             </div>
 
-            <div className="relative group cursor-pointer">
+            <div className="relative group cursor-pointer" onClick={() => window.open('https://kustomgarment.com', '_blank')}>
               <div className="relative bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20 hover:border-white/30 transition-all duration-300">
                 <img 
                   ref={(el) => { logoRefs.current[1] = el; }}
@@ -508,7 +521,7 @@ export default function PusatBelajar() {
               </div>
             </div>
 
-            <div className="relative group cursor-pointer">
+            <div className="relative group cursor-pointer" onClick={() => window.open('https://kustomproject.id', '_blank')}>
               <div className="relative bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20 hover:border-white/30 transition-all duration-300">
                 <img 
                   ref={(el) => { logoRefs.current[2] = el; }}
@@ -519,7 +532,7 @@ export default function PusatBelajar() {
               </div>
             </div>
 
-            <div className="relative group cursor-pointer">
+            <div className="relative group cursor-pointer" onClick={() => window.open('https://care.kustompedia.com', '_blank')}>
               <div className="relative bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20 hover:border-white/30 transition-all duration-300">
                 <img 
                   ref={(el) => { logoRefs.current[3] = el; }}

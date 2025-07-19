@@ -4,8 +4,53 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { supabaseDataManager as dataManager } from '@/lib/supabaseDataManager';
 import ImageUpload from '@/components/SupabaseImageUpload';
-import EnhancedRichTextEditor from '@/components/EnhancedRichTextEditor';
-import { Article, Video, Event, Ebook, GalleryItem } from '@/lib/supabase';
+import PowerfulMarkdownEditor from '@/components/PowerfulMarkdownEditor';
+import { Article, Video, Event, Ebook, User } from '@/lib/supabase';
+import SimpleUsersContent from '@/components/admin/SimpleUsersContent';
+
+// Utility function to generate slug from title
+const generateSlug = (title: string): string => {
+  // Convert to lowercase and remove special characters
+  let slug = title
+    .toLowerCase()
+    .replace(/[^\w\s-]/g, '') // Remove special characters except spaces and hyphens
+    .replace(/\s+/g, '-') // Replace spaces with hyphens
+    .replace(/-+/g, '-') // Replace multiple hyphens with single hyphen
+    .trim();
+
+  // Split into words
+  const words = slug.split('-').filter(word => word.length > 0);
+  
+  // Take minimum 2 words, but if first 2 words are the same, take 3 words
+  if (words.length >= 2) {
+    if (words.length >= 3 && words[0] === words[1]) {
+      return words.slice(0, 3).join('-');
+    } else {
+      return words.slice(0, 2).join('-');
+    }
+  }
+  
+  // If less than 2 words, return the whole slug
+  return slug;
+};
+
+// Helper function to load data with refresh
+const loadData = async () => {
+  try {
+    const [articles, videos, events, ebooks, users] = await Promise.all([
+      dataManager.getAllArticles(),
+      dataManager.getAllVideos(),
+      dataManager.getAllEvents(),
+      dataManager.getAllEbooks(),
+      dataManager.getAllUsers()
+    ]);
+    return { articles, videos, events, ebooks, users };
+  } catch (error) {
+    console.error('Error in loadData:', error);
+    // Return empty data if there's an error
+    return { articles: [], videos: [], events: [], ebooks: [], users: [] };
+  }
+};
 
 // Types for admin data
 interface AdminData {
@@ -13,7 +58,7 @@ interface AdminData {
   videos: any[];
   events: any[];
   ebooks: any[];
-  gallery: any[];
+  users: any[];
 }
 
 // Props interfaces for components
@@ -39,9 +84,10 @@ interface EventsContentProps extends ContentProps<Event> {
   events: Event[];
 }
 
-interface GalleryContentProps extends ContentProps<GalleryItem> {
-  gallery: GalleryItem[];
+interface UsersContentProps extends ContentProps<User> {
+  users: User[];
 }
+
 
 // Mock data storage (in production, this would be a database)
 const initialData: AdminData = {
@@ -49,7 +95,7 @@ const initialData: AdminData = {
   videos: [],
   events: [],
   ebooks: [],
-  gallery: []
+  users: []
 };
 
 export default function AdminDashboard() {
@@ -57,38 +103,59 @@ export default function AdminDashboard() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [data, setData] = useState<AdminData>(initialData);
+  const [adminName, setAdminName] = useState('Admin');
   const router = useRouter();
 
   // Check authentication on component mount
   useEffect(() => {
-    const checkAuth = async () => {
-      const isLoggedIn = localStorage.getItem('isAdminLoggedIn');
-      if (isLoggedIn === 'true') {
-        setIsAuthenticated(true);
-        // Load data from dataManager (async)
-        try {
-          const [articles, videos, events, ebooks, gallery] = await Promise.all([
-            dataManager.getAllArticles(),
-            dataManager.getAllVideos(),
-            dataManager.getAllEvents(),
-            dataManager.getAllEbooks(),
-            dataManager.getGalleryItems()
-          ]);
-          setData({ articles, videos, events, ebooks, gallery });
-        } catch (error) {
-          console.error('Error loading admin data:', error);
+    const checkAuth = () => {
+      try {
+        console.log('Checking authentication...');
+        const isLoggedIn = localStorage.getItem('isAdminLoggedIn');
+        console.log('isLoggedIn:', isLoggedIn);
+        
+        if (isLoggedIn === 'true') {
+          console.log('User is authenticated');
+          setIsAuthenticated(true);
+          // Set admin name
+          const name = localStorage.getItem('adminName') || localStorage.getItem('adminUsername') || 'Admin';
+          setAdminName(name);
+          console.log('Admin name set to:', name);
+          
+          // Load data in background (with timeout to prevent hanging)
+          console.log('Starting to load admin data with timeout...');
+          Promise.race([
+            loadData(),
+            new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout')), 5000))
+          ]).then(data => {
+            console.log('Admin data loaded successfully:', data);
+            setData(data);
+          }).catch(error => {
+            console.error('Error loading admin data (using empty data):', error);
+            setData({ articles: [], videos: [], events: [], ebooks: [], users: [] });
+          });
+        } else {
+          console.log('User not authenticated, redirecting to login');
+          router.push('/login');
         }
-      } else {
+      } catch (error) {
+        console.error('Auth check error:', error);
         router.push('/login');
       }
     };
 
-    checkAuth();
+    // Check if we're in browser environment
+    if (typeof window !== 'undefined') {
+      // Add small delay to ensure localStorage is available
+      setTimeout(checkAuth, 100);
+    }
   }, [router]);
 
   const handleLogout = () => {
     localStorage.removeItem('isAdminLoggedIn');
-    localStorage.removeItem('adminEmail');
+    localStorage.removeItem('adminUsername');
+    localStorage.removeItem('adminRole');
+    localStorage.removeItem('adminName');
     router.push('/login');
   };
 
@@ -108,8 +175,8 @@ export default function AdminDashboard() {
         case 'ebooks':
           newItem = await dataManager.addEbook(item);
           break;
-        case 'gallery':
-          newItem = await dataManager.addGalleryItem(item);
+        case 'users':
+          newItem = await dataManager.addUser(item);
           break;
         default:
           return;
@@ -122,6 +189,9 @@ export default function AdminDashboard() {
       }));
     } catch (error) {
       console.error(`Error adding ${type}:`, error);
+      console.error('Error details:', JSON.stringify(error, null, 2));
+      // Show user-friendly error message
+      alert(`Failed to add ${type}. Please check the console for details. Error: ${error?.message || 'Unknown error'}`);
     }
   };
 
@@ -141,8 +211,8 @@ export default function AdminDashboard() {
         case 'ebooks':
           result = await dataManager.updateEbook(id, updatedItem);
           break;
-        case 'gallery':
-          result = await dataManager.updateGalleryItem(id, updatedItem);
+        case 'users':
+          result = await dataManager.updateUser(id, updatedItem);
           break;
         default:
           return;
@@ -180,8 +250,8 @@ export default function AdminDashboard() {
         case 'ebooks':
           success = await dataManager.deleteEbook(id);
           break;
-        case 'gallery':
-          success = await dataManager.deleteGalleryItem(id);
+        case 'users':
+          success = await dataManager.deleteUser(id);
           break;
         default:
           return;
@@ -217,7 +287,7 @@ export default function AdminDashboard() {
     { id: 'videos', name: 'Videos', icon: '🎥' },
     { id: 'ebooks', name: 'E-Books', icon: '📚' },
     { id: 'events', name: 'Events', icon: '📅' },
-    { id: 'gallery', name: 'Gallery', icon: '🖼️' },
+    { id: 'users', name: 'Users', icon: '👥' },
   ];
 
   const renderContent = () => {
@@ -232,8 +302,8 @@ export default function AdminDashboard() {
         return <EbooksContent ebooks={data.ebooks} onAdd={(item) => addItem('ebooks', item)} onUpdate={(id, item) => updateItem('ebooks', id, item)} onDelete={(id) => deleteItem('ebooks', id)} />;
       case 'events':
         return <EventsContent events={data.events} onAdd={(item) => addItem('events', item)} onUpdate={(id, item) => updateItem('events', id, item)} onDelete={(id) => deleteItem('events', id)} />;
-      case 'gallery':
-        return <GalleryContent gallery={data.gallery} onAdd={(item) => addItem('gallery', item)} onUpdate={(id, item) => updateItem('gallery', id, item)} onDelete={(id) => deleteItem('gallery', id)} />;
+      case 'users':
+        return <SimpleUsersContent users={data.users} onAdd={(item) => addItem('users', item)} onUpdate={(id, item) => updateItem('users', id, item)} onDelete={(id) => deleteItem('users', id)} />;
       default:
         return <DashboardContent data={data} />;
     }
@@ -257,7 +327,7 @@ export default function AdminDashboard() {
             </div>
             <div className="flex items-center space-x-2 md:space-x-4">
               <span className="text-xs md:text-sm text-gray-500 hidden sm:block">
-                Welcome, Admin
+                Welcome, {adminName}
               </span>
               <button
                 onClick={handleLogout}
@@ -387,14 +457,14 @@ function DashboardContent({ data }: { data: AdminData }) {
           </div>
         </div>
         
-        <div className="bg-white p-6 rounded-lg shadow-lg border-l-4 border-pink-500">
+        <div className="bg-white p-6 rounded-lg shadow-lg border-l-4 border-indigo-500">
           <div className="flex items-center">
-            <div className="p-3 bg-pink-100 rounded-full">
-              <span className="text-2xl">🖼️</span>
+            <div className="p-3 bg-indigo-100 rounded-full">
+              <span className="text-2xl">👥</span>
             </div>
             <div className="ml-4">
-              <p className="text-sm text-gray-600">Gallery</p>
-              <p className="text-3xl font-bold text-gray-900">{data.gallery.length}</p>
+              <p className="text-sm text-gray-600">Users</p>
+              <p className="text-3xl font-bold text-gray-900">{data.users.length}</p>
             </div>
           </div>
         </div>
@@ -442,8 +512,12 @@ function DashboardContent({ data }: { data: AdminData }) {
 function ArticlesContent({ articles, onAdd, onUpdate, onDelete }: ArticlesContentProps) {
   const [showForm, setShowForm] = useState(false);
   const [editingArticle, setEditingArticle] = useState<Article | null>(null);
+  const [showCategoryForm, setShowCategoryForm] = useState(false);
+  const [categories, setCategories] = useState(['Tutorial', 'Tips', 'Pattern', 'Material']);
+  const [newCategory, setNewCategory] = useState('');
   const [formData, setFormData] = useState({
     title: '',
+    slug: '',
     category: 'Tutorial',
     author: 'Admin',
     read_time: '',
@@ -461,13 +535,14 @@ function ArticlesContent({ articles, onAdd, onUpdate, onDelete }: ArticlesConten
     } else {
       onAdd(formData);
     }
-    setFormData({ title: '', category: 'Tutorial', author: 'Admin', read_time: '', content: '', excerpt: '', image_url: '/assets/pusatbelajar.webp', status: 'published' });
+    setFormData({ title: '', slug: '', category: 'Tutorial', author: 'Admin', read_time: '', content: '', excerpt: '', image_url: '/assets/pusatbelajar.webp', status: 'published' });
     setShowForm(false);
   };
 
   const handleEdit = (article: Article) => {
     setFormData({
       title: article.title,
+      slug: article.slug || generateSlug(article.title),
       category: article.category,
       author: article.author,
       read_time: article.read_time,
@@ -480,6 +555,20 @@ function ArticlesContent({ articles, onAdd, onUpdate, onDelete }: ArticlesConten
     setShowForm(true);
   };
 
+  const addCategory = () => {
+    if (newCategory.trim() && !categories.includes(newCategory.trim())) {
+      setCategories([...categories, newCategory.trim()]);
+      setNewCategory('');
+      setShowCategoryForm(false);
+    }
+  };
+
+  const removeCategory = (categoryToRemove: string) => {
+    if (categories.length > 1) { // Keep at least one category
+      setCategories(categories.filter(cat => cat !== categoryToRemove));
+    }
+  };
+
   return (
     <div>
       <div className="flex justify-between items-center mb-6">
@@ -488,7 +577,7 @@ function ArticlesContent({ articles, onAdd, onUpdate, onDelete }: ArticlesConten
           onClick={() => {
             setShowForm(!showForm);
             setEditingArticle(null);
-            setFormData({ title: '', category: 'Tutorial', author: 'Admin', read_time: '', content: '', excerpt: '', image_url: '/assets/pusatbelajar.webp', status: 'published' });
+            setFormData({ title: '', slug: '', category: 'Tutorial', author: 'Admin', read_time: '', content: '', excerpt: '', image_url: '/assets/pusatbelajar.webp', status: 'published' });
           }}
           className="bg-[#1ca4bc] text-white px-6 py-2 rounded-lg hover:bg-[#159bb3] transition-colors"
         >
@@ -508,24 +597,104 @@ function ArticlesContent({ articles, onAdd, onUpdate, onDelete }: ArticlesConten
                 <input
                   type="text"
                   value={formData.title}
-                  onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                  onChange={(e) => {
+                    const newTitle = e.target.value;
+                    setFormData({ 
+                      ...formData, 
+                      title: newTitle,
+                      slug: newTitle ? generateSlug(newTitle) : ''
+                    });
+                  }}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1ca4bc] focus:border-[#1ca4bc] text-gray-900"
                   placeholder="Article title..."
                   required
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Category</label>
-                <select 
-                  value={formData.category}
-                  onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                <label className="block text-sm font-medium text-gray-700 mb-2">Slug (URL)</label>
+                <input
+                  type="text"
+                  value={formData.slug}
+                  onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1ca4bc] focus:border-[#1ca4bc] text-gray-900"
-                >
-                  <option>Tutorial</option>
-                  <option>Tips</option>
-                  <option>Pattern</option>
-                  <option>Material</option>
-                </select>
+                  placeholder="article-slug"
+                  required
+                />
+                {formData.slug && (
+                  <p className="text-xs text-gray-500 mt-1">
+                    URL: /pusat-belajar/artikel/{formData.slug}
+                  </p>
+                )}
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Category</label>
+                <div className="flex gap-2">
+                  <select 
+                    value={formData.category}
+                    onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                    className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1ca4bc] focus:border-[#1ca4bc] text-gray-900"
+                  >
+                    {categories.map(cat => (
+                      <option key={cat} value={cat}>{cat}</option>
+                    ))}
+                  </select>
+                  <button
+                    type="button"
+                    onClick={() => setShowCategoryForm(!showCategoryForm)}
+                    className="px-3 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+                    title="Manage Categories"
+                  >
+                    +
+                  </button>
+                </div>
+                
+                {/* Category Management */}
+                {showCategoryForm && (
+                  <div className="mt-3 p-4 bg-gray-50 rounded-lg border">
+                    <h4 className="text-sm font-medium text-gray-700 mb-3">Manage Categories</h4>
+                    
+                    {/* Add New Category */}
+                    <div className="flex gap-2 mb-3">
+                      <input
+                        type="text"
+                        value={newCategory}
+                        onChange={(e) => setNewCategory(e.target.value)}
+                        placeholder="New category name..."
+                        className="flex-1 px-3 py-2 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-[#1ca4bc] focus:border-[#1ca4bc] text-gray-900"
+                        onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), addCategory())}
+                      />
+                      <button
+                        type="button"
+                        onClick={addCategory}
+                        className="px-3 py-2 bg-[#1ca4bc] text-white rounded hover:bg-[#159bb3] transition-colors text-sm"
+                      >
+                        Add
+                      </button>
+                    </div>
+                    
+                    {/* Existing Categories */}
+                    <div className="space-y-2">
+                      <p className="text-xs text-gray-600">Existing categories:</p>
+                      <div className="flex flex-wrap gap-2">
+                        {categories.map(cat => (
+                          <div key={cat} className="flex items-center gap-1 bg-white px-2 py-1 rounded border text-sm">
+                            <span>{cat}</span>
+                            {categories.length > 1 && (
+                              <button
+                                type="button"
+                                onClick={() => removeCategory(cat)}
+                                className="text-red-500 hover:text-red-700 ml-1"
+                                title="Remove category"
+                              >
+                                ×
+                              </button>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -558,11 +727,11 @@ function ArticlesContent({ articles, onAdd, onUpdate, onDelete }: ArticlesConten
               folder="articles"
             />
             
-            {/* Enhanced Rich Text Editor with Image Upload */}
-            <EnhancedRichTextEditor
+            {/* Powerful Markdown Editor with Enhanced Features */}
+            <PowerfulMarkdownEditor
               value={formData.content}
               onChange={(content) => setFormData({ ...formData, content })}
-              placeholder="Write your article content here... Use markdown for formatting!"
+              placeholder="Tulis konten artikel Anda di sini... Gunakan markdown untuk formatting yang keren!"
             />
             
             {/* Excerpt Field */}
@@ -604,6 +773,17 @@ function ArticlesContent({ articles, onAdd, onUpdate, onDelete }: ArticlesConten
                 </div>
                 <div className="flex space-x-2">
                   <button 
+                    onClick={() => {
+                      // Use slug if available, otherwise use id
+                      const urlParam = article.slug || article.id;
+                      window.open(`/pusat-belajar/artikel/${urlParam}`, '_blank');
+                    }}
+                    className="text-green-600 hover:text-green-800 px-3 py-1 rounded-md hover:bg-green-50"
+                    title="View article"
+                  >
+                    View
+                  </button>
+                  <button 
                     onClick={() => handleEdit(article)}
                     className="text-blue-600 hover:text-blue-800 px-3 py-1 rounded-md hover:bg-blue-50"
                   >
@@ -629,6 +809,9 @@ function ArticlesContent({ articles, onAdd, onUpdate, onDelete }: ArticlesConten
 function VideosContent({ videos, onAdd, onUpdate, onDelete }: VideosContentProps) {
   const [showForm, setShowForm] = useState(false);
   const [editingVideo, setEditingVideo] = useState<Video | null>(null);
+  const [showCategoryForm, setShowCategoryForm] = useState(false);
+  const [categories, setCategories] = useState(['Tutorial', 'Tips', 'Workshop']);
+  const [newCategory, setNewCategory] = useState('');
   const [formData, setFormData] = useState({
     title: '',
     duration: '',
@@ -661,6 +844,20 @@ function VideosContent({ videos, onAdd, onUpdate, onDelete }: VideosContentProps
     });
     setEditingVideo(video);
     setShowForm(true);
+  };
+
+  const addCategory = () => {
+    if (newCategory.trim() && !categories.includes(newCategory.trim())) {
+      setCategories([...categories, newCategory.trim()]);
+      setNewCategory('');
+      setShowCategoryForm(false);
+    }
+  };
+
+  const removeCategory = (categoryToRemove: string) => {
+    if (categories.length > 1) {
+      setCategories(categories.filter(cat => cat !== categoryToRemove));
+    }
   };
 
   return (
@@ -709,15 +906,73 @@ function VideosContent({ videos, onAdd, onUpdate, onDelete }: VideosContentProps
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">Category</label>
-                <select 
-                  value={formData.category}
-                  onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1ca4bc] focus:border-[#1ca4bc] text-gray-900"
-                >
-                  <option>Tutorial</option>
-                  <option>Tips</option>
-                  <option>Workshop</option>
-                </select>
+                <div className="flex gap-2">
+                  <select 
+                    value={formData.category}
+                    onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                    className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1ca4bc] focus:border-[#1ca4bc] text-gray-900"
+                  >
+                    {categories.map(cat => (
+                      <option key={cat} value={cat}>{cat}</option>
+                    ))}
+                  </select>
+                  <button
+                    type="button"
+                    onClick={() => setShowCategoryForm(!showCategoryForm)}
+                    className="px-3 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+                    title="Manage Categories"
+                  >
+                    +
+                  </button>
+                </div>
+                
+                {/* Category Management */}
+                {showCategoryForm && (
+                  <div className="mt-3 p-4 bg-gray-50 rounded-lg border">
+                    <h4 className="text-sm font-medium text-gray-700 mb-3">Manage Categories</h4>
+                    
+                    {/* Add New Category */}
+                    <div className="flex gap-2 mb-3">
+                      <input
+                        type="text"
+                        value={newCategory}
+                        onChange={(e) => setNewCategory(e.target.value)}
+                        placeholder="New category name..."
+                        className="flex-1 px-3 py-2 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-[#1ca4bc] focus:border-[#1ca4bc] text-gray-900"
+                        onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), addCategory())}
+                      />
+                      <button
+                        type="button"
+                        onClick={addCategory}
+                        className="px-3 py-2 bg-[#1ca4bc] text-white rounded hover:bg-[#159bb3] transition-colors text-sm"
+                      >
+                        Add
+                      </button>
+                    </div>
+                    
+                    {/* Existing Categories */}
+                    <div className="space-y-2">
+                      <p className="text-xs text-gray-600">Existing categories:</p>
+                      <div className="flex flex-wrap gap-2">
+                        {categories.map(cat => (
+                          <div key={cat} className="flex items-center gap-1 bg-white px-2 py-1 rounded border text-sm">
+                            <span>{cat}</span>
+                            {categories.length > 1 && (
+                              <button
+                                type="button"
+                                onClick={() => removeCategory(cat)}
+                                className="text-red-500 hover:text-red-700 ml-1"
+                                title="Remove category"
+                              >
+                                ×
+                              </button>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
             
@@ -797,9 +1052,13 @@ function VideosContent({ videos, onAdd, onUpdate, onDelete }: VideosContentProps
 function EbooksContent({ ebooks, onAdd, onUpdate, onDelete }: EbooksContentProps) {
   const [showForm, setShowForm] = useState(false);
   const [editingEbook, setEditingEbook] = useState<Ebook | null>(null);
+  const [showCategoryForm, setShowCategoryForm] = useState(false);
+  const [categories, setCategories] = useState(['Panduan', 'Pattern', 'Tutorial', 'Reference']);
+  const [newCategory, setNewCategory] = useState('');
   const [formData, setFormData] = useState({
     title: '',
     description: '',
+    category: 'Panduan',
     pages: '',
     format: 'PDF',
     size: '',
@@ -815,14 +1074,31 @@ function EbooksContent({ ebooks, onAdd, onUpdate, onDelete }: EbooksContentProps
     } else {
       onAdd({ ...formData, downloadCount: 0 });
     }
-    setFormData({ title: '', description: '', pages: '', format: 'PDF', size: '', fileUrl: '', status: 'published' });
+    setFormData({ title: '', description: '', category: 'Panduan', pages: '', format: 'PDF', size: '', fileUrl: '', status: 'published' });
     setShowForm(false);
   };
 
   const handleEdit = (ebook: any) => {
-    setFormData(ebook);
+    setFormData({
+      ...ebook,
+      category: ebook.category || 'Panduan'
+    });
     setEditingEbook(ebook);
     setShowForm(true);
+  };
+
+  const addCategory = () => {
+    if (newCategory.trim() && !categories.includes(newCategory.trim())) {
+      setCategories([...categories, newCategory.trim()]);
+      setNewCategory('');
+      setShowCategoryForm(false);
+    }
+  };
+
+  const removeCategory = (categoryToRemove: string) => {
+    if (categories.length > 1) {
+      setCategories(categories.filter(cat => cat !== categoryToRemove));
+    }
   };
 
   return (
@@ -833,7 +1109,7 @@ function EbooksContent({ ebooks, onAdd, onUpdate, onDelete }: EbooksContentProps
           onClick={() => {
             setShowForm(!showForm);
             setEditingEbook(null);
-            setFormData({ title: '', description: '', pages: '', format: 'PDF', size: '', fileUrl: '', status: 'published' });
+            setFormData({ title: '', description: '', category: 'Panduan', pages: '', format: 'PDF', size: '', fileUrl: '', status: 'published' });
           }}
           className="bg-[#1ca4bc] text-white px-6 py-2 rounded-lg hover:bg-[#159bb3] transition-colors"
         >
@@ -866,6 +1142,76 @@ function EbooksContent({ ebooks, onAdd, onUpdate, onDelete }: EbooksContentProps
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1ca4bc] focus:border-[#1ca4bc] text-gray-900"
                 required
               ></textarea>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Category</label>
+              <div className="flex gap-2">
+                <select 
+                  value={formData.category}
+                  onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                  className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1ca4bc] focus:border-[#1ca4bc] text-gray-900"
+                >
+                  {categories.map(cat => (
+                    <option key={cat} value={cat}>{cat}</option>
+                  ))}
+                </select>
+                <button
+                  type="button"
+                  onClick={() => setShowCategoryForm(!showCategoryForm)}
+                  className="px-3 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+                  title="Manage Categories"
+                >
+                  +
+                </button>
+              </div>
+              
+              {/* Category Management */}
+              {showCategoryForm && (
+                <div className="mt-3 p-4 bg-gray-50 rounded-lg border">
+                  <h4 className="text-sm font-medium text-gray-700 mb-3">Manage Categories</h4>
+                  
+                  {/* Add New Category */}
+                  <div className="flex gap-2 mb-3">
+                    <input
+                      type="text"
+                      value={newCategory}
+                      onChange={(e) => setNewCategory(e.target.value)}
+                      placeholder="New category name..."
+                      className="flex-1 px-3 py-2 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-[#1ca4bc] focus:border-[#1ca4bc] text-gray-900"
+                      onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), addCategory())}
+                    />
+                    <button
+                      type="button"
+                      onClick={addCategory}
+                      className="px-3 py-2 bg-[#1ca4bc] text-white rounded hover:bg-[#159bb3] transition-colors text-sm"
+                    >
+                      Add
+                    </button>
+                  </div>
+                  
+                  {/* Existing Categories */}
+                  <div className="space-y-2">
+                    <p className="text-xs text-gray-600">Existing categories:</p>
+                    <div className="flex flex-wrap gap-2">
+                      {categories.map(cat => (
+                        <div key={cat} className="flex items-center gap-1 bg-white px-2 py-1 rounded border text-sm">
+                          <span>{cat}</span>
+                          {categories.length > 1 && (
+                            <button
+                              type="button"
+                              onClick={() => removeCategory(cat)}
+                              className="text-red-500 hover:text-red-700 ml-1"
+                              title="Remove category"
+                            >
+                              ×
+                            </button>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div>
@@ -982,6 +1328,9 @@ function EbooksContent({ ebooks, onAdd, onUpdate, onDelete }: EbooksContentProps
 function EventsContent({ events, onAdd, onUpdate, onDelete }: EventsContentProps) {
   const [showForm, setShowForm] = useState(false);
   const [editingEvent, setEditingEvent] = useState<Event | null>(null);
+  const [showCategoryForm, setShowCategoryForm] = useState(false);
+  const [categories, setCategories] = useState(['workshop', 'seminar', 'webinar', 'bootcamp']);
+  const [newCategory, setNewCategory] = useState('');
   const [formData, setFormData] = useState({
     title: '',
     date: '',
@@ -1011,6 +1360,20 @@ function EventsContent({ events, onAdd, onUpdate, onDelete }: EventsContentProps
     setFormData(event);
     setEditingEvent(event);
     setShowForm(true);
+  };
+
+  const addCategory = () => {
+    if (newCategory.trim() && !categories.includes(newCategory.trim())) {
+      setCategories([...categories, newCategory.trim()]);
+      setNewCategory('');
+      setShowCategoryForm(false);
+    }
+  };
+
+  const removeCategory = (categoryToRemove: string) => {
+    if (categories.length > 1) {
+      setCategories(categories.filter(cat => cat !== categoryToRemove));
+    }
   };
 
   return (
@@ -1081,15 +1444,73 @@ function EventsContent({ events, onAdd, onUpdate, onDelete }: EventsContentProps
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">Category</label>
-                <select 
-                  value={formData.category}
-                  onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1ca4bc] focus:border-[#1ca4bc] text-gray-900"
-                >
-                  <option value="workshop">Workshop</option>
-                  <option value="seminar">Seminar</option>
-                  <option value="webinar">Webinar</option>
-                </select>
+                <div className="flex gap-2">
+                  <select 
+                    value={formData.category}
+                    onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                    className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1ca4bc] focus:border-[#1ca4bc] text-gray-900"
+                  >
+                    {categories.map(cat => (
+                      <option key={cat} value={cat}>{cat}</option>
+                    ))}
+                  </select>
+                  <button
+                    type="button"
+                    onClick={() => setShowCategoryForm(!showCategoryForm)}
+                    className="px-3 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+                    title="Manage Categories"
+                  >
+                    +
+                  </button>
+                </div>
+                
+                {/* Category Management */}
+                {showCategoryForm && (
+                  <div className="mt-3 p-4 bg-gray-50 rounded-lg border">
+                    <h4 className="text-sm font-medium text-gray-700 mb-3">Manage Categories</h4>
+                    
+                    {/* Add New Category */}
+                    <div className="flex gap-2 mb-3">
+                      <input
+                        type="text"
+                        value={newCategory}
+                        onChange={(e) => setNewCategory(e.target.value)}
+                        placeholder="New category name..."
+                        className="flex-1 px-3 py-2 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-[#1ca4bc] focus:border-[#1ca4bc] text-gray-900"
+                        onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), addCategory())}
+                      />
+                      <button
+                        type="button"
+                        onClick={addCategory}
+                        className="px-3 py-2 bg-[#1ca4bc] text-white rounded hover:bg-[#159bb3] transition-colors text-sm"
+                      >
+                        Add
+                      </button>
+                    </div>
+                    
+                    {/* Existing Categories */}
+                    <div className="space-y-2">
+                      <p className="text-xs text-gray-600">Existing categories:</p>
+                      <div className="flex flex-wrap gap-2">
+                        {categories.map(cat => (
+                          <div key={cat} className="flex items-center gap-1 bg-white px-2 py-1 rounded border text-sm">
+                            <span>{cat}</span>
+                            {categories.length > 1 && (
+                              <button
+                                type="button"
+                                onClick={() => removeCategory(cat)}
+                                className="text-red-500 hover:text-red-700 ml-1"
+                                title="Remove category"
+                              >
+                                ×
+                              </button>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">Price</label>
@@ -1191,171 +1612,3 @@ function EventsContent({ events, onAdd, onUpdate, onDelete }: EventsContentProps
   );
 }
 
-// Gallery Management Component
-function GalleryContent({ gallery, onAdd, onUpdate, onDelete }: GalleryContentProps) {
-  const [showForm, setShowForm] = useState(false);
-  const [editingItem, setEditingItem] = useState<GalleryItem | null>(null);
-  const [formData, setFormData] = useState({
-    title: '',
-    category: 'fashion',
-    image_url: '/assets/kustominspira.webp',
-    description: '',
-    tags: ''
-  });
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    const tagsArray = formData.tags.split(',').map(tag => tag.trim()).filter(tag => tag);
-    if (editingItem) {
-      onUpdate(editingItem.id!, { ...formData, tags: tagsArray });
-      setEditingItem(null);
-    } else {
-      onAdd({ ...formData, tags: tagsArray });
-    }
-    setFormData({ title: '', category: 'fashion', image: '/assets/kustominspira.webp', description: '', tags: '' });
-    setShowForm(false);
-  };
-
-  const handleEdit = (item: GalleryItem) => {
-    setFormData({ ...item, tags: item.tags?.join(', ') || '' });
-    setEditingItem(item);
-    setShowForm(true);
-  };
-
-  return (
-    <div>
-      <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-bold text-gray-900">Gallery Management</h2>
-        <button
-          onClick={() => {
-            setShowForm(!showForm);
-            setEditingItem(null);
-            setFormData({ title: '', category: 'fashion', image: '/assets/kustominspira.webp', description: '', tags: '' });
-          }}
-          className="bg-[#1ca4bc] text-white px-6 py-2 rounded-lg hover:bg-[#159bb3] transition-colors"
-        >
-          {showForm ? 'Cancel' : 'Upload Images'}
-        </button>
-      </div>
-
-      {showForm && (
-        <div className="bg-white p-6 rounded-lg shadow-lg mb-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">
-            {editingItem ? 'Edit Gallery Item' : 'Upload New Image'}
-          </h3>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Title</label>
-              <input
-                type="text"
-                value={formData.title}
-                onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1ca4bc] focus:border-[#1ca4bc] text-gray-900"
-                required
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Category</label>
-              <select 
-                value={formData.category}
-                onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1ca4bc] focus:border-[#1ca4bc] text-gray-900"
-              >
-                <option value="fashion">Fashion</option>
-                <option value="accessories">Accessories</option>
-              </select>
-            </div>
-            
-            {/* Gallery Image Upload */}
-            <ImageUpload
-              currentImage={formData.image_url}
-              onImageUpload={(imageUrl) => setFormData({ ...formData, image_url: imageUrl })}
-              folder="gallery"
-            />
-            
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Description</label>
-              <textarea
-                rows={3}
-                value={formData.description}
-                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1ca4bc] focus:border-[#1ca4bc] text-gray-900"
-                required
-              ></textarea>
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Tags (comma separated)</label>
-              <input
-                type="text"
-                value={formData.tags}
-                onChange={(e) => setFormData({ ...formData, tags: e.target.value })}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1ca4bc] focus:border-[#1ca4bc] text-gray-900"
-                placeholder="batik, dress, fashion"
-              />
-            </div>
-            <button
-              type="submit"
-              className="bg-[#1ca4bc] text-white px-6 py-2 rounded-lg hover:bg-[#159bb3] transition-colors"
-            >
-              {editingItem ? 'Update Item' : 'Upload Image'}
-            </button>
-          </form>
-        </div>
-      )}
-
-      <div className="bg-white rounded-lg shadow-lg">
-        <div className="p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">Gallery Items ({gallery.length})</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {gallery.map((item: GalleryItem, index: number) => (
-              <div key={item.id} className="group relative">
-                <div className="bg-white rounded-lg shadow-lg overflow-hidden">
-                  <div className={`relative overflow-hidden ${index % 4 === 0 ? 'h-64' : index % 4 === 1 ? 'h-48' : index % 4 === 2 ? 'h-72' : 'h-56'}`}>
-                    <img 
-                      src={item.image} 
-                      alt={item.title}
-                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-                    />
-                    <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                      <div className="text-white text-center">
-                        <h4 className="font-semibold mb-1">{item.title}</h4>
-                        <span className="text-sm bg-[#1ca4bc] px-2 py-1 rounded">
-                          {item.category}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="p-4">
-                    <h4 className="font-medium text-gray-900 mb-1">{item.title}</h4>
-                    <p className="text-sm text-gray-600 mb-2">{item.description}</p>
-                    <div className="flex flex-wrap gap-1 mb-3">
-                      {item.tags?.map((tag: string, tagIndex: number) => (
-                        <span key={tagIndex} className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded">
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
-                    <div className="flex space-x-2">
-                      <button 
-                        onClick={() => handleEdit(item)}
-                        className="text-blue-600 hover:text-blue-800 text-sm"
-                      >
-                        Edit
-                      </button>
-                      <button 
-                        onClick={() => onDelete(item.id)}
-                        className="text-red-600 hover:text-red-800 text-sm"
-                      >
-                        Delete
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
