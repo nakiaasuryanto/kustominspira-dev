@@ -38,7 +38,7 @@ export default function Login() {
       }
     } catch (error) {
       console.error('Login error:', error);
-      setError('Terjadi kesalahan saat login: ' + error.message);
+      setError('Terjadi kesalahan saat login: ' + (error instanceof Error ? error.message : 'Unknown error'));
     }
     
     setIsLoading(false);
