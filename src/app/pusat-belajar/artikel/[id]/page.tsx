@@ -21,6 +21,9 @@ export default function ArticlePage() {
   const [commentCount, setCommentCount] = useState(0);
   const [hasLiked, setHasLiked] = useState(false);
   const [hasViewed, setHasViewed] = useState(false);
+  
+  // Header height management
+  const [headerHeight, setHeaderHeight] = useState('h-80 md:h-96');
 
   useEffect(() => {
     const loadArticle = async () => {
@@ -52,6 +55,33 @@ export default function ArticlePage() {
               setViewCount(prev => prev + 1);
               setHasViewed(true);
             }, 2000); // After 2 seconds of viewing
+          }
+          
+          // Calculate optimal header height based on image aspect ratio
+          if (foundArticle.image_url) {
+            const img = new Image();
+            img.onload = () => {
+              const aspectRatio = img.width / img.height;
+              
+              // Determine header height based on aspect ratio
+              if (aspectRatio >= 2.5) {
+                // Very wide images (panoramic) - shorter header
+                setHeaderHeight('h-64 md:h-80');
+              } else if (aspectRatio >= 1.8) {
+                // Wide images - medium header
+                setHeaderHeight('h-72 md:h-88');
+              } else if (aspectRatio >= 1.3) {
+                // Standard landscape - standard header
+                setHeaderHeight('h-80 md:h-96');
+              } else if (aspectRatio >= 0.8) {
+                // Square or portrait - taller header to avoid cropping
+                setHeaderHeight('h-96 md:h-[28rem]');
+              } else {
+                // Very tall images - maximum height
+                setHeaderHeight('h-[28rem] md:h-[32rem]');
+              }
+            };
+            img.src = foundArticle.image_url;
           }
         }
       } catch (error) {
@@ -289,15 +319,18 @@ export default function ArticlePage() {
           ></div>
         )}
 
-        {/* Header Banner Section - Fixed Height */}
-        <section className="relative h-80 md:h-96 flex items-center justify-center overflow-hidden pt-20 md:pt-24">
+        {/* Header Banner Section - Adaptive Height */}
+        <section className={`relative ${headerHeight} flex items-center justify-center overflow-hidden pt-20 md:pt-24`}>
           {/* Background Image */}
           <div className="absolute inset-0">
             {article.image_url ? (
               <img 
                 src={article.image_url} 
                 alt={article.title}
-                className="w-full h-full object-cover"
+                className="w-full h-full object-cover object-center"
+                style={{
+                  objectPosition: 'center center'
+                }}
               />
             ) : (
               <div className="w-full h-full bg-gradient-to-br from-[#1ca4bc] to-[#159bb3]"></div>
