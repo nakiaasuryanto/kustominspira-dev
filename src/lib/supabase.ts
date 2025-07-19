@@ -40,6 +40,7 @@ export interface Video {
   title: string;
   duration: string;
   category: string;
+  tags?: string[];
   videoUrl?: string;
   video_url?: string; // snake_case alternative
   thumbnail?: string;
@@ -75,6 +76,7 @@ export interface Ebook {
   title: string;
   description: string;
   category?: string;
+  tags?: string[];
   pages: string;
   format: string;
   size: string;

@@ -1,6 +1,6 @@
 // @ts-nocheck
 import { supabase } from './supabase';
-import type { Article, Video, Event, Ebook, User } from './supabase';
+import type { Article, Video, Event, Ebook, User, GalleryItem } from './supabase';
 
 export class SupabaseDataManager {
   private static instance: SupabaseDataManager;
@@ -404,6 +404,85 @@ export class SupabaseDataManager {
       return true;
     } catch (error) {
       console.error('Error deleting user:', error);
+      return false;
+    }
+  }
+
+  // Gallery Items
+  async getGalleryItems(): Promise<GalleryItem[]> {
+    try {
+      const { data, error } = await supabase
+        .from('gallery')
+        .select('*')
+        .order('uploaded_at', { ascending: false });
+
+      if (error) throw error;
+      return data || [];
+    } catch (error) {
+      console.error('Error getting gallery items:', error);
+      return [];
+    }
+  }
+
+  async getAllGalleryItems(): Promise<GalleryItem[]> {
+    try {
+      const { data, error } = await supabase
+        .from('gallery')
+        .select('*')
+        .order('uploaded_at', { ascending: false });
+
+      if (error) throw error;
+      return data || [];
+    } catch (error) {
+      console.error('Error getting all gallery items:', error);
+      return [];
+    }
+  }
+
+  async addGalleryItem(item: Omit<GalleryItem, 'id' | 'uploaded_at'>): Promise<GalleryItem> {
+    try {
+      const { data, error } = await supabase
+        .from('gallery')
+        .insert([item])
+        .select()
+        .single();
+
+      if (error) throw error;
+      return data;
+    } catch (error) {
+      console.error('Error adding gallery item:', error);
+      throw error;
+    }
+  }
+
+  async updateGalleryItem(id: string, updates: Partial<GalleryItem>): Promise<GalleryItem | null> {
+    try {
+      const { data, error } = await supabase
+        .from('gallery')
+        .update(updates)
+        .eq('id', id)
+        .select()
+        .single();
+
+      if (error) throw error;
+      return data;
+    } catch (error) {
+      console.error('Error updating gallery item:', error);
+      return null;
+    }
+  }
+
+  async deleteGalleryItem(id: string): Promise<boolean> {
+    try {
+      const { error } = await supabase
+        .from('gallery')
+        .delete()
+        .eq('id', id);
+
+      if (error) throw error;
+      return true;
+    } catch (error) {
+      console.error('Error deleting gallery item:', error);
       return false;
     }
   }
