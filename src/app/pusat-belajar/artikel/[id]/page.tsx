@@ -211,6 +211,7 @@ export default function ArticlePage() {
               <Link href="/" className="text-gray-600 hover:text-gray-900 transition-colors text-sm lg:text-base">Home</Link>
               <Link href="/pusat-belajar" className="text-[#1ca4bc] font-medium text-sm lg:text-base">Pusat Belajar</Link>
               <Link href="/temu-belajar" className="text-gray-600 hover:text-gray-900 transition-colors text-sm lg:text-base">Temu Belajar</Link>
+              <Link href="/gallery" className="text-gray-600 hover:text-gray-900 transition-colors text-sm lg:text-base">Gallery</Link>
               <a href="https://kustompedia.com" target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-gray-900 transition-colors text-sm lg:text-base">Kustompedia</a>
             </div>
 
@@ -232,6 +233,7 @@ export default function ArticlePage() {
               <Link href="/" className="text-gray-700 hover:text-[#1ca4bc] transition-colors font-medium" onClick={() => setIsMenuOpen(false)}>Home</Link>
               <Link href="/pusat-belajar" className="text-[#1ca4bc] font-bold" onClick={() => setIsMenuOpen(false)}>Pusat Belajar</Link>
               <Link href="/temu-belajar" className="text-gray-700 hover:text-[#1ca4bc] transition-colors font-medium" onClick={() => setIsMenuOpen(false)}>Temu Belajar</Link>
+              <Link href="/gallery" className="text-gray-700 hover:text-[#1ca4bc] transition-colors font-medium" onClick={() => setIsMenuOpen(false)}>Gallery</Link>
               <a href="https://kustompedia.com" target="_blank" rel="noopener noreferrer" className="text-gray-700 hover:text-[#1ca4bc] transition-colors font-medium">Kustompedia</a>
             </div>
           </div>

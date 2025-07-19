@@ -174,6 +174,13 @@ export default function Home() {
                 TEMU BELAJAR
               </a>
               <a 
+                href="/gallery" 
+                className="block text-4xl md:text-6xl lg:text-7xl font-black text-white hover:text-[#1ca4bc] transition-all duration-300 transform hover:translate-x-4"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                GALLERY
+              </a>
+              <a 
                 href="https://kustompedia.com" 
                 target="_blank"
                 rel="noopener noreferrer"
