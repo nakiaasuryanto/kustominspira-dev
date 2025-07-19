@@ -2,9 +2,11 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+// import { supabase } from '@/lib/supabase';
+// import bcrypt from 'bcryptjs';
 
 export default function Login() {
-  const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
@@ -15,16 +17,28 @@ export default function Login() {
     setIsLoading(true);
     setError('');
 
-    // Simple authentication - in production, this should be handled by a proper auth system
-    if (email === 'admin@kustominspira.com' && password === 'admin123') {
-      // Store login state in localStorage (in production, use proper auth tokens)
-      localStorage.setItem('isAdminLoggedIn', 'true');
-      localStorage.setItem('adminEmail', email);
+    try {
+      console.log('Attempting login for username:', username);
       
-      // Redirect to admin dashboard
-      router.push('/admin');
-    } else {
-      setError('Email atau password salah');
+      // Simple admin login for testing
+      if (username === 'admin' && password === 'admin123') {
+        console.log('Admin login successful');
+        localStorage.setItem('isAdminLoggedIn', 'true');
+        localStorage.setItem('adminUsername', 'admin');
+        localStorage.setItem('adminRole', 'admin');
+        localStorage.setItem('adminName', 'Kustominspira Admin');
+        
+        console.log('Redirecting to admin dashboard');
+        router.push('/admin');
+        return;
+      } else {
+        setError('Username atau password salah');
+        setIsLoading(false);
+        return;
+      }
+    } catch (error) {
+      console.error('Login error:', error);
+      setError('Terjadi kesalahan saat login: ' + error.message);
     }
     
     setIsLoading(false);
@@ -60,16 +74,16 @@ export default function Login() {
           {/* Login Form */}
           <form onSubmit={handleLogin} className="space-y-6">
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
-                Email Address
+              <label htmlFor="username" className="block text-sm font-medium text-gray-700 mb-2">
+                Username
               </label>
               <input
-                type="email"
-                id="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                type="text"
+                id="username"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1ca4bc] focus:border-[#1ca4bc] transition-colors text-gray-900"
-                placeholder="admin@kustominspira.com"
+                placeholder="username"
                 required
               />
             </div>
@@ -108,14 +122,6 @@ export default function Login() {
             </button>
           </form>
 
-          {/* Demo Credentials */}
-          <div className="mt-8 p-4 bg-gray-50 rounded-lg">
-            <h3 className="text-sm font-medium text-gray-700 mb-2">Demo Credentials:</h3>
-            <p className="text-sm text-gray-600">
-              Email: admin@kustominspira.com<br />
-              Password: admin123
-            </p>
-          </div>
         </div>
 
         {/* Back to Home */}

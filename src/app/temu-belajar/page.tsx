@@ -130,7 +130,6 @@ export default function TemuBelajar() {
             <Link href="/" className="text-gray-600 hover:text-gray-900 transition-colors text-sm lg:text-base">Home</Link>
             <Link href="/pusat-belajar" className="text-gray-600 hover:text-gray-900 transition-colors text-sm lg:text-base">Pusat Belajar</Link>
             <Link href="/temu-belajar" className="text-[#1ca4bc] font-medium text-sm lg:text-base">Temu Belajar</Link>
-            <Link href="/gallery" className="text-gray-600 hover:text-gray-900 transition-colors text-sm lg:text-base">Gallery</Link>
             <a href="https://kustompedia.com" target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-gray-900 transition-colors text-sm lg:text-base">Kustompedia</a>
           </div>
 
@@ -494,7 +493,8 @@ export default function TemuBelajar() {
               <img 
                 src="/assets/Kustompedia.png" 
                 alt="Kustompedia" 
-                className="h-12 md:h-16 w-auto"
+                className="h-12 md:h-16 w-auto cursor-pointer hover:scale-105 transition-transform duration-300"
+                onClick={() => window.open('https://kustompedia.com', '_blank')}
               />
             </div>
             <p className="text-white text-xl md:text-2xl max-w-3xl mx-auto leading-relaxed font-medium">
@@ -518,7 +518,8 @@ export default function TemuBelajar() {
                 <img 
                   src="/assets/KG.png" 
                   alt="Kustom Gallery" 
-                  className="h-28 w-28 mx-auto object-contain"
+                  className="h-28 w-28 mx-auto object-contain cursor-pointer"
+                  onClick={() => window.open('https://kustomgarment.com', '_blank')}
                 />
               </div>
             </div>
@@ -528,7 +529,8 @@ export default function TemuBelajar() {
                 <img 
                   src="/assets/KP.png" 
                   alt="Kustom Pedia" 
-                  className="h-28 w-28 mx-auto object-contain"
+                  className="h-28 w-28 mx-auto object-contain cursor-pointer"
+                  onClick={() => window.open('https://kustomproject.id', '_blank')}
                 />
               </div>
             </div>
@@ -538,7 +540,8 @@ export default function TemuBelajar() {
                 <img 
                   src="/assets/KC.png" 
                   alt="Kustom Care" 
-                  className="h-28 w-28 mx-auto object-contain"
+                  className="h-28 w-28 mx-auto object-contain cursor-pointer"
+                  onClick={() => window.open('https://care.kustompedia.com', '_blank')}
                 />
               </div>
             </div>

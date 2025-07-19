@@ -120,52 +120,149 @@ export default function Home() {
         </button>
       </nav>
 
-      {/* Modern Mobile Menu */}
-      <div className={`fixed top-0 right-0 h-full w-80 max-w-[90vw] z-50 bg-white shadow-2xl transform transition-transform duration-300 ${isMenuOpen ? 'translate-x-0' : 'translate-x-full'}`}>
-        <div className="h-full flex flex-col">
-          {/* Header */}
-          <div className="flex items-center justify-between p-6 border-b border-gray-200">
-            <img src="/assets/Kustom Inspira.png" alt="Kustom Inspira" className="h-8 w-auto" />
+      {/* Fullscreen Menu with Left & Right Sections */}
+      <div className={`fixed inset-0 z-50 transform transition-transform duration-500 ease-in-out ${isMenuOpen ? 'translate-x-0' : 'translate-x-full'}`}>
+        {/* Background */}
+        <div className="absolute inset-0 bg-black">
+          <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-black to-gray-800"></div>
+        </div>
+
+        {/* Content Grid */}
+        <div className="relative z-10 h-full flex">
+          {/* Left Section - Navigation */}
+          <div className="w-full md:w-1/2 flex flex-col justify-center p-8 md:p-16">
+            {/* Close Button */}
             <button 
               onClick={() => setIsMenuOpen(false)}
-              className="w-8 h-8 flex items-center justify-center text-gray-500 hover:text-gray-900 transition-colors"
+              className="absolute top-6 right-6 md:top-8 md:right-8 w-12 h-12 flex items-center justify-center text-white hover:bg-white/10 rounded-full transition-colors"
             >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
               </svg>
             </button>
-          </div>
 
-          {/* Navigation */}
-          <div className="flex-1 py-6">
-            <nav className="space-y-2 px-6">
-              <a href="#" className="block py-3 text-lg font-semibold text-gray-900 hover:text-[#1ca4bc] transition-colors" onClick={() => setIsMenuOpen(false)}>Home</a>
-              <a href="/pusat-belajar" className="block py-3 text-lg font-semibold text-gray-600 hover:text-[#1ca4bc] transition-colors" onClick={() => setIsMenuOpen(false)}>Pusat Belajar</a>
-              <a href="/temu-belajar" className="block py-3 text-lg font-semibold text-gray-600 hover:text-[#1ca4bc] transition-colors" onClick={() => setIsMenuOpen(false)}>Temu Belajar</a>
-              <a href="https://kustompedia.com" target="_blank" rel="noopener noreferrer" className="block py-3 text-lg font-semibold text-gray-600 hover:text-[#1ca4bc] transition-colors">Kustompedia</a>
+            {/* Logo */}
+            <div className="mb-16">
+              <img 
+                src="/assets/Kustom Inspira - putih.png" 
+                alt="Kustom Inspira" 
+                className="h-12 md:h-16 w-auto"
+              />
+            </div>
+
+            {/* Navigation */}
+            <nav className="space-y-6 md:space-y-8">
+              <a 
+                href="#" 
+                className="block text-4xl md:text-6xl lg:text-7xl font-black text-white hover:text-[#1ca4bc] transition-all duration-300 transform hover:translate-x-4"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                HOME
+              </a>
+              <a 
+                href="/pusat-belajar" 
+                className="block text-4xl md:text-6xl lg:text-7xl font-black text-white hover:text-[#1ca4bc] transition-all duration-300 transform hover:translate-x-4"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                PUSAT BELAJAR
+              </a>
+              <a 
+                href="/temu-belajar" 
+                className="block text-4xl md:text-6xl lg:text-7xl font-black text-white hover:text-[#1ca4bc] transition-all duration-300 transform hover:translate-x-4"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                TEMU BELAJAR
+              </a>
+              <a 
+                href="https://kustompedia.com" 
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block text-4xl md:text-6xl lg:text-7xl font-black text-white hover:text-[#1ca4bc] transition-all duration-300 transform hover:translate-x-4"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                KUSTOMPEDIA
+              </a>
             </nav>
           </div>
 
-          {/* Contact Info */}
-          <div className="border-t border-gray-200 p-6 bg-gray-50">
-            <h3 className="text-sm font-semibold text-gray-900 mb-3">HUBUNGI KAMI</h3>
-            <div className="space-y-2 text-sm text-gray-600">
-              <p>Jl. Sidosermo Indah Gg. III No. 37</p>
-              <p>Surabaya, 60239</p>
-              <p>+62 (851) 7311-2499</p>
-              <a href="mailto:kustompedia@gmail.com" className="text-[#1ca4bc] hover:underline">kustompedia@gmail.com</a>
+          {/* Right Section - Contact & Info */}
+          <div className="hidden md:flex w-1/2 flex-col justify-center p-16 bg-white/5 backdrop-blur-sm border-l border-white/10">
+            <div className="space-y-8">
+              {/* Contact */}
+              <div>
+                <h3 className="text-2xl font-bold text-white mb-6">#DariKainJadiKarya</h3>
+                <div className="space-y-3 text-white/80">
+                  <p className="text-lg">Hubungi Kami:</p>
+                  <p>Jl. Sidosermo Indah Gg. III No. 37</p>
+                  <p>Surabaya, 60239</p>
+                  <p className="font-semibold">+62 (851) 7311-2499</p>
+                  <a 
+                    href="mailto:kustompedia@gmail.com" 
+                    className="text-[#1ca4bc] hover:text-white transition-colors"
+                  >
+                    kustompedia@gmail.com
+                  </a>
+                </div>
+              </div>
+
+              {/* Ecosystem */}
+              <div>
+                <h3 className="text-2xl font-bold text-white mb-6">Part of Kustompedia</h3>
+                
+                {/* Logos Grid - 2x2 */}
+                <div className="grid grid-cols-2 gap-4 max-w-xs">
+                  {/* Row 1 */}
+                  <div className="bg-white/10 rounded-lg p-4 hover:bg-white/20 transition-colors">
+                    <img 
+                      src="/assets/Kustom Inspira - putih.png" 
+                      alt="Kustom Inspira" 
+                      className="h-12 w-auto mx-auto object-contain filter brightness-0 invert"
+                    />
+                  </div>
+                  <a 
+                    href="https://kustomgarment.com" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="bg-white/10 rounded-lg p-4 hover:bg-white/20 transition-colors cursor-pointer"
+                  >
+                    <img 
+                      src="/assets/KG.png" 
+                      alt="Kustom Garment" 
+                      className="h-12 w-auto mx-auto object-contain"
+                    />
+                  </a>
+                  
+                  {/* Row 2 */}
+                  <a 
+                    href="https://kustomproject.id" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="bg-white/10 rounded-lg p-4 hover:bg-white/20 transition-colors cursor-pointer"
+                  >
+                    <img 
+                      src="/assets/KP.png" 
+                      alt="Kustom Project" 
+                      className="h-12 w-auto mx-auto object-contain"
+                    />
+                  </a>
+                  <a 
+                    href="https://care.kustompedia.com" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="bg-white/10 rounded-lg p-4 hover:bg-white/20 transition-colors cursor-pointer"
+                  >
+                    <img 
+                      src="/assets/KC.png" 
+                      alt="Kustom Care" 
+                      className="h-12 w-auto mx-auto object-contain"
+                    />
+                  </a>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
-
-      {/* Overlay */}
-      {isMenuOpen && (
-        <div 
-          className="fixed inset-0 z-40 bg-black/50" 
-          onClick={() => setIsMenuOpen(false)}
-        ></div>
-      )}
 
       {/* Fixed Description Text */}
       <div className="fixed top-16 md:top-24 left-1/2 transform -translate-x-1/2 z-40 text-center text-white px-4">
