@@ -1,7 +1,6 @@
 'use client';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import Head from 'next/head';
 import { supabaseDataManager as dataManager } from '@/lib/supabaseDataManager';
 import { GalleryItem } from '@/lib/supabase';
 
@@ -131,18 +130,7 @@ export default function Gallery() {
   }
 
   return (
-    <>
-      <Head>
-        <title>Fashion Gallery - Kustom Inspira | Indonesian Fashion Inspiration & Design</title>
-        <meta name="description" content="Discover stunning Indonesian fashion designs, traditional batik dresses, modern kebaya, handcrafted accessories, and sustainable fashion pieces in our creative gallery." />
-        <meta name="keywords" content="indonesian fashion, batik dress, kebaya design, handcraft accessories, sustainable fashion, traditional clothing, modern fashion, fashion inspiration, kustom inspira" />
-        <meta property="og:title" content="Fashion Gallery - Kustom Inspira" />
-        <meta property="og:description" content="Explore beautiful Indonesian fashion designs and handcrafted accessories" />
-        <meta property="og:type" content="website" />
-        <meta name="robots" content="index, follow" />
-      </Head>
-      
-      <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50">
         {/* Navigation */}
         <nav className="fixed top-0 w-full z-50 bg-white/95 backdrop-blur-sm border-b border-gray-200">
           <div className="max-w-7xl mx-auto px-4 md:px-6 py-3 md:py-4 flex justify-between items-center">
