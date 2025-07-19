@@ -49,7 +49,7 @@ export class SupabaseDataManager {
   async addArticle(article: Omit<Article, 'id' | 'created_at' | 'updated_at'>): Promise<Article> {
     try {
       // Remove slug from the article data if it exists, since the database might not have this column
-      const { slug, ...articleWithoutSlug } = article;
+      const { slug: _, ...articleWithoutSlug } = article;
       
       const { data, error } = await supabase
         .from('articles')
@@ -70,7 +70,7 @@ export class SupabaseDataManager {
   async updateArticle(id: string, updates: Partial<Article>): Promise<Article | null> {
     try {
       // Remove slug from updates if it exists, since the database might not have this column
-      const { slug, ...updatesWithoutSlug } = updates;
+      const { slug: _, ...updatesWithoutSlug } = updates;
       
       const { data, error } = await supabase
         .from('articles')
