@@ -1039,7 +1039,7 @@ Dalam **[konteks/industri]**, **[topik]** menjadi semakin penting karena:
               <li><code>[link](url)</code> → Link</li>
               <li><code>---</code> → Garis pemisah</li>
               <li><code>![alt](url)</code> → Gambar</li>
-              <li>Gunakan tombol "Upload Gambar" untuk gambar</li>
+              <li>Gunakan tombol &quot;Upload Gambar&quot; untuk gambar</li>
             </ul>
           </div>
         </div>

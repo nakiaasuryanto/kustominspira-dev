@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { supabaseDataManager as dataManager } from '@/lib/supabaseDataManager';
 import ImageUpload from '@/components/SupabaseImageUpload';
 import PowerfulMarkdownEditor from '@/components/PowerfulMarkdownEditor';
-import { Article, Video, Event, Ebook, User } from '@/lib/supabase';
+import { Article, Video, Event, Ebook } from '@/lib/supabase';
 import SimpleUsersContent from '@/components/admin/SimpleUsersContent';
 
 // Utility function to generate slug from title
