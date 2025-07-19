@@ -41,12 +41,15 @@ export default function ArticlePage() {
             .slice(0, 4);
           setRelatedArticles(related);
           
-          // Initialize counters with random base values (10-15) + any existing values
-          const baseViews = Math.floor(Math.random() * 6) + 10; // 10-15
-          const baseLikes = Math.floor(Math.random() * 6) + 10; // 10-15
+          // Initialize counters with random base values
+          const baseViews = Math.floor(Math.random() * 421) + 80; // 80-500
+          const baseLikes = Math.floor(Math.random() * 331) + 70; // 70-400
           
-          setViewCount(parseInt(foundArticle.views as string) || baseViews);
-          setLikeCount(parseInt(foundArticle.likes as string) || baseLikes);
+          // Ensure likes is always less than views
+          const finalViews = parseInt(foundArticle.views as string) || baseViews;
+          const maxLikes = Math.min(baseLikes, finalViews - 10); // Ensure likes < views
+          setViewCount(finalViews);
+          setLikeCount(parseInt(foundArticle.likes as string) || Math.max(maxLikes, 70));
           setCommentCount(0); // Real comment count starts at 0
           
           // Auto-increment view count when article loads (user viewed it)
@@ -370,7 +373,7 @@ export default function ArticlePage() {
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
-                <span>{article.read_time || '5 Min Read'}</span>
+                <span>{article.read_time || '3 Min Read'}</span>
               </div>
               
               <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2">
@@ -385,12 +388,6 @@ export default function ArticlePage() {
               </div>
             </div>
 
-            {/* Scroll Indicator */}
-            <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
-              <svg className="w-6 h-6 text-white/70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-              </svg>
-            </div>
           </div>
         </section>
 
@@ -651,28 +648,28 @@ export default function ArticlePage() {
 
           {/* Related Articles with Enhanced Design */}
           {relatedArticles.length > 0 && (
-            <section className="relative mt-20">
+            <section className="relative mt-12">
               {/* Background with gradient */}
-              <div className="absolute inset-0 bg-gradient-to-r from-[#1ca4bc]/5 via-[#159bb3]/10 to-[#1ca4bc]/5 rounded-3xl"></div>
+              <div className="absolute inset-0 bg-gradient-to-r from-[#1ca4bc]/5 via-[#159bb3]/10 to-[#1ca4bc]/5 rounded-2xl"></div>
               
-              <div className="relative p-8 md:p-12">
-                <div className="text-center mb-12">
-                  <h3 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-[#1ca4bc] to-[#159bb3] bg-clip-text text-transparent mb-4">
-                    Discover More Amazing Tutorials
+              <div className="relative p-6 md:p-8">
+                <div className="text-center mb-8">
+                  <h3 className="text-xl md:text-2xl font-bold bg-gradient-to-r from-[#1ca4bc] to-[#159bb3] bg-clip-text text-transparent mb-2">
+                    Artikel Lainnya
                   </h3>
-                  <p className="text-gray-600 text-lg">
+                  <p className="text-gray-600 text-sm">
                     Continue your creative journey with these handpicked articles
                   </p>
                 </div>
                 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {relatedArticles.slice(0, 4).map((relatedArticle) => (
                     <Link 
                       key={relatedArticle.id}
                       href={`/pusat-belajar/artikel/${relatedArticle.slug || relatedArticle.id}`}
                       className="group relative"
                     >
-                      <div className="relative bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 animate-glow">
+                      <div className="relative bg-white rounded-xl overflow-hidden shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
                         {/* Article Image */}
                         <div className="relative aspect-video w-full overflow-hidden">
                           <img 
@@ -683,23 +680,23 @@ export default function ArticlePage() {
                           <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
                           
                           {/* Category Badge */}
-                          <div className="absolute top-4 left-4">
-                            <span className="bg-gradient-to-r from-[#1ca4bc] to-[#159bb3] text-white text-xs font-semibold px-3 py-1 rounded-full">
+                          <div className="absolute top-3 left-3">
+                            <span className="bg-gradient-to-r from-[#1ca4bc] to-[#159bb3] text-white text-xs font-medium px-2 py-1 rounded-full">
                               {relatedArticle.category}
                             </span>
                           </div>
                           
                           {/* Read Time */}
-                          <div className="absolute bottom-4 right-4">
+                          <div className="absolute bottom-3 right-3">
                             <span className="bg-white/90 backdrop-blur-sm text-gray-800 text-xs font-medium px-2 py-1 rounded-full">
-                              {relatedArticle.read_time || '5 min read'}
+                              {relatedArticle.read_time || '3 Min Read'}
                             </span>
                           </div>
                         </div>
                         
                         {/* Content */}
-                        <div className="p-6">
-                          <h4 className="font-bold text-lg text-gray-900 group-hover:text-[#1ca4bc] transition-colors duration-300 line-clamp-2 mb-3">
+                        <div className="p-4">
+                          <h4 className="font-semibold text-base text-gray-900 group-hover:text-[#1ca4bc] transition-colors duration-300 line-clamp-2 mb-2">
                             {relatedArticle.title}
                           </h4>
                           
@@ -723,17 +720,17 @@ export default function ArticlePage() {
                         </div>
                         
                         {/* Hover effect overlay */}
-                        <div className="absolute inset-0 bg-gradient-to-r from-[#1ca4bc]/10 to-[#159bb3]/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-2xl"></div>
+                        <div className="absolute inset-0 bg-gradient-to-r from-[#1ca4bc]/10 to-[#159bb3]/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl"></div>
                       </div>
                     </Link>
                   ))}
                 </div>
                 
                 {/* View All Button */}
-                <div className="text-center mt-12">
+                <div className="text-center mt-8">
                   <Link 
                     href="/pusat-belajar"
-                    className="inline-flex items-center gap-2 bg-gradient-to-r from-[#1ca4bc] to-[#159bb3] text-white font-semibold px-8 py-4 rounded-full hover:from-[#159bb3] hover:to-[#1ca4bc] transition-all duration-300 transform hover:scale-105 animate-shimmer"
+                    className="inline-flex items-center gap-2 bg-gradient-to-r from-[#1ca4bc] to-[#159bb3] text-white font-medium px-6 py-3 rounded-full hover:from-[#159bb3] hover:to-[#1ca4bc] transition-all duration-300 transform hover:scale-105"
                   >
                     <span>Explore All Tutorials</span>
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

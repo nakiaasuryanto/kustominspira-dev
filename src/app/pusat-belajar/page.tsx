@@ -209,7 +209,7 @@ export default function PusatBelajar() {
                     <span className="bg-[#1ca4bc]/10 text-[#1ca4bc] px-3 md:px-4 py-1 md:py-2 rounded-full text-xs md:text-sm font-medium">
                       {articles[0].category}
                     </span>
-                    <span className="text-gray-400 text-xs md:text-sm">{articles[0].read_time}</span>
+                    <span className="text-gray-400 text-xs md:text-sm">{articles[0].read_time || '3 Min Read'}</span>
                   </div>
                   <h3 className="text-lg md:text-2xl font-bold text-gray-900 mb-3 md:mb-4 line-clamp-2">
                     {articles[0].title}
@@ -257,7 +257,7 @@ export default function PusatBelajar() {
                       <span className="bg-[#1ca4bc]/10 text-[#1ca4bc] px-3 py-1 rounded-full text-xs font-medium">
                         {article.category}
                       </span>
-                      <span className="text-gray-400 text-xs">{article.read_time}</span>
+                      <span className="text-gray-400 text-xs">{article.read_time || '3 Min Read'}</span>
                     </div>
                     <h3 className="text-lg font-semibold text-gray-900 mb-2">
                       {article.title}

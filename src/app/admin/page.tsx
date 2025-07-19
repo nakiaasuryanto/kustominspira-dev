@@ -7,6 +7,7 @@ import ImageUpload from '@/components/SupabaseImageUpload';
 import PowerfulMarkdownEditor from '@/components/PowerfulMarkdownEditor';
 import { Article, Video, Event, Ebook } from '@/lib/supabase';
 import SimpleUsersContent from '@/components/admin/SimpleUsersContent';
+import GalleryContent from '@/components/admin/GalleryContent';
 
 // Utility function to generate slug from title
 const generateSlug = (title: string): string => {
@@ -37,18 +38,19 @@ const generateSlug = (title: string): string => {
 // Helper function to load data with refresh
 const loadData = async () => {
   try {
-    const [articles, videos, events, ebooks, users] = await Promise.all([
+    const [articles, videos, events, ebooks, users, galleryItems] = await Promise.all([
       dataManager.getAllArticles(),
       dataManager.getAllVideos(),
       dataManager.getAllEvents(),
       dataManager.getAllEbooks(),
-      dataManager.getAllUsers()
+      dataManager.getAllUsers(),
+      dataManager.getGalleryItems()
     ]);
-    return { articles, videos, events, ebooks, users };
+    return { articles, videos, events, ebooks, users, galleryItems };
   } catch (error) {
     console.error('Error in loadData:', error);
     // Return empty data if there's an error
-    return { articles: [], videos: [], events: [], ebooks: [], users: [] };
+    return { articles: [], videos: [], events: [], ebooks: [], users: [], galleryItems: [] };
   }
 };
 
@@ -59,6 +61,7 @@ interface AdminData {
   events: any[];
   ebooks: any[];
   users: any[];
+  galleryItems: any[];
 }
 
 // Props interfaces for components
@@ -95,7 +98,8 @@ const initialData: AdminData = {
   videos: [],
   events: [],
   ebooks: [],
-  users: []
+  users: [],
+  galleryItems: []
 };
 
 export default function AdminDashboard() {
@@ -132,7 +136,7 @@ export default function AdminDashboard() {
             setData(data);
           }).catch(error => {
             console.error('Error loading admin data (using empty data):', error);
-            setData({ articles: [], videos: [], events: [], ebooks: [], users: [] });
+            setData({ articles: [], videos: [], events: [], ebooks: [], users: [], galleryItems: [] });
           });
         } else {
           console.log('User not authenticated, redirecting to login');
@@ -178,6 +182,9 @@ export default function AdminDashboard() {
         case 'users':
           newItem = await dataManager.addUser(item);
           break;
+        case 'galleryItems':
+          newItem = await dataManager.addGalleryItem(item);
+          break;
         default:
           return;
       }
@@ -213,6 +220,9 @@ export default function AdminDashboard() {
           break;
         case 'users':
           result = await dataManager.updateUser(id, updatedItem);
+          break;
+        case 'galleryItems':
+          result = await dataManager.updateGalleryItem(id, updatedItem);
           break;
         default:
           return;
@@ -253,6 +263,9 @@ export default function AdminDashboard() {
         case 'users':
           success = await dataManager.deleteUser(id);
           break;
+        case 'galleryItems':
+          success = await dataManager.deleteGalleryItem(id);
+          break;
         default:
           return;
       }
@@ -287,6 +300,7 @@ export default function AdminDashboard() {
     { id: 'videos', name: 'Videos', icon: '🎥' },
     { id: 'ebooks', name: 'E-Books', icon: '📚' },
     { id: 'events', name: 'Events', icon: '📅' },
+    { id: 'gallery', name: 'Gallery', icon: '🖼️' },
     { id: 'users', name: 'Users', icon: '👥' },
   ];
 
@@ -302,6 +316,8 @@ export default function AdminDashboard() {
         return <EbooksContent ebooks={data.ebooks} onAdd={(item) => addItem('ebooks', item)} onUpdate={(id, item) => updateItem('ebooks', id, item)} onDelete={(id) => deleteItem('ebooks', id)} />;
       case 'events':
         return <EventsContent events={data.events} onAdd={(item) => addItem('events', item)} onUpdate={(id, item) => updateItem('events', id, item)} onDelete={(id) => deleteItem('events', id)} />;
+      case 'gallery':
+        return <GalleryContent galleryItems={data.galleryItems} onAdd={(item) => addItem('galleryItems', item)} onUpdate={(id, item) => updateItem('galleryItems', id, item)} onDelete={(id) => deleteItem('galleryItems', id)} />;
       case 'users':
         return <SimpleUsersContent users={data.users} onAdd={(item) => addItem('users', item)} onUpdate={(id, item) => updateItem('users', id, item)} onDelete={(id) => deleteItem('users', id)} />;
       default:
@@ -408,7 +424,7 @@ function DashboardContent({ data }: { data: AdminData }) {
         </div>
       </div>
       
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-6 mb-8">
         <div className="bg-white p-6 rounded-lg shadow-lg border-l-4 border-blue-500">
           <div className="flex items-center">
             <div className="p-3 bg-blue-100 rounded-full">
@@ -453,6 +469,18 @@ function DashboardContent({ data }: { data: AdminData }) {
             <div className="ml-4">
               <p className="text-sm text-gray-600">E-Books</p>
               <p className="text-3xl font-bold text-gray-900">{data.ebooks.length}</p>
+            </div>
+          </div>
+        </div>
+        
+        <div className="bg-white p-6 rounded-lg shadow-lg border-l-4 border-pink-500">
+          <div className="flex items-center">
+            <div className="p-3 bg-pink-100 rounded-full">
+              <span className="text-2xl">🖼️</span>
+            </div>
+            <div className="ml-4">
+              <p className="text-sm text-gray-600">Gallery</p>
+              <p className="text-3xl font-bold text-gray-900">{data.galleryItems.length}</p>
             </div>
           </div>
         </div>
@@ -520,7 +548,7 @@ function ArticlesContent({ articles, onAdd, onUpdate, onDelete }: ArticlesConten
     slug: '',
     category: 'Tutorial',
     author: 'Admin',
-    read_time: '',
+    read_time: '3 Min Read',
     content: '',
     excerpt: '',
     image_url: '/assets/pusatbelajar.webp',
@@ -535,7 +563,7 @@ function ArticlesContent({ articles, onAdd, onUpdate, onDelete }: ArticlesConten
     } else {
       onAdd(formData);
     }
-    setFormData({ title: '', slug: '', category: 'Tutorial', author: 'Admin', read_time: '', content: '', excerpt: '', image_url: '/assets/pusatbelajar.webp', status: 'published' });
+    setFormData({ title: '', slug: '', category: 'Tutorial', author: 'Admin', read_time: '3 Min Read', content: '', excerpt: '', image_url: '/assets/pusatbelajar.webp', status: 'published' });
     setShowForm(false);
   };
 
@@ -577,7 +605,7 @@ function ArticlesContent({ articles, onAdd, onUpdate, onDelete }: ArticlesConten
           onClick={() => {
             setShowForm(!showForm);
             setEditingArticle(null);
-            setFormData({ title: '', slug: '', category: 'Tutorial', author: 'Admin', read_time: '', content: '', excerpt: '', image_url: '/assets/pusatbelajar.webp', status: 'published' });
+            setFormData({ title: '', slug: '', category: 'Tutorial', author: 'Admin', read_time: '3 Min Read', content: '', excerpt: '', image_url: '/assets/pusatbelajar.webp', status: 'published' });
           }}
           className="bg-[#1ca4bc] text-white px-6 py-2 rounded-lg hover:bg-[#159bb3] transition-colors"
         >

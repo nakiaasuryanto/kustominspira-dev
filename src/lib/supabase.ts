@@ -89,6 +89,7 @@ export interface Ebook {
 export interface GalleryItem {
   id?: string;
   title: string;
+  slug?: string;
   category: string;
   image_url: string;
   description: string;
