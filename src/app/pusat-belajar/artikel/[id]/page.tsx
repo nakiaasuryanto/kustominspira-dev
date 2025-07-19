@@ -196,137 +196,43 @@ export default function ArticlePage() {
           }
         `}</style>
         
-        {/* Header */}
-        <header className="bg-white shadow-sm sticky top-0 z-40 border-b">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex justify-between items-center h-16">
-              <div className="flex items-center">
-                <Link href="/" className="flex items-center">
-                  <img 
-                    src="/assets/Kustom Inspira.png" 
-                    alt="Kustom Inspira" 
-                    className="h-8 w-auto"
-                  />
-                </Link>
-              </div>
-              
-              <button
-                className="md:hidden"
-                onClick={() => setIsMenuOpen(!isMenuOpen)}
-              >
-                <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-                </svg>
-              </button>
-              
-              <nav className="hidden md:flex space-x-8">
-                <Link href="/" className="text-gray-700 hover:text-[#1ca4bc] transition-colors">
-                  Home
-                </Link>
-                <Link href="/pusat-belajar" className="text-[#1ca4bc] font-medium">
-                  Pusat Belajar
-                </Link>
-                <Link href="/temu-belajar" className="text-gray-700 hover:text-[#1ca4bc] transition-colors">
-                  Temu Belajar
-                </Link>
-              </nav>
+        {/* Navigation */}
+        <nav className="fixed top-0 w-full z-50 bg-white/95 backdrop-blur-sm border-b border-gray-200">
+          <div className="max-w-7xl mx-auto px-4 md:px-6 py-3 md:py-4 flex justify-between items-center">
+            <Link href="/" className="h-8 md:h-10">
+              <img 
+                src="/assets/Kustom Inspira.png" 
+                alt="Kustom Inspira" 
+                className="h-full w-auto"
+              />
+            </Link>
+            
+            <div className="hidden md:flex items-center space-x-6 lg:space-x-8">
+              <Link href="/" className="text-gray-600 hover:text-gray-900 transition-colors text-sm lg:text-base">Home</Link>
+              <Link href="/pusat-belajar" className="text-[#1ca4bc] font-medium text-sm lg:text-base">Pusat Belajar</Link>
+              <Link href="/temu-belajar" className="text-gray-600 hover:text-gray-900 transition-colors text-sm lg:text-base">Temu Belajar</Link>
+              <a href="https://kustompedia.com" target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-gray-900 transition-colors text-sm lg:text-base">Kustompedia</a>
             </div>
+
+            <button 
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              className="md:hidden w-8 h-8 flex flex-col justify-center items-center"
+            >
+              <div className="w-4 h-px bg-gray-900 mb-1"></div>
+              <div className="w-4 h-px bg-gray-900 mb-1"></div>
+              <div className="w-4 h-px bg-gray-900"></div>
+            </button>
           </div>
-        </header>
+        </nav>
 
-        {/* Mobile Side Menu */}
-        <div className={`fixed top-0 right-0 h-full w-80 max-w-[90vw] z-50 bg-white shadow-2xl transform transition-transform duration-300 ${isMenuOpen ? 'translate-x-0' : 'translate-x-full'}`}>
-          <div className="h-full flex flex-col">
-            {/* Header */}
-            <div className="flex items-center justify-between p-6 border-b border-gray-200">
-              <img src="/assets/Kustom Inspira.png" alt="Kustom Inspira" className="h-8 w-auto" />
-              <button 
-                onClick={() => setIsMenuOpen(false)}
-                className="w-8 h-8 flex items-center justify-center text-gray-500 hover:text-gray-900 transition-colors"
-              >
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </button>
-            </div>
-
-            {/* Navigation */}
-            <div className="flex-1 py-6">
-              <nav className="space-y-2 px-6">
-                <Link href="/" className="block py-3 text-lg font-semibold text-gray-600 hover:text-[#1ca4bc] transition-colors" onClick={() => setIsMenuOpen(false)}>Home</Link>
-                <Link href="/pusat-belajar" className="block py-3 text-lg font-semibold text-[#1ca4bc] transition-colors" onClick={() => setIsMenuOpen(false)}>Pusat Belajar</Link>
-                <Link href="/temu-belajar" className="block py-3 text-lg font-semibold text-gray-600 hover:text-[#1ca4bc] transition-colors" onClick={() => setIsMenuOpen(false)}>Temu Belajar</Link>
-                <a href="https://kustompedia.com" target="_blank" rel="noopener noreferrer" className="block py-3 text-lg font-semibold text-gray-600 hover:text-[#1ca4bc] transition-colors">Kustompedia</a>
-              </nav>
-            </div>
-
-            {/* Contact Info & Ecosystem */}
-            <div className="border-t border-gray-200 bg-gray-50">
-              {/* Contact Section */}
-              <div className="p-6 border-b border-gray-200">
-                <h3 className="text-sm font-semibold text-gray-900 mb-3">HUBUNGI KAMI</h3>
-                <div className="space-y-2 text-sm text-gray-600">
-                  <p>Jl. Sidosermo Indah Gg. III No. 37</p>
-                  <p>Surabaya, 60239</p>
-                  <p>+62 (851) 7311-2499</p>
-                  <a href="mailto:kustompedia@gmail.com" className="text-[#1ca4bc] hover:underline">kustompedia@gmail.com</a>
-                </div>
-              </div>
-
-              {/* Ecosystem Section */}
-              <div className="p-6">
-                <h3 className="text-sm font-semibold text-gray-900 mb-4">PART OF KUSTOMPEDIA</h3>
-                
-                {/* Logos Grid - 2x2 */}
-                <div className="grid grid-cols-2 gap-3">
-                  {/* Row 1 */}
-                  <div className="bg-white rounded-lg p-3 shadow-sm">
-                    <img 
-                      src="/assets/Kustom Inspira.png" 
-                      alt="Kustom Inspira" 
-                      className="h-8 w-auto mx-auto object-contain"
-                    />
-                  </div>
-                  <a 
-                    href="https://kustomgarment.com" 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="bg-white rounded-lg p-3 shadow-sm hover:shadow-md transition-shadow cursor-pointer"
-                  >
-                    <img 
-                      src="/assets/KG.png" 
-                      alt="Kustom Garment" 
-                      className="h-8 w-auto mx-auto object-contain"
-                    />
-                  </a>
-                  
-                  {/* Row 2 */}
-                  <a 
-                    href="https://kustomproject.id" 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="bg-white rounded-lg p-3 shadow-sm hover:shadow-md transition-shadow cursor-pointer"
-                  >
-                    <img 
-                      src="/assets/KP.png" 
-                      alt="Kustom Project" 
-                      className="h-8 w-auto mx-auto object-contain"
-                    />
-                  </a>
-                  <a 
-                    href="https://care.kustompedia.com" 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="bg-white rounded-lg p-3 shadow-sm hover:shadow-md transition-shadow cursor-pointer"
-                  >
-                    <img 
-                      src="/assets/KC.png" 
-                      alt="Kustom Care" 
-                      className="h-8 w-auto mx-auto object-contain"
-                    />
-                  </a>
-                </div>
-              </div>
+        {/* Mobile Menu */}
+        <div className={`fixed top-16 left-0 right-0 z-40 bg-white shadow-lg border-b border-gray-200 transform transition-transform duration-300 md:hidden ${isMenuOpen ? 'translate-y-0' : '-translate-y-full'}`}>
+          <div className="max-w-7xl mx-auto px-4 py-4">
+            <div className="flex flex-col space-y-4">
+              <Link href="/" className="text-gray-700 hover:text-[#1ca4bc] transition-colors font-medium" onClick={() => setIsMenuOpen(false)}>Home</Link>
+              <Link href="/pusat-belajar" className="text-[#1ca4bc] font-bold" onClick={() => setIsMenuOpen(false)}>Pusat Belajar</Link>
+              <Link href="/temu-belajar" className="text-gray-700 hover:text-[#1ca4bc] transition-colors font-medium" onClick={() => setIsMenuOpen(false)}>Temu Belajar</Link>
+              <a href="https://kustompedia.com" target="_blank" rel="noopener noreferrer" className="text-gray-700 hover:text-[#1ca4bc] transition-colors font-medium">Kustompedia</a>
             </div>
           </div>
         </div>
@@ -340,7 +246,7 @@ export default function ArticlePage() {
         )}
 
         {/* Header Banner Section */}
-        <section className="relative h-96 flex items-center justify-center overflow-hidden">
+        <section className="relative h-96 flex items-center justify-center overflow-hidden pt-20 md:pt-24">
           {/* Background Image */}
           <div className="absolute inset-0">
             {article.image_url ? (
