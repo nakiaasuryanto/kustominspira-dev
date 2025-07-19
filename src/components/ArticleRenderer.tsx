@@ -54,11 +54,11 @@ export default function ArticleRenderer({ content, className = '' }: ArticleRend
     
     // Convert ordered lists
     processed = processed.replace(/^\d+\. (.*$)/gm, '<li class="text-black mb-2 ml-4">$1</li>');
-    processed = processed.replace(/(<li class="text-black mb-2 ml-4">.*<\/li>)/gs, '<ol class="list-decimal list-inside mb-6 space-y-2 bg-gray-50 p-4 rounded-lg">$1</ol>');
+    processed = processed.replace(/(<li class="text-black mb-2 ml-4">[\s\S]*?<\/li>)/g, '<ol class="list-decimal list-inside mb-6 space-y-2 bg-gray-50 p-4 rounded-lg">$1</ol>');
     
     // Convert unordered lists
     processed = processed.replace(/^- (.*$)/gm, '<li class="text-black mb-2 flex items-start"><span class="text-orange-500 mr-2">•</span><span>$1</span></li>');
-    processed = processed.replace(/(<li class="text-black mb-2 flex items-start">.*<\/li>)/gs, '<ul class="mb-6 space-y-2 bg-gray-50 p-4 rounded-lg">$1</ul>');
+    processed = processed.replace(/(<li class="text-black mb-2 flex items-start">[\s\S]*?<\/li>)/g, '<ul class="mb-6 space-y-2 bg-gray-50 p-4 rounded-lg">$1</ul>');
     
     // Convert bold and italic
     processed = processed.replace(/\*\*(.*?)\*\*/g, '<strong class="font-bold text-black bg-yellow-100 px-1 rounded">$1</strong>');
