@@ -14,6 +14,13 @@ export default function ArticlePage() {
   const [loading, setLoading] = useState(true);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [relatedArticles, setRelatedArticles] = useState<Article[]>([]);
+  
+  // Interactive counters
+  const [viewCount, setViewCount] = useState(0);
+  const [likeCount, setLikeCount] = useState(0);
+  const [commentCount, setCommentCount] = useState(0);
+  const [hasLiked, setHasLiked] = useState(false);
+  const [hasViewed, setHasViewed] = useState(false);
 
   useEffect(() => {
     const loadArticle = async () => {
@@ -30,6 +37,22 @@ export default function ArticlePage() {
             .filter(a => a.category === foundArticle.category && a.id !== foundArticle.id)
             .slice(0, 4);
           setRelatedArticles(related);
+          
+          // Initialize counters with random base values (10-15) + any existing values
+          const baseViews = Math.floor(Math.random() * 6) + 10; // 10-15
+          const baseLikes = Math.floor(Math.random() * 6) + 10; // 10-15
+          
+          setViewCount(parseInt(foundArticle.views as string) || baseViews);
+          setLikeCount(parseInt(foundArticle.likes as string) || baseLikes);
+          setCommentCount(0); // Real comment count starts at 0
+          
+          // Auto-increment view count when article loads (user viewed it)
+          if (!hasViewed) {
+            setTimeout(() => {
+              setViewCount(prev => prev + 1);
+              setHasViewed(true);
+            }, 2000); // After 2 seconds of viewing
+          }
         }
       } catch (error) {
         console.error('Error loading article:', error);
@@ -42,6 +65,25 @@ export default function ArticlePage() {
       loadArticle();
     }
   }, [params.id]);
+
+  // Handle like button click
+  const handleLike = () => {
+    if (!hasLiked) {
+      setLikeCount(prev => prev + 1);
+      setHasLiked(true);
+    }
+  };
+
+  // Handle share button click - scroll to share section
+  const handleShare = () => {
+    const shareSection = document.getElementById('share-section');
+    if (shareSection) {
+      shareSection.scrollIntoView({ 
+        behavior: 'smooth',
+        block: 'center'
+      });
+    }
+  };
 
   if (loading) {
     return (
@@ -332,7 +374,7 @@ export default function ArticlePage() {
                     <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
                     <path fillRule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clipRule="evenodd" />
                   </svg>
-                  <span className="font-semibold">{article.views || '1.2K'}</span>
+                  <span className="font-semibold">{viewCount}</span>
                   <span className="text-sm text-gray-500">views</span>
                 </div>
                 
@@ -340,7 +382,7 @@ export default function ArticlePage() {
                   <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd" />
                   </svg>
-                  <span className="font-semibold">{article.likes || '89'}</span>
+                  <span className="font-semibold">{likeCount}</span>
                   <span className="text-sm text-gray-500">likes</span>
                 </div>
                 
@@ -348,20 +390,31 @@ export default function ArticlePage() {
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                   </svg>
-                  <span className="font-semibold">24</span>
+                  <span className="font-semibold">{commentCount}</span>
                   <span className="text-sm text-gray-500">comments</span>
                 </div>
               </div>
               
               <div className="flex items-center gap-3">
-                <button className="flex items-center gap-2 bg-[#1ca4bc] text-white px-4 py-2 rounded-full hover:bg-[#159bb3] hover:shadow-lg transition-all duration-300 hover:scale-105">
+                <button 
+                  onClick={handleLike}
+                  disabled={hasLiked}
+                  className={`flex items-center gap-2 px-4 py-2 rounded-full hover:shadow-lg transition-all duration-300 hover:scale-105 ${
+                    hasLiked 
+                      ? 'bg-red-500 text-white cursor-not-allowed' 
+                      : 'bg-[#1ca4bc] text-white hover:bg-[#159bb3]'
+                  }`}
+                >
                   <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd" />
                   </svg>
-                  <span className="text-sm font-medium">Like</span>
+                  <span className="text-sm font-medium">{hasLiked ? 'Liked!' : 'Like'}</span>
                 </button>
                 
-                <button className="flex items-center gap-2 bg-white text-gray-700 px-4 py-2 rounded-full border border-[#1ca4bc]/30 hover:border-[#1ca4bc] hover:bg-[#1ca4bc]/5 transition-all duration-300 hover:scale-105">
+                <button 
+                  onClick={handleShare}
+                  className="flex items-center gap-2 bg-white text-gray-700 px-4 py-2 rounded-full border border-[#1ca4bc]/30 hover:border-[#1ca4bc] hover:bg-[#1ca4bc]/5 transition-all duration-300 hover:scale-105"
+                >
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z" />
                   </svg>
@@ -407,9 +460,9 @@ export default function ArticlePage() {
 
           {/* Tags Section */}
           <div className="border-t border-gray-200 pt-8 mb-8">
-            <div className="mb-6">
+            <div className="mb-6 text-center">
               <h3 className="text-lg font-semibold text-gray-900 mb-4">Tags:</h3>
-              <div className="flex flex-wrap gap-2">
+              <div className="flex flex-wrap gap-2 justify-center">
                 {article.tags && article.tags.length > 0 ? (
                   article.tags.map((tag: string, index: number) => (
                     <span
@@ -441,7 +494,7 @@ export default function ArticlePage() {
           </div>
 
           {/* Enhanced Share Section */}
-          <div className="bg-gradient-to-r from-gray-50 to-white rounded-2xl p-6 mb-8">
+          <div id="share-section" className="bg-gradient-to-r from-gray-50 to-white rounded-2xl p-6 mb-8">
             <div className="text-center mb-6">
               <h3 className="text-xl font-bold text-gray-900 mb-2">Share Article</h3>
               <p className="text-gray-600 text-sm">Help others discover this amazing content!</p>
