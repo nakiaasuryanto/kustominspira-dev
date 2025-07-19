@@ -644,7 +644,7 @@ export default function Gallery() {
                           `;
                           document.body.appendChild(notification);
                           setTimeout(() => notification.remove(), 2000);
-                        } catch (err) {
+                        } catch {
                           // Fallback for older browsers
                           prompt('Copy this link:', currentUrl);
                         }
