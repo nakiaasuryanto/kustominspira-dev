@@ -232,8 +232,8 @@ export default function GalleryItemPage() {
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
             
             {/* Action Bar */}
-            <div className="flex items-center justify-between bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-[#1ca4bc]/20 mb-12">
-              <div className="flex items-center gap-6">
+            <div className="flex flex-col md:flex-row items-start md:items-center justify-between bg-white/80 backdrop-blur-sm rounded-xl md:rounded-2xl p-4 md:p-6 shadow-lg border border-[#1ca4bc]/20 mb-8 md:mb-12 gap-4 md:gap-0">
+              <div className="flex items-center gap-4 md:gap-6">
                 <div className="flex items-center gap-2 text-[#1ca4bc]">
                   <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd" />
@@ -243,11 +243,11 @@ export default function GalleryItemPage() {
                 </div>
               </div>
               
-              <div className="flex items-center gap-3">
+              <div className="flex flex-wrap items-center gap-2 md:gap-3">
                 <button 
                   onClick={handleLike}
                   disabled={hasLiked}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-full hover:shadow-lg transition-all duration-300 hover:scale-105 ${
+                  className={`flex items-center gap-1 md:gap-2 px-3 md:px-4 py-2 rounded-full hover:shadow-lg transition-all duration-300 hover:scale-105 text-sm md:text-base ${
                     hasLiked 
                       ? 'bg-red-500 text-white cursor-not-allowed' 
                       : 'bg-[#1ca4bc] text-white hover:bg-[#159bb3]'
@@ -256,31 +256,31 @@ export default function GalleryItemPage() {
                   <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd" />
                   </svg>
-                  <span className="text-sm font-medium">{hasLiked ? 'Liked!' : 'Like'}</span>
+                  <span className="text-xs md:text-sm font-medium">{hasLiked ? 'Liked!' : 'Like'}</span>
                 </button>
                 
                 <button 
                   onClick={handleShare}
                   disabled={isSharing}
-                  className="flex items-center gap-2 bg-white text-gray-700 px-4 py-2 rounded-full border border-[#1ca4bc]/30 hover:border-[#1ca4bc] hover:bg-[#1ca4bc]/5 transition-all duration-300 hover:scale-105 disabled:opacity-50"
+                  className="flex items-center gap-1 md:gap-2 bg-white text-gray-700 px-3 md:px-4 py-2 rounded-full border border-[#1ca4bc]/30 hover:border-[#1ca4bc] hover:bg-[#1ca4bc]/5 transition-all duration-300 hover:scale-105 disabled:opacity-50 text-sm md:text-base"
                 >
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z" />
                   </svg>
-                  <span className="text-sm font-medium">{isSharing ? 'Sharing...' : 'Share'}</span>
+                  <span className="text-xs md:text-sm font-medium">{isSharing ? 'Sharing...' : 'Share'}</span>
                 </button>
               </div>
             </div>
 
             {/* Description */}
-            <div className="bg-white rounded-3xl p-8 md:p-12 shadow-xl border border-gray-100 mb-12">
-              <h2 className="text-2xl font-bold text-gray-900 mb-6">About This Design</h2>
-              <p className="text-lg text-gray-700 leading-relaxed">{item.description}</p>
+            <div className="bg-white rounded-2xl md:rounded-3xl p-6 md:p-12 shadow-xl border border-gray-100 mb-8 md:mb-12">
+              <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-4 md:mb-6">About This Design</h2>
+              <p className="text-base md:text-lg text-gray-700 leading-relaxed">{item.description}</p>
               
               {/* Tags */}
               {item.tags && item.tags.length > 0 && (
-                <div className="mt-8 pt-6 border-t border-gray-200">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Tags</h3>
+                <div className="mt-6 md:mt-8 pt-4 md:pt-6 border-t border-gray-200">
+                  <h3 className="text-base md:text-lg font-semibold text-gray-900 mb-3 md:mb-4">Tags</h3>
                   <div className="flex flex-wrap gap-2">
                     {item.tags.map((tag, index) => (
                       <span 
