@@ -321,7 +321,17 @@ export default function TemuBelajar() {
                         <span className="text-sm text-gray-500">
                           {event.spots}
                         </span>
-                        <button className="bg-[#1ca4bc] text-white px-6 py-2 rounded-lg hover:bg-[#159bb3] transition-colors font-medium">
+                        <button 
+                          onClick={() => {
+                            if (event.registration_url) {
+                              window.open(event.registration_url, '_blank');
+                            } else {
+                              // Default registration action - could open a modal or redirect
+                              alert(`Pendaftaran untuk ${event.title} akan segera dibuka!`);
+                            }
+                          }}
+                          className="bg-[#1ca4bc] text-white px-6 py-2 rounded-lg hover:bg-[#159bb3] transition-colors font-medium"
+                        >
                           Daftar
                         </button>
                       </div>
@@ -455,7 +465,16 @@ export default function TemuBelajar() {
                                 {event.location}
                               </div>
                             </div>
-                            <button className="w-full mt-3 bg-[#1ca4bc] text-white py-2 rounded-lg hover:bg-[#159bb3] transition-colors text-sm">
+                            <button 
+                              onClick={() => {
+                                if (event.registration_url) {
+                                  window.open(event.registration_url, '_blank');
+                                } else {
+                                  alert(`Pendaftaran untuk ${event.title} akan segera dibuka!`);
+                                }
+                              }}
+                              className="w-full mt-3 bg-[#1ca4bc] text-white py-2 rounded-lg hover:bg-[#159bb3] transition-colors text-sm"
+                            >
                               Daftar Sekarang
                             </button>
                           </div>
@@ -505,7 +524,7 @@ export default function TemuBelajar() {
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12 items-center justify-items-center">
-            <div className="relative group cursor-pointer">
+            <Link href="/" className="relative group cursor-pointer">
               <div className="relative bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20 hover:border-white/30 transition-all duration-300">
                 <img 
                   src="/assets/Kustom Inspira - putih.png" 
@@ -513,7 +532,7 @@ export default function TemuBelajar() {
                   className="h-28 w-28 mx-auto object-contain filter brightness-0 invert"
                 />
               </div>
-            </div>
+            </Link>
 
             <div className="relative group cursor-pointer">
               <div className="relative bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20 hover:border-white/30 transition-all duration-300">
@@ -562,11 +581,13 @@ export default function TemuBelajar() {
         <div className="max-w-7xl mx-auto px-6">
           <div className="grid md:grid-cols-4 gap-8">
             <div>
-              <img 
-                src="/assets/Kustom Inspira - putih.png" 
-                alt="Kustom Inspira" 
-                className="h-12 w-auto mb-4"
-              />
+              <Link href="/">
+                <img 
+                  src="/assets/Kustom Inspira - putih.png" 
+                  alt="Kustom Inspira" 
+                  className="h-12 w-auto mb-4 cursor-pointer hover:opacity-80 transition-opacity"
+                />
+              </Link>
               <p className="text-gray-400">
                 <span className="font-bold text-white">#DariKainJadiKarya</span><br />
                 Belajar dan praktek langsung di Kustominspira.

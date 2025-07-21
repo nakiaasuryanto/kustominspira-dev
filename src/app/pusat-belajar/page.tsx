@@ -3,8 +3,7 @@ import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { gsap } from 'gsap';
 import { supabaseDataManager as dataManager } from '@/lib/supabaseDataManager';
-import { Article, Video, Ebook } from '@/lib/supabase';
-import LoaderAnimation, { FullScreenLoader } from '@/components/LoaderAnimation';
+import { Article, Video } from '@/lib/supabase';
 
 export default function PusatBelajar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -12,7 +11,6 @@ export default function PusatBelajar() {
   const logoRefs = useRef<(HTMLImageElement | null)[]>([]);
   const [articles, setArticles] = useState<Article[]>([]);
   const [videos, setVideos] = useState<Video[]>([]);
-  const [ebooks, setEbooks] = useState<Ebook[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -20,14 +18,12 @@ export default function PusatBelajar() {
     const loadData = async () => {
       try {
         setLoading(true);
-        const [articlesData, videosData, ebooksData] = await Promise.all([
+        const [articlesData, videosData] = await Promise.all([
           dataManager.getArticles(),
-          dataManager.getVideos(),
-          dataManager.getEbooks()
+          dataManager.getVideos()
         ]);
         setArticles(articlesData);
         setVideos(videosData);
-        setEbooks(ebooksData);
       } catch (error) {
         console.error('Error loading data:', error);
       } finally {
@@ -173,9 +169,6 @@ export default function PusatBelajar() {
               <a href="#videos" className="bg-[#1ca4bc] text-white px-4 md:px-8 py-2 md:py-3 rounded-lg hover:bg-[#159bb3] transition-colors text-sm md:text-base">
                 Tonton Video
               </a>
-              <a href="#ebooks" className="bg-[#1ca4bc] text-white px-4 md:px-8 py-2 md:py-3 rounded-lg hover:bg-[#159bb3] transition-colors text-sm md:text-base">
-                Unduh E-Book
-              </a>
             </div>
           </div>
         </div>
@@ -244,7 +237,7 @@ export default function PusatBelajar() {
 
             {/* Regular Articles */}
             <div className="space-y-6">
-              {articles.slice(1).map((article) => (
+              {articles.filter(article => !article.featured).slice(0, 4).map((article) => (
                 <article key={article.id} className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow flex">
                   <div className="w-32 h-32 bg-gray-200 overflow-hidden flex-shrink-0">
                     <img 
@@ -300,44 +293,56 @@ export default function PusatBelajar() {
 
           <div className="grid lg:grid-cols-2 gap-8">
             {/* Spotlight Video */}
-            {videos.length > 0 ? (
-              <div 
-                onClick={() => {
-                  const videoUrl = videos[0].videoUrl || videos[0].video_url;
-                  if (videoUrl) {
-                    window.open(videoUrl, '_blank');
-                  }
-                }}
-                className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow cursor-pointer"
-              >
-                <div className="aspect-video bg-gray-200 relative overflow-hidden">
-                  <img 
-                    src={videos[0].thumbnail} 
-                    alt={videos[0].title}
-                    className="w-full h-full object-cover"
-                  />
-                  <div className="absolute inset-0 bg-black/30 flex items-center justify-center">
-                    <div className="w-20 h-20 bg-white/90 rounded-full flex items-center justify-center hover:bg-white transition-colors">
-                      <div className="w-0 h-0 border-l-6 border-l-gray-900 border-t-4 border-t-transparent border-b-4 border-b-transparent ml-1"></div>
+            {(() => {
+              const spotlightVideo = videos.find(video => video.featured) || videos[0];
+              return spotlightVideo ? (
+                <div 
+                  onClick={() => {
+                    const videoUrl = spotlightVideo.videoUrl || spotlightVideo.video_url;
+                    if (videoUrl) {
+                      window.open(videoUrl, '_blank');
+                    }
+                  }}
+                  className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow cursor-pointer relative"
+                >
+                  {spotlightVideo.featured && (
+                    <div className="absolute top-4 right-4 z-10">
+                      <div className="bg-yellow-500 text-white px-3 py-1 rounded-full text-xs font-medium flex items-center gap-1">
+                        ⭐ Spotlight
+                      </div>
+                    </div>
+                  )}
+                  <div className="aspect-video bg-gray-200 relative overflow-hidden">
+                    <img 
+                      src={spotlightVideo.thumbnail} 
+                      alt={spotlightVideo.title}
+                      className="w-full h-full object-cover"
+                    />
+                    <div className="absolute inset-0 bg-black/30 flex items-center justify-center">
+                      <div className="w-20 h-20 bg-white/90 rounded-full flex items-center justify-center hover:bg-white transition-colors">
+                        <div className="w-0 h-0 border-l-6 border-l-gray-900 border-t-4 border-t-transparent border-b-4 border-b-transparent ml-1"></div>
+                      </div>
+                    </div>
+                    <div className="absolute bottom-4 right-4 bg-black/70 text-white px-3 py-2 rounded text-lg font-medium">
+                      {spotlightVideo.duration}
                     </div>
                   </div>
-                  <div className="absolute bottom-4 right-4 bg-black/70 text-white px-3 py-2 rounded text-lg font-medium">
-                    {videos[0].duration}
+                  <div className="p-8">
+                    <h3 className="text-2xl font-bold text-gray-900 mb-4">
+                      {spotlightVideo.title}
+                    </h3>
+                    <div className="flex items-center justify-between text-lg text-gray-500">
+                      <span>{spotlightVideo.views} views</span>
+                      <span className="bg-red-100 text-red-600 px-4 py-2 rounded-full text-sm font-medium">
+                        Video Tutorial
+                      </span>
+                    </div>
                   </div>
                 </div>
-                <div className="p-8">
-                  <h3 className="text-2xl font-bold text-gray-900 mb-4">
-                    {videos[0].title}
-                  </h3>
-                  <div className="flex items-center justify-between text-lg text-gray-500">
-                    <span>{videos[0].views} views</span>
-                    <span className="bg-red-100 text-red-600 px-4 py-2 rounded-full text-sm font-medium">
-                      Video Tutorial
-                    </span>
-                  </div>
-                </div>
-              </div>
-            ) : (
+              ) : null;
+            })()} 
+            
+            {videos.length === 0 && (
               <div className="bg-white rounded-xl shadow-lg overflow-hidden p-8 text-center">
                 <div className="text-gray-400 mb-4">
                   <svg className="w-16 h-16 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -350,7 +355,7 @@ export default function PusatBelajar() {
 
             {/* Regular Videos */}
             <div className="space-y-6">
-              {videos.slice(1).map((video) => (
+              {videos.filter(video => !video.featured).slice(0, 4).map((video) => (
                 <div 
                   key={video.id} 
                   onClick={() => {
@@ -394,96 +399,6 @@ export default function PusatBelajar() {
         </div>
       </section>
 
-      {/* E-books Section */}
-      <section id="ebooks" className="py-16 bg-white">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="flex justify-between items-center mb-12">
-            <div>
-              <h2 className="text-3xl font-bold text-gray-900 mb-4">E-Book Gratis</h2>
-              <p className="text-gray-600">Download panduan lengkap dalam format PDF</p>
-            </div>
-            <button className="text-[#1ca4bc] hover:text-[#159bb3] font-medium">
-              Lihat Semua →
-            </button>
-          </div>
-
-          <div className="grid lg:grid-cols-2 gap-8">
-            {/* Spotlight E-book */}
-            {ebooks.length > 0 ? (
-              <div className="bg-gradient-to-br from-[#1ca4bc]/5 to-[#1ca4bc]/10 rounded-xl p-10 hover:shadow-lg transition-shadow">
-                <div className="w-20 h-20 bg-[#1ca4bc] rounded-lg flex items-center justify-center mb-8">
-                  <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                  </svg>
-                </div>
-                <h3 className="text-2xl font-bold text-gray-900 mb-4">
-                  {ebooks[0].title}
-                </h3>
-                <p className="text-gray-600 mb-8 text-lg leading-relaxed">
-                  {ebooks[0].description}
-                </p>
-                <div className="space-y-3 mb-8">
-                  <div className="flex justify-between text-lg">
-                    <span className="text-gray-500">Halaman:</span>
-                    <span className="text-gray-900 font-medium">{ebooks[0].pages}</span>
-                  </div>
-                  <div className="flex justify-between text-lg">
-                    <span className="text-gray-500">Format:</span>
-                    <span className="text-gray-900 font-medium">{ebooks[0].format}</span>
-                  </div>
-                  <div className="flex justify-between text-lg">
-                    <span className="text-gray-500">Ukuran:</span>
-                    <span className="text-gray-900 font-medium">{ebooks[0].size}</span>
-                  </div>
-                </div>
-                <button className="w-full bg-[#1ca4bc] text-white py-4 rounded-lg hover:bg-[#159bb3] transition-colors text-lg font-medium">
-                  Download Gratis
-                </button>
-              </div>
-            ) : (
-              <div className="bg-gradient-to-br from-[#1ca4bc]/5 to-[#1ca4bc]/10 rounded-xl p-10 text-center">
-                <div className="w-20 h-20 bg-[#1ca4bc]/20 rounded-lg flex items-center justify-center mb-8 mx-auto">
-                  <svg className="w-10 h-10 text-[#1ca4bc]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                  </svg>
-                </div>
-                <p className="text-gray-600">Belum ada e-book. Silakan tambahkan melalui admin panel.</p>
-              </div>
-            )}
-
-            {/* Regular E-books */}
-            <div className="space-y-6">
-              {ebooks.slice(1).map((ebook) => (
-                <div key={ebook.id} className="bg-gradient-to-br from-[#1ca4bc]/5 to-[#1ca4bc]/10 rounded-xl p-6 hover:shadow-lg transition-shadow flex items-center">
-                  <div className="w-16 h-16 bg-[#1ca4bc] rounded-lg flex items-center justify-center mr-6 flex-shrink-0">
-                    <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                    </svg>
-                  </div>
-                  <div className="flex-1">
-                    <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                      {ebook.title}
-                    </h3>
-                    <p className="text-gray-600 mb-3 text-sm">
-                      {ebook.description}
-                    </p>
-                    <div className="flex items-center gap-4 text-xs text-gray-500 mb-3">
-                      <span>{ebook.pages}</span>
-                      <span>•</span>
-                      <span>{ebook.format}</span>
-                      <span>•</span>
-                      <span>{ebook.size}</span>
-                    </div>
-                    <button className="bg-[#1ca4bc] text-white px-6 py-2 rounded-lg hover:bg-[#159bb3] transition-colors text-sm font-medium">
-                      Download
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
 
       {/* Brand Showcase Section */}
       <section className="py-20 bg-gradient-to-br from-[#1ca4bc] to-[#159bb3] overflow-hidden">
@@ -506,7 +421,7 @@ export default function PusatBelajar() {
           </div>
 
           <div ref={logosRef} className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12 items-center justify-items-center">
-            <div className="relative group cursor-pointer">
+            <Link href="/" className="relative group cursor-pointer">
               <div className="relative bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20 hover:border-white/30 transition-all duration-300">
                 <img 
                   ref={(el) => { logoRefs.current[0] = el; }}
@@ -515,7 +430,7 @@ export default function PusatBelajar() {
                   className="h-28 w-28 mx-auto object-contain filter brightness-0 invert"
                 />
               </div>
-            </div>
+            </Link>
 
             <div className="relative group cursor-pointer" onClick={() => window.open('https://kustomgarment.com', '_blank')}>
               <div className="relative bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20 hover:border-white/30 transition-all duration-300">
@@ -564,11 +479,13 @@ export default function PusatBelajar() {
         <div className="max-w-7xl mx-auto px-6">
           <div className="grid md:grid-cols-4 gap-8">
             <div>
-              <img 
-                src="/assets/Kustom Inspira - putih.png" 
-                alt="Kustom Inspira" 
-                className="h-12 w-auto mb-4"
-              />
+              <Link href="/">
+                <img 
+                  src="/assets/Kustom Inspira - putih.png" 
+                  alt="Kustom Inspira" 
+                  className="h-12 w-auto mb-4 cursor-pointer hover:opacity-80 transition-opacity"
+                />
+              </Link>
               <p className="text-gray-400">
                 <span className="font-bold text-white">#DariKainJadiKarya</span><br />
                 Belajar dan praktek langsung di Kustominspira.

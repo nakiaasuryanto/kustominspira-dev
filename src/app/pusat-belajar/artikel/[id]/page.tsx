@@ -760,7 +760,7 @@ export default function ArticlePage() {
             </div>
 
             <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12 items-center justify-items-center">
-              <div className="relative group cursor-pointer">
+              <Link href="/" className="relative group cursor-pointer">
                 <div className="relative bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20 hover:border-white/30 transition-all duration-300">
                   <img 
                     src="/assets/Kustom Inspira - putih.png" 
@@ -768,7 +768,7 @@ export default function ArticlePage() {
                     className="h-28 w-28 mx-auto object-contain filter brightness-0 invert"
                   />
                 </div>
-              </div>
+              </Link>
 
               <div className="relative group cursor-pointer">
                 <div className="relative bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20 hover:border-white/30 transition-all duration-300">
@@ -817,11 +817,13 @@ export default function ArticlePage() {
           <div className="max-w-7xl mx-auto px-6">
             <div className="grid md:grid-cols-4 gap-8">
               <div>
-                <img 
-                  src="/assets/Kustom Inspira - putih.png" 
-                  alt="Kustom Inspira" 
-                  className="h-12 w-auto mb-4"
-                />
+                <Link href="/">
+                  <img 
+                    src="/assets/Kustom Inspira - putih.png" 
+                    alt="Kustom Inspira" 
+                    className="h-12 w-auto mb-4 cursor-pointer hover:opacity-80 transition-opacity"
+                  />
+                </Link>
                 <p className="text-gray-400">
                   <span className="font-bold text-white">#DariKainJadiKarya</span><br />
                   Belajar dan praktek langsung di Kustominspira.

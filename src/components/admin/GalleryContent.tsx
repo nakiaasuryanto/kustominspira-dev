@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import ImageUpload from '../SupabaseImageUpload';
 import { GalleryItem } from '@/lib/supabase';
-import LoaderAnimation, { ButtonLoader } from '../LoaderAnimation';
+import { ButtonLoader } from '../LoaderAnimation';
 
 interface GalleryContentProps {
   galleryItems: GalleryItem[];
@@ -22,7 +22,6 @@ export default function GalleryContent({ galleryItems, onAdd, onUpdate, onDelete
   const [aiPrompt, setAiPrompt] = useState('');
   const [formData, setFormData] = useState({
     title: '',
-    slug: '',
     description: '',
     category: 'fashion',
     tags: [] as string[],
@@ -34,17 +33,11 @@ export default function GalleryContent({ galleryItems, onAdd, onUpdate, onDelete
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Auto-generate slug if not provided
-    const finalData = {
-      ...formData,
-      slug: formData.slug || generateSlug(formData.title)
-    };
-    
     if (editingItem) {
-      onUpdate(editingItem.id!, finalData);
+      onUpdate(editingItem.id!, formData);
       setEditingItem(null);
     } else {
-      onAdd(finalData);
+      onAdd(formData);
     }
     resetForm();
     setShowForm(false);
@@ -53,7 +46,6 @@ export default function GalleryContent({ galleryItems, onAdd, onUpdate, onDelete
   const resetForm = () => {
     setFormData({
       title: '',
-      slug: '',
       description: '',
       category: 'fashion',
       tags: [],
@@ -64,20 +56,10 @@ export default function GalleryContent({ galleryItems, onAdd, onUpdate, onDelete
     setAiPrompt('');
   };
 
-  // Generate slug from title
-  const generateSlug = (title: string): string => {
-    return title
-      .toLowerCase()
-      .trim()
-      .replace(/[^\w\s-]/g, '') // Remove special characters
-      .replace(/\s+/g, '-') // Replace spaces with hyphens
-      .replace(/-+/g, '-'); // Replace multiple hyphens with single hyphen
-  };
 
   const handleEdit = (item: GalleryItem) => {
     setFormData({
       title: item.title,
-      slug: item.slug || generateSlug(item.title),
       description: item.description,
       category: item.category,
       tags: item.tags || [],
@@ -217,14 +199,7 @@ export default function GalleryContent({ galleryItems, onAdd, onUpdate, onDelete
                 <input
                   type="text"
                   value={formData.title}
-                  onChange={(e) => {
-                    const newTitle = e.target.value;
-                    setFormData({ 
-                      ...formData, 
-                      title: newTitle,
-                      slug: formData.slug || generateSlug(newTitle)
-                    });
-                  }}
+                  onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1ca4bc] focus:border-[#1ca4bc] text-gray-900"
                   placeholder="Gallery item title..."
                   required
@@ -297,19 +272,6 @@ export default function GalleryContent({ galleryItems, onAdd, onUpdate, onDelete
                     </div>
                   </div>
                 )}
-              </div>
-              
-              {/* Slug Field */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Slug (URL)</label>
-                <input
-                  type="text"
-                  value={formData.slug}
-                  onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1ca4bc] focus:border-[#1ca4bc] text-gray-900"
-                  placeholder="gallery-item-slug"
-                />
-                <p className="text-xs text-gray-500 mt-1">URL: /gallery/{formData.slug || 'gallery-item-slug'}</p>
               </div>
             </div>
 

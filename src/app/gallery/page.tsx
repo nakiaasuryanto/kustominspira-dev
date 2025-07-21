@@ -3,7 +3,6 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { supabaseDataManager as dataManager } from '@/lib/supabaseDataManager';
 import { GalleryItem } from '@/lib/supabase';
-import LoaderAnimation, { FullScreenLoader } from '@/components/LoaderAnimation';
 
 export default function Gallery() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -164,7 +163,7 @@ export default function Gallery() {
     const shareData = {
       title: `${item.title} - Kustom Inspira Gallery`,
       text: item.description,
-      url: `${window.location.origin}/gallery/${item.slug || item.id}`
+      url: `${window.location.origin}/gallery/${item.id}`
     };
 
     const shareText = `🎨 ${shareData.title}\n\n${shareData.text}\n\n🔗 View in Gallery: ${shareData.url}\n\n#KustomInspira #FashionDesign #Indonesian`;
@@ -267,7 +266,14 @@ export default function Gallery() {
 
 
   if (loading) {
-    return <FullScreenLoader text="Loading gallery..." variant="fashion" />;
+    return (
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-[#1ca4bc] mx-auto"></div>
+          <p className="mt-4 text-gray-600">Loading gallery...</p>
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -499,7 +505,7 @@ export default function Gallery() {
                     
                     {/* Bottom Info (Always Visible) */}
                     <div className="p-4">
-                      <Link href={`/gallery/${item.slug || item.id}`} className="block">
+                      <Link href={`/gallery/${item.id}`} className="block">
                         <h3 className="font-semibold text-gray-900 mb-1 line-clamp-1 hover:text-[#1ca4bc] transition-colors">{item.title}</h3>
                         <p className="text-sm text-gray-600 line-clamp-2">{item.description}</p>
                       </Link>
@@ -601,7 +607,7 @@ export default function Gallery() {
                       
                       {/* View Details Button */}
                       <Link 
-                        href={`/gallery/${selectedImage.slug || selectedImage.id}`}
+                        href={`/gallery/${selectedImage.id}`}
                         className="flex items-center space-x-1 md:space-x-2 bg-[#1ca4bc]/80 hover:bg-[#1ca4bc] text-white backdrop-blur-sm px-3 md:px-6 py-2 md:py-3 rounded-lg md:rounded-xl transition-all duration-300 font-medium text-sm md:text-base"
                         onClick={(e) => e.stopPropagation()}
                       >
@@ -617,7 +623,7 @@ export default function Gallery() {
                     <button
                       onClick={async (e) => {
                         e.stopPropagation();
-                        const currentUrl = `${window.location.origin}/gallery/${selectedImage.slug || selectedImage.id}`;
+                        const currentUrl = `${window.location.origin}/gallery/${selectedImage.id}`;
                         try {
                           await navigator.clipboard.writeText(currentUrl);
                           // Show success notification
@@ -734,7 +740,7 @@ export default function Gallery() {
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12 items-center justify-items-center">
-            <div className="relative group cursor-pointer">
+            <Link href="/" className="relative group cursor-pointer">
               <div className="relative bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20 hover:border-white/30 transition-all duration-300">
                 <img 
                   src="/assets/Kustom Inspira - putih.png" 
@@ -742,7 +748,7 @@ export default function Gallery() {
                   className="h-28 w-28 mx-auto object-contain filter brightness-0 invert"
                 />
               </div>
-            </div>
+            </Link>
 
             <div className="relative group cursor-pointer">
               <div className="relative bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20 hover:border-white/30 transition-all duration-300">
@@ -788,11 +794,13 @@ export default function Gallery() {
         <div className="max-w-7xl mx-auto px-6">
           <div className="grid md:grid-cols-4 gap-8">
             <div>
-              <img 
-                src="/assets/Kustom Inspira - putih.png" 
-                alt="Kustom Inspira" 
-                className="h-12 w-auto mb-4"
-              />
+              <Link href="/">
+                <img 
+                  src="/assets/Kustom Inspira - putih.png" 
+                  alt="Kustom Inspira" 
+                  className="h-12 w-auto mb-4 cursor-pointer hover:opacity-80 transition-opacity"
+                />
+              </Link>
               <p className="text-gray-400">
                 <span style={{color: '#FF4B00'}}>#DariKainJadiKarya</span><br />
                 Belajar dan praktek langsung di Kustominspira.

@@ -51,11 +51,13 @@ export default function Login() {
         <div className="bg-white rounded-2xl shadow-2xl p-8">
           {/* Header */}
           <div className="text-center mb-8">
-            <img 
-              src="/assets/Kustom Inspira.png" 
-              alt="Kustom Inspira" 
-              className="h-16 w-auto mx-auto mb-4"
-            />
+            <Link href="/">
+              <img 
+                src="/assets/Kustom Inspira.png" 
+                alt="Kustom Inspira" 
+                className="h-16 w-auto mx-auto mb-4 cursor-pointer hover:opacity-80 transition-opacity"
+              />
+            </Link>
             <h1 className="text-2xl font-bold text-gray-900 mb-2">
               Administrator Login
             </h1>

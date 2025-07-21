@@ -5,7 +5,6 @@ import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { supabaseDataManager as dataManager } from '@/lib/supabaseDataManager';
 import { GalleryItem } from '@/lib/supabase';
-import LoaderAnimation, { FullScreenLoader } from '@/components/LoaderAnimation';
 
 export default function GalleryItemPage() {
   const params = useParams();
@@ -24,8 +23,8 @@ export default function GalleryItemPage() {
       try {
         setLoading(true);
         const items = await dataManager.getAllGalleryItems();
-        // Find by slug, then fallback to id for backward compatibility
-        const foundItem = items.find(i => i.slug === params.slug || i.id === params.slug);
+        // Find by id
+        const foundItem = items.find(i => i.id === params.id);
         setItem(foundItem);
         
         // Get related items (same category, exclude current)
@@ -46,10 +45,10 @@ export default function GalleryItemPage() {
       }
     };
 
-    if (params.slug) {
+    if (params.id) {
       loadItem();
     }
-  }, [params.slug]);
+  }, [params.id]);
 
   // Handle like button click
   const handleLike = () => {
@@ -67,7 +66,7 @@ export default function GalleryItemPage() {
     const shareData = {
       title: `${item.title} - Kustom Inspira Gallery`,
       text: item.description,
-      url: `${window.location.origin}/gallery/${item.slug || item.id}`
+      url: `${window.location.origin}/gallery/${item.id}`
     };
 
     const shareText = `🎨 ${shareData.title}\n\n${shareData.text}\n\n🔗 View in Gallery: ${shareData.url}\n\n#KustomInspira #FashionDesign #Indonesian`;
@@ -103,7 +102,14 @@ export default function GalleryItemPage() {
   };
 
   if (loading) {
-    return <FullScreenLoader text="Loading design details..." variant="fashion" />;
+    return (
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-[#1ca4bc] mx-auto"></div>
+          <p className="mt-4 text-gray-600">Loading design details...</p>
+        </div>
+      </div>
+    );
   }
 
   if (!item) {
@@ -321,7 +327,7 @@ export default function GalleryItemPage() {
                 {relatedItems.map((relatedItem) => (
                   <Link 
                     key={relatedItem.id}
-                    href={`/gallery/${relatedItem.slug || relatedItem.id}`}
+                    href={`/gallery/${relatedItem.id}`}
                     className="group relative"
                   >
                     <div className="relative bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2">
@@ -369,11 +375,13 @@ export default function GalleryItemPage() {
         <div className="max-w-7xl mx-auto px-6">
           <div className="grid md:grid-cols-4 gap-8">
             <div>
-              <img 
-                src="/assets/Kustom Inspira - putih.png" 
-                alt="Kustom Inspira" 
-                className="h-12 w-auto mb-4"
-              />
+              <Link href="/">
+                <img 
+                  src="/assets/Kustom Inspira - putih.png" 
+                  alt="Kustom Inspira" 
+                  className="h-12 w-auto mb-4 cursor-pointer hover:opacity-80 transition-opacity"
+                />
+              </Link>
               <p className="text-gray-400">
                 <span className="font-bold text-white">#DariKainJadiKarya</span><br />
                 Galeri inspirasi fashion dan design terbaik.

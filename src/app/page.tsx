@@ -17,7 +17,7 @@ export default function Home() {
     // Initial loading delay
     const timer = setTimeout(() => {
       setIsLoading(false);
-    }, 1500);
+    }, 800);
     
     return () => clearTimeout(timer);
   }, []);
@@ -33,16 +33,14 @@ export default function Home() {
         gsap.fromTo(title, 
           { 
             opacity: 0, 
-            y: 100,
-            scale: 0.8
+            y: 50
           },
           { 
             opacity: 1, 
             y: 0,
-            scale: 1,
-            duration: 1.5,
-            delay: index * 0.3,
-            ease: "power3.out"
+            duration: 1,
+            delay: index * 0.2,
+            ease: "power2.out"
           }
         );
       }
@@ -66,7 +64,7 @@ export default function Home() {
       yoyo: true
     });
 
-  }, [isLoading]);
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -77,15 +75,11 @@ export default function Home() {
         const sectionHeight = window.innerHeight;
         const scrollProgress = window.scrollY / sectionHeight;
         
-        // Parallax effect for titles
+        // Simple parallax effect for titles
         titleRefs.current.forEach((title, index) => {
           if (title) {
-            const offset = (scrollProgress - index) * 50;
-            gsap.to(title, {
-              y: offset,
-              duration: 0.3,
-              ease: "none"
-            });
+            const offset = (scrollProgress - index) * 20;
+            title.style.transform = `translateY(${offset}px)`;
           }
         });
       }

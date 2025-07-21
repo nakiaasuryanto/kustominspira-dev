@@ -46,6 +46,7 @@ export interface Video {
   thumbnail?: string;
   views?: string;
   status: string;
+  featured?: boolean;
   created_at?: string;
   updated_at?: string;
 }
@@ -83,13 +84,13 @@ export interface Ebook {
   download_count?: number;
   file_url?: string;
   status: string;
+  featured?: boolean;
   created_at?: string;
 }
 
 export interface GalleryItem {
   id?: string;
   title: string;
-  slug?: string;
   category: string;
   image_url: string;
   description: string;

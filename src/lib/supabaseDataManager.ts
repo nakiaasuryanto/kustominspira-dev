@@ -486,6 +486,82 @@ export class SupabaseDataManager {
       return false;
     }
   }
+
+  // Spotlight functionality
+  async toggleArticleSpotlight(id: string, featured: boolean): Promise<Article | null> {
+    try {
+      // If setting as featured, remove spotlight from other articles
+      if (featured) {
+        await supabase
+          .from('articles')
+          .update({ featured: false })
+          .neq('id', id);
+      }
+
+      const { data, error } = await supabase
+        .from('articles')
+        .update({ featured })
+        .eq('id', id)
+        .select()
+        .single();
+
+      if (error) throw error;
+      return data;
+    } catch (error) {
+      console.error('Error toggling article spotlight:', error);
+      return null;
+    }
+  }
+
+  async toggleVideoSpotlight(id: string, featured: boolean): Promise<Video | null> {
+    try {
+      // If setting as featured, remove spotlight from other videos
+      if (featured) {
+        await supabase
+          .from('videos')
+          .update({ featured: false })
+          .neq('id', id);
+      }
+
+      const { data, error } = await supabase
+        .from('videos')
+        .update({ featured })
+        .eq('id', id)
+        .select()
+        .single();
+
+      if (error) throw error;
+      return data;
+    } catch (error) {
+      console.error('Error toggling video spotlight:', error);
+      return null;
+    }
+  }
+
+  async toggleEbookSpotlight(id: string, featured: boolean): Promise<Ebook | null> {
+    try {
+      // If setting as featured, remove spotlight from other ebooks
+      if (featured) {
+        await supabase
+          .from('ebooks')
+          .update({ featured: false })
+          .neq('id', id);
+      }
+
+      const { data, error } = await supabase
+        .from('ebooks')
+        .update({ featured })
+        .eq('id', id)
+        .select()
+        .single();
+
+      if (error) throw error;
+      return data;
+    } catch (error) {
+      console.error('Error toggling ebook spotlight:', error);
+      return null;
+    }
+  }
 }
 
 export const supabaseDataManager = SupabaseDataManager.getInstance();

@@ -2,13 +2,13 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { supabaseDataManager as dataManager } from '@/lib/supabaseDataManager';
 import ImageUpload from '@/components/SupabaseImageUpload';
 import PowerfulMarkdownEditor from '@/components/PowerfulMarkdownEditor';
 import { Article, Video, Event, Ebook } from '@/lib/supabase';
 import SimpleUsersContent from '@/components/admin/SimpleUsersContent';
 import GalleryContent from '@/components/admin/GalleryContent';
-import LoaderAnimation, { FullScreenLoader } from '@/components/LoaderAnimation';
 
 // Utility function to generate slug from title
 const generateSlug = (title: string): string => {
@@ -333,11 +333,13 @@ export default function AdminDashboard() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-14 md:h-16">
             <div className="flex items-center">
-              <img 
-                src="/assets/Kustom Inspira.png" 
-                alt="Kustom Inspira" 
-                className="h-6 md:h-8 w-auto mr-2 md:mr-4"
-              />
+              <Link href="/">
+                <img 
+                  src="/assets/Kustom Inspira.png" 
+                  alt="Kustom Inspira" 
+                  className="h-6 md:h-8 w-auto mr-2 md:mr-4 cursor-pointer hover:opacity-80 transition-opacity"
+                />
+              </Link>
               <h1 className="text-lg md:text-xl font-semibold text-gray-900">
                 Admin Dashboard
               </h1>
@@ -555,6 +557,19 @@ function ArticlesContent({ articles, onAdd, onUpdate, onDelete }: ArticlesConten
     image_url: '/assets/pusatbelajar.webp',
     status: 'published'
   });
+
+  const handleSpotlight = async (articleId: string, currentFeatured: boolean) => {
+    try {
+      const result = await dataManager.toggleArticleSpotlight(articleId, !currentFeatured);
+      if (result) {
+        // Refresh articles list
+        window.location.reload();
+      }
+    } catch (error) {
+      console.error('Error toggling article spotlight:', error);
+      alert('Failed to toggle spotlight');
+    }
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -802,6 +817,17 @@ function ArticlesContent({ articles, onAdd, onUpdate, onDelete }: ArticlesConten
                 </div>
                 <div className="flex space-x-2">
                   <button 
+                    onClick={() => handleSpotlight(article.id!, article.featured || false)}
+                    className={`px-3 py-1 rounded-md transition-colors ${
+                      article.featured 
+                        ? 'text-yellow-600 hover:text-yellow-800 bg-yellow-50 hover:bg-yellow-100' 
+                        : 'text-gray-600 hover:text-yellow-600 hover:bg-yellow-50'
+                    }`}
+                    title={article.featured ? 'Remove from spotlight' : 'Add to spotlight'}
+                  >
+                    {article.featured ? '⭐' : '☆'}
+                  </button>
+                  <button 
                     onClick={() => {
                       // Use slug if available, otherwise use id
                       const urlParam = article.slug || article.id;
@@ -849,6 +875,19 @@ function VideosContent({ videos, onAdd, onUpdate, onDelete }: VideosContentProps
     thumbnail: '/assets/pusatbelajar.webp',
     status: 'published'
   });
+
+  const handleSpotlight = async (videoId: string, currentFeatured: boolean) => {
+    try {
+      const result = await dataManager.toggleVideoSpotlight(videoId, !currentFeatured);
+      if (result) {
+        // Refresh videos list
+        window.location.reload();
+      }
+    } catch (error) {
+      console.error('Error toggling video spotlight:', error);
+      alert('Failed to toggle spotlight');
+    }
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -1055,6 +1094,17 @@ function VideosContent({ videos, onAdd, onUpdate, onDelete }: VideosContentProps
                   <p className="text-sm text-gray-600 mb-3">{video.views} views • {video.category}</p>
                   <div className="flex space-x-2">
                     <button 
+                      onClick={() => handleSpotlight(video.id!, video.featured || false)}
+                      className={`px-2 py-1 rounded text-sm transition-colors ${
+                        video.featured 
+                          ? 'text-yellow-600 hover:text-yellow-800 bg-yellow-50 hover:bg-yellow-100' 
+                          : 'text-gray-600 hover:text-yellow-600 hover:bg-yellow-50'
+                      }`}
+                      title={video.featured ? 'Remove from spotlight' : 'Add to spotlight'}
+                    >
+                      {video.featured ? '⭐' : '☆'}
+                    </button>
+                    <button 
                       onClick={() => handleEdit(video)}
                       className="text-blue-600 hover:text-blue-800 text-sm"
                     >
@@ -1094,6 +1144,19 @@ function EbooksContent({ ebooks, onAdd, onUpdate, onDelete }: EbooksContentProps
     fileUrl: '',
     status: 'published'
   });
+
+  const handleSpotlight = async (ebookId: string, currentFeatured: boolean) => {
+    try {
+      const result = await dataManager.toggleEbookSpotlight(ebookId, !currentFeatured);
+      if (result) {
+        // Refresh ebooks list
+        window.location.reload();
+      }
+    } catch (error) {
+      console.error('Error toggling ebook spotlight:', error);
+      alert('Failed to toggle spotlight');
+    }
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -1331,6 +1394,17 @@ function EbooksContent({ ebooks, onAdd, onUpdate, onDelete }: EbooksContentProps
                   </div>
                 </div>
                 <div className="flex space-x-2">
+                  <button 
+                    onClick={() => handleSpotlight(ebook.id!, ebook.featured || false)}
+                    className={`px-2 py-1 rounded text-sm transition-colors ${
+                      ebook.featured 
+                        ? 'text-yellow-600 hover:text-yellow-800 bg-yellow-50 hover:bg-yellow-100' 
+                        : 'text-gray-600 hover:text-yellow-600 hover:bg-yellow-50'
+                    }`}
+                    title={ebook.featured ? 'Remove from spotlight' : 'Add to spotlight'}
+                  >
+                    {ebook.featured ? '⭐' : '☆'}
+                  </button>
                   <button 
                     onClick={() => handleEdit(ebook)}
                     className="text-blue-600 hover:text-blue-800 text-sm"
