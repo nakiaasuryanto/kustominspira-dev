@@ -2,16 +2,29 @@
 import { useEffect, useState, useRef } from 'react';
 import { gsap } from 'gsap';
 import Link from 'next/link';
+import LoaderAnimation, { FullScreenLoader } from '@/components/LoaderAnimation';
 
 export default function Home() {
   const [scrollY, setScrollY] = useState(0);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const section1Ref = useRef<HTMLDivElement>(null);
   const section2Ref = useRef<HTMLDivElement>(null);
   const section3Ref = useRef<HTMLDivElement>(null);
   const titleRefs = useRef<(HTMLElement | null)[]>([]);
 
   useEffect(() => {
+    // Initial loading delay
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 1500);
+    
+    return () => clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
+    if (isLoading) return;
+    
     // GSAP animations on mount
     
     // Animate titles on load
@@ -53,7 +66,7 @@ export default function Home() {
       yoyo: true
     });
 
-  }, []);
+  }, [isLoading]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -97,6 +110,10 @@ export default function Home() {
     }
     return 1; // Visible section stays opaque
   };
+
+  if (isLoading) {
+    return <FullScreenLoader text="Welcome to Kustom Inspira" variant="fashion" />;
+  }
 
   return (
     <div className="relative">

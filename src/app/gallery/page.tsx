@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { supabaseDataManager as dataManager } from '@/lib/supabaseDataManager';
 import { GalleryItem } from '@/lib/supabase';
+import LoaderAnimation, { FullScreenLoader } from '@/components/LoaderAnimation';
 
 export default function Gallery() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -266,14 +267,7 @@ export default function Gallery() {
 
 
   if (loading) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-[#1ca4bc] mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading gallery...</p>
-        </div>
-      </div>
-    );
+    return <FullScreenLoader text="Loading gallery..." variant="fashion" />;
   }
 
   return (

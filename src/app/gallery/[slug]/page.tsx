@@ -5,6 +5,7 @@ import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { supabaseDataManager as dataManager } from '@/lib/supabaseDataManager';
 import { GalleryItem } from '@/lib/supabase';
+import LoaderAnimation, { FullScreenLoader } from '@/components/LoaderAnimation';
 
 export default function GalleryItemPage() {
   const params = useParams();
@@ -102,14 +103,7 @@ export default function GalleryItemPage() {
   };
 
   if (loading) {
-    return (
-      <div className="min-h-screen bg-white flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#1ca4bc] mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading gallery item...</p>
-        </div>
-      </div>
-    );
+    return <FullScreenLoader text="Loading design details..." variant="fashion" />;
   }
 
   if (!item) {

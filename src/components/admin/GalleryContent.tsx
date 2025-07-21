@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import ImageUpload from '../SupabaseImageUpload';
 import { GalleryItem } from '@/lib/supabase';
+import LoaderAnimation, { ButtonLoader } from '../LoaderAnimation';
 
 interface GalleryContentProps {
   galleryItems: GalleryItem[];
@@ -196,8 +197,8 @@ export default function GalleryContent({ galleryItems, onAdd, onUpdate, onDelete
               >
                 {isGeneratingAI ? (
                   <div className="flex items-center">
-                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                    Generating...
+                    <ButtonLoader />
+                    <span className="ml-2">Generating...</span>
                   </div>
                 ) : (
                   'Generate AI Image'

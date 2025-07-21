@@ -7,6 +7,7 @@ import Head from 'next/head';
 import { supabaseDataManager as dataManager } from '@/lib/supabaseDataManager';
 import ArticleRenderer from '@/components/ArticleRenderer';
 import { Article } from '@/lib/supabase';
+import LoaderAnimation, { FullScreenLoader } from '@/components/LoaderAnimation';
 
 export default function ArticlePage() {
   const params = useParams();
@@ -119,14 +120,7 @@ export default function ArticlePage() {
   };
 
   if (loading) {
-    return (
-      <div className="min-h-screen bg-white flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#1ca4bc] mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading article...</p>
-        </div>
-      </div>
-    );
+    return <FullScreenLoader text="Loading article..." variant="default" />;
   }
 
   if (!article) {

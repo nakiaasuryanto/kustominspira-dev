@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { gsap } from 'gsap';
 import { supabaseDataManager as dataManager } from '@/lib/supabaseDataManager';
 import { Article, Video, Ebook } from '@/lib/supabase';
+import LoaderAnimation, { FullScreenLoader } from '@/components/LoaderAnimation';
 
 export default function PusatBelajar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);

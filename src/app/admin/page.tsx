@@ -8,6 +8,7 @@ import PowerfulMarkdownEditor from '@/components/PowerfulMarkdownEditor';
 import { Article, Video, Event, Ebook } from '@/lib/supabase';
 import SimpleUsersContent from '@/components/admin/SimpleUsersContent';
 import GalleryContent from '@/components/admin/GalleryContent';
+import LoaderAnimation, { FullScreenLoader } from '@/components/LoaderAnimation';
 
 // Utility function to generate slug from title
 const generateSlug = (title: string): string => {
