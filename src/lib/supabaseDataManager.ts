@@ -490,12 +490,19 @@ export class SupabaseDataManager {
   // Spotlight functionality
   async toggleArticleSpotlight(id: string, featured: boolean): Promise<Article | null> {
     try {
+      console.log('Toggling article spotlight:', { id, featured });
+      
       // If setting as featured, remove spotlight from other articles
       if (featured) {
-        await supabase
+        const { error: updateError } = await supabase
           .from('articles')
           .update({ featured: false })
           .neq('id', id);
+        
+        if (updateError) {
+          console.error('Error removing spotlight from other articles:', updateError);
+          // Don't throw here, continue with the main update
+        }
       }
 
       const { data, error } = await supabase
@@ -505,22 +512,37 @@ export class SupabaseDataManager {
         .select()
         .single();
 
-      if (error) throw error;
+      if (error) {
+        console.error('Detailed error toggling article spotlight:', error);
+        throw error;
+      }
+      
+      console.log('Successfully updated article spotlight:', data);
       return data;
     } catch (error) {
       console.error('Error toggling article spotlight:', error);
+      // Check if it's a column not found error
+      if (error?.message?.includes('column') || error?.message?.includes('featured')) {
+        alert('Spotlight feature requires database schema update. Please contact administrator.');
+      }
       return null;
     }
   }
 
   async toggleVideoSpotlight(id: string, featured: boolean): Promise<Video | null> {
     try {
+      console.log('Toggling video spotlight:', { id, featured });
+      
       // If setting as featured, remove spotlight from other videos
       if (featured) {
-        await supabase
+        const { error: updateError } = await supabase
           .from('videos')
           .update({ featured: false })
           .neq('id', id);
+        
+        if (updateError) {
+          console.error('Error removing spotlight from other videos:', updateError);
+        }
       }
 
       const { data, error } = await supabase
@@ -530,22 +552,35 @@ export class SupabaseDataManager {
         .select()
         .single();
 
-      if (error) throw error;
+      if (error) {
+        console.error('Detailed error toggling video spotlight:', error);
+        throw error;
+      }
+      
       return data;
     } catch (error) {
       console.error('Error toggling video spotlight:', error);
+      if (error?.message?.includes('column') || error?.message?.includes('featured')) {
+        alert('Spotlight feature requires database schema update. Please contact administrator.');
+      }
       return null;
     }
   }
 
   async toggleEbookSpotlight(id: string, featured: boolean): Promise<Ebook | null> {
     try {
+      console.log('Toggling ebook spotlight:', { id, featured });
+      
       // If setting as featured, remove spotlight from other ebooks
       if (featured) {
-        await supabase
+        const { error: updateError } = await supabase
           .from('ebooks')
           .update({ featured: false })
           .neq('id', id);
+        
+        if (updateError) {
+          console.error('Error removing spotlight from other ebooks:', updateError);
+        }
       }
 
       const { data, error } = await supabase
@@ -555,10 +590,17 @@ export class SupabaseDataManager {
         .select()
         .single();
 
-      if (error) throw error;
+      if (error) {
+        console.error('Detailed error toggling ebook spotlight:', error);
+        throw error;
+      }
+      
       return data;
     } catch (error) {
       console.error('Error toggling ebook spotlight:', error);
+      if (error?.message?.includes('column') || error?.message?.includes('featured')) {
+        alert('Spotlight feature requires database schema update. Please contact administrator.');
+      }
       return null;
     }
   }

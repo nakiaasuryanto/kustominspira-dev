@@ -564,10 +564,12 @@ function ArticlesContent({ articles, onAdd, onUpdate, onDelete }: ArticlesConten
       if (result) {
         // Refresh articles list
         window.location.reload();
+      } else {
+        alert('Failed to toggle spotlight. Please check console for details.');
       }
     } catch (error) {
       console.error('Error toggling article spotlight:', error);
-      alert('Failed to toggle spotlight');
+      alert('Failed to toggle spotlight. This feature may require database updates.');
     }
   };
 
@@ -824,6 +826,7 @@ function ArticlesContent({ articles, onAdd, onUpdate, onDelete }: ArticlesConten
                         : 'text-gray-600 hover:text-yellow-600 hover:bg-yellow-50'
                     }`}
                     title={article.featured ? 'Remove from spotlight' : 'Add to spotlight'}
+                    disabled={!article.hasOwnProperty('featured')}
                   >
                     {article.featured ? '⭐' : '☆'}
                   </button>
@@ -882,10 +885,12 @@ function VideosContent({ videos, onAdd, onUpdate, onDelete }: VideosContentProps
       if (result) {
         // Refresh videos list
         window.location.reload();
+      } else {
+        alert('Failed to toggle spotlight. Please check console for details.');
       }
     } catch (error) {
       console.error('Error toggling video spotlight:', error);
-      alert('Failed to toggle spotlight');
+      alert('Failed to toggle spotlight. This feature may require database updates.');
     }
   };
 
@@ -1151,10 +1156,12 @@ function EbooksContent({ ebooks, onAdd, onUpdate, onDelete }: EbooksContentProps
       if (result) {
         // Refresh ebooks list
         window.location.reload();
+      } else {
+        alert('Failed to toggle spotlight. Please check console for details.');
       }
     } catch (error) {
       console.error('Error toggling ebook spotlight:', error);
-      alert('Failed to toggle spotlight');
+      alert('Failed to toggle spotlight. This feature may require database updates.');
     }
   };
 

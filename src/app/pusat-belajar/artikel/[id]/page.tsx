@@ -7,7 +7,7 @@ import Head from 'next/head';
 import { supabaseDataManager as dataManager } from '@/lib/supabaseDataManager';
 import ArticleRenderer from '@/components/ArticleRenderer';
 import { Article } from '@/lib/supabase';
-import LoaderAnimation, { FullScreenLoader } from '@/components/LoaderAnimation';
+import { FullScreenLoader } from '@/components/LoaderAnimation';
 
 export default function ArticlePage() {
   const params = useParams();
@@ -98,7 +98,7 @@ export default function ArticlePage() {
     if (params.id) {
       loadArticle();
     }
-  }, [params.id]);
+  }, [params.id, hasViewed]);
 
   // Handle like button click
   const handleLike = () => {

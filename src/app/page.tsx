@@ -2,7 +2,7 @@
 import { useEffect, useState, useRef } from 'react';
 import { gsap } from 'gsap';
 import Link from 'next/link';
-import LoaderAnimation, { FullScreenLoader } from '@/components/LoaderAnimation';
+import { FullScreenLoader } from '@/components/LoaderAnimation';
 
 export default function Home() {
   const [scrollY, setScrollY] = useState(0);
@@ -64,7 +64,7 @@ export default function Home() {
       yoyo: true
     });
 
-  }, []);
+  }, [isLoading]);
 
   useEffect(() => {
     const handleScroll = () => {
