@@ -24,7 +24,19 @@ export class SupabaseDataManager {
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-      return data || [];
+      
+      // If featured column doesn't exist in database, add it from localStorage (client-side only)
+      const articles = data || [];
+      
+      if (typeof window !== 'undefined') {
+        const featuredArticles = JSON.parse(localStorage.getItem('featuredArticles') || '[]');
+        return articles.map(article => ({
+          ...article,
+          featured: article.featured !== undefined ? article.featured : featuredArticles.includes(article.id)
+        }));
+      }
+      
+      return articles;
     } catch (error) {
       console.error('Error getting articles:', error);
       return [];
@@ -39,7 +51,19 @@ export class SupabaseDataManager {
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-      return data || [];
+      
+      // If featured column doesn't exist in database, add it from localStorage (client-side only)
+      const articles = data || [];
+      
+      if (typeof window !== 'undefined') {
+        const featuredArticles = JSON.parse(localStorage.getItem('featuredArticles') || '[]');
+        return articles.map(article => ({
+          ...article,
+          featured: article.featured !== undefined ? article.featured : featuredArticles.includes(article.id)
+        }));
+      }
+      
+      return articles;
     } catch (error) {
       console.error('Error getting all articles:', error);
       return [];
@@ -492,6 +516,51 @@ export class SupabaseDataManager {
     try {
       console.log('Toggling article spotlight:', { id, featured });
       
+      // First, try the proper database approach
+      const { error: testError } = await supabase
+        .from('articles')
+        .select('id, featured')
+        .eq('id', id)
+        .single();
+
+      // If the column doesn't exist, use localStorage fallback
+      if (testError && testError.message.includes('column') && testError.message.includes('featured')) {
+        console.log('Featured column does not exist, using localStorage fallback');
+        
+        if (typeof window !== 'undefined') {
+          // Get current featured articles from localStorage
+          const featuredArticles = JSON.parse(localStorage.getItem('featuredArticles') || '[]');
+          
+          if (featured) {
+            // Remove all other featured articles
+            localStorage.setItem('featuredArticles', JSON.stringify([id]));
+          } else {
+            // Remove this article from featured
+            const filtered = featuredArticles.filter((featuredId: string) => featuredId !== id);
+            localStorage.setItem('featuredArticles', JSON.stringify(filtered));
+          }
+        }
+        
+        // Get the article data without featured column
+        const { data: articleData, error: articleError } = await supabase
+          .from('articles')
+          .select('*')
+          .eq('id', id)
+          .single();
+          
+        if (articleError) throw articleError;
+        
+        // Add the featured property manually
+        return {
+          ...articleData,
+          featured
+        };
+      }
+
+      if (testError) {
+        throw testError;
+      }
+
       // If setting as featured, remove spotlight from other articles
       if (featured) {
         const { error: updateError } = await supabase
@@ -501,7 +570,6 @@ export class SupabaseDataManager {
         
         if (updateError) {
           console.error('Error removing spotlight from other articles:', updateError);
-          // Don't throw here, continue with the main update
         }
       }
 
@@ -521,10 +589,7 @@ export class SupabaseDataManager {
       return data;
     } catch (error) {
       console.error('Error toggling article spotlight:', error);
-      // Check if it's a column not found error
-      if (error?.message?.includes('column') || error?.message?.includes('featured')) {
-        alert('Spotlight feature requires database schema update. Please contact administrator.');
-      }
+      alert(`Failed to toggle spotlight: ${error?.message || 'Unknown error'}`);
       return null;
     }
   }

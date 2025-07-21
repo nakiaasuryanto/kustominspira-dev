@@ -560,11 +560,17 @@ function ArticlesContent({ articles, onAdd, onUpdate, onDelete }: ArticlesConten
 
   const handleSpotlight = async (articleId: string, currentFeatured: boolean) => {
     try {
+      console.log('Attempting to toggle spotlight for article:', articleId);
+      console.log('Current featured status:', currentFeatured);
+      console.log('Will set to:', !currentFeatured);
+      
       const result = await dataManager.toggleArticleSpotlight(articleId, !currentFeatured);
       if (result) {
+        console.log('Spotlight toggle successful, reloading page');
         // Refresh articles list
         window.location.reload();
       } else {
+        console.log('Spotlight toggle returned null');
         alert('Failed to toggle spotlight. Please check console for details.');
       }
     } catch (error) {
@@ -819,14 +825,17 @@ function ArticlesContent({ articles, onAdd, onUpdate, onDelete }: ArticlesConten
                 </div>
                 <div className="flex space-x-2">
                   <button 
-                    onClick={() => handleSpotlight(article.id!, article.featured || false)}
+                    onClick={() => {
+                      console.log('Spotlight button clicked for article:', article.id);
+                      console.log('Article data:', article);
+                      handleSpotlight(article.id!, article.featured || false);
+                    }}
                     className={`px-3 py-1 rounded-md transition-colors ${
                       article.featured 
                         ? 'text-yellow-600 hover:text-yellow-800 bg-yellow-50 hover:bg-yellow-100' 
                         : 'text-gray-600 hover:text-yellow-600 hover:bg-yellow-50'
                     }`}
                     title={article.featured ? 'Remove from spotlight' : 'Add to spotlight'}
-                    disabled={!article.hasOwnProperty('featured')}
                   >
                     {article.featured ? '⭐' : '☆'}
                   </button>
