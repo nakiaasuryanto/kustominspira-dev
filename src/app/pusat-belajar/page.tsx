@@ -189,42 +189,54 @@ export default function PusatBelajar() {
 
           <div className="grid lg:grid-cols-2 gap-6 md:gap-8">
             {/* Spotlight Article */}
-            {articles.length > 0 ? (
-              <article className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow">
-                <div className="aspect-[4/3] bg-gray-200 overflow-hidden">
-                  <img 
-                    src={articles[0].image_url || articles[0].image} 
-                    alt={articles[0].title}
-                    className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
-                  />
-                </div>
-                <div className="p-4 md:p-8">
-                  <div className="flex flex-wrap items-center gap-2 mb-3 md:mb-4">
-                    <span className="bg-[#1ca4bc]/10 text-[#1ca4bc] px-3 md:px-4 py-1 md:py-2 rounded-full text-xs md:text-sm font-medium">
-                      {articles[0].category}
-                    </span>
-                    <span className="text-gray-400 text-xs md:text-sm">{articles[0].read_time || '3 Min Read'}</span>
+            {(() => {
+              const spotlightArticle = articles.find(article => article.featured) || articles[0];
+              return spotlightArticle ? (
+                <article className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow relative">
+                  {spotlightArticle.featured && (
+                    <div className="absolute top-4 right-4 z-10">
+                      <div className="bg-yellow-500 text-white px-3 py-1 rounded-full text-xs font-medium flex items-center gap-1">
+                        ⭐ Spotlight
+                      </div>
+                    </div>
+                  )}
+                  <div className="aspect-[4/3] bg-gray-200 overflow-hidden">
+                    <img 
+                      src={spotlightArticle.image_url || spotlightArticle.image} 
+                      alt={spotlightArticle.title}
+                      className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                    />
                   </div>
-                  <h3 className="text-lg md:text-2xl font-bold text-gray-900 mb-3 md:mb-4 line-clamp-2">
-                    {articles[0].title}
-                  </h3>
-                  <p className="text-gray-600 mb-4 md:mb-6 text-sm md:text-lg leading-relaxed line-clamp-3">
-                    {articles[0].excerpt}
-                  </p>
-                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-                    <span className="text-xs md:text-sm text-gray-500">
-                      Oleh {articles[0].author}
-                    </span>
-                    <button 
-                      onClick={() => window.location.href = `/pusat-belajar/artikel/${articles[0].slug || articles[0].id}`}
-                      className="bg-[#1ca4bc] text-white px-4 md:px-6 py-2 md:py-3 rounded-lg hover:bg-[#159bb3] transition-colors font-medium text-sm md:text-base"
-                    >
-                      Baca Artikel →
-                    </button>
+                  <div className="p-4 md:p-8">
+                    <div className="flex flex-wrap items-center gap-2 mb-3 md:mb-4">
+                      <span className="bg-[#1ca4bc]/10 text-[#1ca4bc] px-3 md:px-4 py-1 md:py-2 rounded-full text-xs md:text-sm font-medium">
+                        {spotlightArticle.category}
+                      </span>
+                      <span className="text-gray-400 text-xs md:text-sm">{spotlightArticle.read_time || '3 Min Read'}</span>
+                    </div>
+                    <h3 className="text-lg md:text-2xl font-bold text-gray-900 mb-3 md:mb-4 line-clamp-2">
+                      {spotlightArticle.title}
+                    </h3>
+                    <p className="text-gray-600 mb-4 md:mb-6 text-sm md:text-lg leading-relaxed line-clamp-3">
+                      {spotlightArticle.excerpt}
+                    </p>
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                      <span className="text-xs md:text-sm text-gray-500">
+                        Oleh {spotlightArticle.author}
+                      </span>
+                      <button 
+                        onClick={() => window.location.href = `/pusat-belajar/artikel/${spotlightArticle.slug || spotlightArticle.id}`}
+                        className="bg-[#1ca4bc] text-white px-4 md:px-6 py-2 md:py-3 rounded-lg hover:bg-[#159bb3] transition-colors font-medium text-sm md:text-base"
+                      >
+                        Baca Artikel →
+                      </button>
+                    </div>
                   </div>
-                </div>
-              </article>
-            ) : (
+                </article>
+              ) : null;
+            })()}
+
+            {articles.length === 0 && (
               <div className="bg-white rounded-xl shadow-lg overflow-hidden p-6 md:p-8 text-center">
                 <div className="text-gray-400 mb-4">
                   <svg className="w-12 md:w-16 h-12 md:h-16 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
