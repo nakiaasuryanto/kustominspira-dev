@@ -130,15 +130,73 @@ export default function PusatBelajar() {
         </div>
       </nav>
 
-      {/* Mobile Menu */}
-      <div className={`fixed top-16 left-0 right-0 z-40 bg-white shadow-lg border-b border-gray-200 transform transition-transform duration-300 md:hidden ${isMenuOpen ? 'translate-y-0' : '-translate-y-full'}`}>
-        <div className="max-w-7xl mx-auto px-4 py-4">
-          <div className="flex flex-col space-y-4">
-            <Link href="/" className="text-gray-700 hover:text-[#1ca4bc] transition-colors font-medium" onClick={() => setIsMenuOpen(false)}>Home</Link>
-            <Link href="/pusat-belajar" className="text-[#1ca4bc] font-bold" onClick={() => setIsMenuOpen(false)}>Pusat Belajar</Link>
-            <Link href="/temu-belajar" className="text-gray-700 hover:text-[#1ca4bc] transition-colors font-medium" onClick={() => setIsMenuOpen(false)}>Temu Belajar</Link>
-            <Link href="/gallery" className="text-gray-700 hover:text-[#1ca4bc] transition-colors font-medium" onClick={() => setIsMenuOpen(false)}>Gallery</Link>
-            <a href="https://kustompedia.com" target="_blank" rel="noopener noreferrer" className="text-gray-700 hover:text-[#1ca4bc] transition-colors font-medium">Kustompedia</a>
+      {/* Fullscreen Mobile Menu */}
+      <div className={`fixed inset-0 z-50 transform transition-transform duration-500 ease-in-out md:hidden ${isMenuOpen ? 'translate-x-0' : 'translate-x-full'}`}>
+        {/* Background */}
+        <div className="absolute inset-0 bg-black">
+          <div className="absolute inset-0 bg-gradient-to-br from-[#1ca4bc]/20 via-black to-gray-800"></div>
+        </div>
+
+        {/* Content */}
+        <div className="relative z-10 h-full flex flex-col justify-center p-8">
+          {/* Close Button */}
+          <button 
+            onClick={() => setIsMenuOpen(false)}
+            className="absolute top-8 right-8 w-8 h-8 flex items-center justify-center text-white hover:scale-110 transition-transform"
+          >
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+
+          {/* Navigation Links */}
+          <nav className="space-y-8">
+            <Link 
+              href="/" 
+              className="block text-4xl font-bold text-white hover:text-[#1ca4bc] transition-colors transform hover:translate-x-4 duration-300" 
+              onClick={() => setIsMenuOpen(false)}
+            >
+              Home
+            </Link>
+            <Link 
+              href="/pusat-belajar" 
+              className="block text-4xl font-bold text-[#1ca4bc] transform translate-x-4 duration-300" 
+              onClick={() => setIsMenuOpen(false)}
+            >
+              Pusat Belajar
+            </Link>
+            <Link 
+              href="/temu-belajar" 
+              className="block text-4xl font-bold text-white hover:text-[#1ca4bc] transition-colors transform hover:translate-x-4 duration-300" 
+              onClick={() => setIsMenuOpen(false)}
+            >
+              Temu Belajar
+            </Link>
+            <Link 
+              href="/gallery" 
+              className="block text-4xl font-bold text-white hover:text-[#1ca4bc] transition-colors transform hover:translate-x-4 duration-300" 
+              onClick={() => setIsMenuOpen(false)}
+            >
+              Gallery
+            </Link>
+            <a 
+              href="https://kustompedia.com" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="block text-4xl font-bold text-white hover:text-[#1ca4bc] transition-colors transform hover:translate-x-4 duration-300"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              Kustompedia
+            </a>
+          </nav>
+
+          {/* Bottom Logo */}
+          <div className="absolute bottom-8 left-8">
+            <img 
+              src="/assets/Kustom Inspira - putih.png" 
+              alt="Kustom Inspira" 
+              className="h-8 w-auto opacity-50"
+            />
           </div>
         </div>
       </div>
@@ -413,66 +471,66 @@ export default function PusatBelajar() {
 
 
       {/* Brand Showcase Section */}
-      <section className="py-20 bg-gradient-to-br from-[#1ca4bc] to-[#159bb3] overflow-hidden">
-        <div className="max-w-6xl mx-auto px-6 text-center">
-          <div className="mb-16">
-            <div className="flex items-center justify-center gap-4 mb-6">
-              <h2 className="text-4xl md:text-5xl font-bold text-white">
+      <section className="py-12 md:py-20 bg-gradient-to-br from-[#1ca4bc] to-[#159bb3] overflow-hidden">
+        <div className="max-w-6xl mx-auto px-4 md:px-6 text-center">
+          <div className="mb-8 md:mb-16">
+            <div className="flex flex-col md:flex-row items-center justify-center gap-2 md:gap-4 mb-4 md:mb-6">
+              <h2 className="text-2xl md:text-4xl lg:text-5xl font-bold text-white">
                 Part of
               </h2>
               <img 
                 src="/assets/kustompedia.png" 
                 alt="Kustompedia" 
-                className="h-12 md:h-16 w-auto cursor-pointer hover:scale-105 transition-transform duration-300 bg-white/20 px-4 py-2 rounded-lg"
+                className="h-8 md:h-12 lg:h-16 w-auto cursor-pointer hover:scale-105 transition-transform duration-300 bg-white/20 px-2 md:px-4 py-1 md:py-2 rounded-lg"
                 onClick={() => window.open('https://kustompedia.com', '_blank')}
               />
             </div>
-            <p className="text-white text-xl md:text-2xl max-w-3xl mx-auto leading-relaxed font-medium">
+            <p className="text-white text-sm md:text-xl lg:text-2xl max-w-3xl mx-auto leading-relaxed font-medium px-4">
               Kami membangun <span className="font-bold text-white">ekosistem</span> yang mendukung <span className="font-bold text-white">penjahit lokal</span>, mendorong <span className="font-bold text-white">inovasi produk</span>, dan mengutamakan <span className="font-bold text-white">keberlanjutan</span> di setiap langkah
             </p>
           </div>
 
-          <div ref={logosRef} className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12 items-center justify-items-center">
+          <div ref={logosRef} className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8 lg:gap-12 items-center justify-items-center">
             <Link href="/" className="relative group cursor-pointer">
-              <div className="relative bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20 hover:border-white/30 transition-all duration-300">
+              <div className="relative bg-white/10 backdrop-blur-sm rounded-xl md:rounded-2xl p-4 md:p-8 border border-white/20 hover:border-white/30 transition-all duration-300">
                 <img 
                   ref={(el) => { logoRefs.current[0] = el; }}
                   src="/assets/Kustom Inspira - putih.png" 
                   alt="Kustom Inspira" 
-                  className="h-28 w-28 mx-auto object-contain filter brightness-0 invert"
+                  className="h-16 md:h-28 w-16 md:w-28 mx-auto object-contain filter brightness-0 invert"
                 />
               </div>
             </Link>
 
             <div className="relative group cursor-pointer" onClick={() => window.open('https://kustomgarment.com', '_blank')}>
-              <div className="relative bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20 hover:border-white/30 transition-all duration-300">
+              <div className="relative bg-white/10 backdrop-blur-sm rounded-xl md:rounded-2xl p-4 md:p-8 border border-white/20 hover:border-white/30 transition-all duration-300">
                 <img 
                   ref={(el) => { logoRefs.current[1] = el; }}
                   src="/assets/KG.png" 
                   alt="Kustom Gallery" 
-                  className="h-28 w-28 mx-auto object-contain"
+                  className="h-16 md:h-28 w-16 md:w-28 mx-auto object-contain"
                 />
               </div>
             </div>
 
             <div className="relative group cursor-pointer" onClick={() => window.open('https://kustomproject.id', '_blank')}>
-              <div className="relative bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20 hover:border-white/30 transition-all duration-300">
+              <div className="relative bg-white/10 backdrop-blur-sm rounded-xl md:rounded-2xl p-4 md:p-8 border border-white/20 hover:border-white/30 transition-all duration-300">
                 <img 
                   ref={(el) => { logoRefs.current[2] = el; }}
                   src="/assets/KP.png" 
                   alt="Kustom Pedia" 
-                  className="h-28 w-28 mx-auto object-contain"
+                  className="h-16 md:h-28 w-16 md:w-28 mx-auto object-contain"
                 />
               </div>
             </div>
 
             <div className="relative group cursor-pointer" onClick={() => window.open('https://care.kustompedia.com', '_blank')}>
-              <div className="relative bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20 hover:border-white/30 transition-all duration-300">
+              <div className="relative bg-white/10 backdrop-blur-sm rounded-xl md:rounded-2xl p-4 md:p-8 border border-white/20 hover:border-white/30 transition-all duration-300">
                 <img 
                   ref={(el) => { logoRefs.current[3] = el; }}
                   src="/assets/KC.png" 
                   alt="Kustom Care" 
-                  className="h-28 w-28 mx-auto object-contain"
+                  className="h-16 md:h-28 w-16 md:w-28 mx-auto object-contain"
                 />
               </div>
             </div>

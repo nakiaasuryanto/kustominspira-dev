@@ -145,15 +145,29 @@ export default function TemuBelajar() {
         </div>
       </nav>
 
-      {/* Mobile Menu */}
-      <div className={`fixed top-16 left-0 right-0 z-40 bg-white shadow-lg border-b border-gray-200 transform transition-transform duration-300 md:hidden ${isMenuOpen ? 'translate-y-0' : '-translate-y-full'}`}>
-        <div className="max-w-7xl mx-auto px-4 py-4">
-          <div className="flex flex-col space-y-4">
-            <Link href="/" className="text-gray-700 hover:text-[#1ca4bc] transition-colors font-medium" onClick={() => setIsMenuOpen(false)}>Home</Link>
-            <Link href="/pusat-belajar" className="text-gray-700 hover:text-[#1ca4bc] transition-colors font-medium" onClick={() => setIsMenuOpen(false)}>Pusat Belajar</Link>
-            <Link href="/temu-belajar" className="text-[#1ca4bc] font-bold" onClick={() => setIsMenuOpen(false)}>Temu Belajar</Link>
-            <Link href="/gallery" className="text-gray-700 hover:text-[#1ca4bc] transition-colors font-medium" onClick={() => setIsMenuOpen(false)}>Gallery</Link>
-            <a href="https://kustompedia.com" target="_blank" rel="noopener noreferrer" className="text-gray-700 hover:text-[#1ca4bc] transition-colors font-medium">Kustompedia</a>
+      {/* Fullscreen Mobile Menu */}
+      <div className={`fixed inset-0 z-50 transform transition-transform duration-500 ease-in-out md:hidden ${isMenuOpen ? 'translate-x-0' : 'translate-x-full'}`}>
+        <div className="absolute inset-0 bg-black">
+          <div className="absolute inset-0 bg-gradient-to-br from-[#1ca4bc]/20 via-black to-gray-800"></div>
+        </div>
+        <div className="relative z-10 h-full flex flex-col justify-center p-8">
+          <button 
+            onClick={() => setIsMenuOpen(false)}
+            className="absolute top-8 right-8 w-8 h-8 flex items-center justify-center text-white hover:scale-110 transition-transform"
+          >
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+          <nav className="space-y-8">
+            <Link href="/" className="block text-4xl font-bold text-white hover:text-[#1ca4bc] transition-colors transform hover:translate-x-4 duration-300" onClick={() => setIsMenuOpen(false)}>Home</Link>
+            <Link href="/pusat-belajar" className="block text-4xl font-bold text-white hover:text-[#1ca4bc] transition-colors transform hover:translate-x-4 duration-300" onClick={() => setIsMenuOpen(false)}>Pusat Belajar</Link>
+            <Link href="/temu-belajar" className="block text-4xl font-bold text-[#1ca4bc] transform translate-x-4 duration-300" onClick={() => setIsMenuOpen(false)}>Temu Belajar</Link>
+            <Link href="/gallery" className="block text-4xl font-bold text-white hover:text-[#1ca4bc] transition-colors transform hover:translate-x-4 duration-300" onClick={() => setIsMenuOpen(false)}>Gallery</Link>
+            <a href="https://kustompedia.com" target="_blank" rel="noopener noreferrer" className="block text-4xl font-bold text-white hover:text-[#1ca4bc] transition-colors transform hover:translate-x-4 duration-300" onClick={() => setIsMenuOpen(false)}>Kustompedia</a>
+          </nav>
+          <div className="absolute bottom-8 left-8">
+            <img src="/assets/Kustom Inspira - putih.png" alt="Kustom Inspira" className="h-8 w-auto opacity-50" />
           </div>
         </div>
       </div>

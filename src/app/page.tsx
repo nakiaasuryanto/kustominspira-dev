@@ -70,22 +70,34 @@ export default function Home() {
     const handleScroll = () => {
       setScrollY(window.scrollY);
       
-      // GSAP scroll animations
+      // Enhanced scroll animations for both desktop and mobile
       if (typeof window !== 'undefined') {
         const sectionHeight = window.innerHeight;
         const scrollProgress = window.scrollY / sectionHeight;
+        const isMobile = window.innerWidth < 768;
         
-        // Simple parallax effect for titles
+        // Enhanced parallax effect for both desktop and mobile
         titleRefs.current.forEach((title, index) => {
           if (title) {
-            const offset = (scrollProgress - index) * 20;
-            title.style.transform = `translateY(${offset}px)`;
+            // More pronounced effect on mobile for better visibility
+            const parallaxIntensity = isMobile ? 30 : 20;
+            const offset = (scrollProgress - index) * parallaxIntensity;
+            
+            // Add rotation and scale effects on mobile
+            if (isMobile) {
+              const rotationOffset = (scrollProgress - index) * 2;
+              const scaleOffset = 1 + (scrollProgress - index) * 0.05;
+              title.style.transform = `translateY(${offset}px) rotate(${rotationOffset}deg) scale(${Math.max(0.8, Math.min(1.2, scaleOffset))})`;
+            } else {
+              title.style.transform = `translateY(${offset}px)`;
+            }
           }
         });
       }
     };
     
-    window.addEventListener('scroll', handleScroll);
+    // Use passive listeners for better mobile performance
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 

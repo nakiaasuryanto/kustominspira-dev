@@ -419,30 +419,30 @@ export default function ArticlePage() {
                 </div>
               </div>
               
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2 md:gap-3">
                 <button 
                   onClick={handleLike}
                   disabled={hasLiked}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-full hover:shadow-lg transition-all duration-300 hover:scale-105 ${
+                  className={`flex items-center gap-1 md:gap-2 px-2 md:px-4 py-1.5 md:py-2 rounded-full hover:shadow-lg transition-all duration-300 hover:scale-105 ${
                     hasLiked 
                       ? 'bg-red-500 text-white cursor-not-allowed' 
                       : 'bg-[#1ca4bc] text-white hover:bg-[#159bb3]'
                   }`}
                 >
-                  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                  <svg className="w-3 md:w-4 h-3 md:h-4" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd" />
                   </svg>
-                  <span className="text-sm font-medium">{hasLiked ? 'Liked!' : 'Like'}</span>
+                  <span className="text-xs md:text-sm font-medium">{hasLiked ? 'Liked!' : 'Like'}</span>
                 </button>
                 
                 <button 
                   onClick={handleShare}
-                  className="flex items-center gap-2 bg-white text-gray-700 px-4 py-2 rounded-full border border-[#1ca4bc]/30 hover:border-[#1ca4bc] hover:bg-[#1ca4bc]/5 transition-all duration-300 hover:scale-105"
+                  className="flex items-center gap-1 md:gap-2 bg-white text-gray-700 px-2 md:px-4 py-1.5 md:py-2 rounded-full border border-[#1ca4bc]/30 hover:border-[#1ca4bc] hover:bg-[#1ca4bc]/5 transition-all duration-300 hover:scale-105"
                 >
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-3 md:w-4 h-3 md:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z" />
                   </svg>
-                  <span className="text-sm font-medium">Share</span>
+                  <span className="text-xs md:text-sm font-medium">Share</span>
                 </button>
               </div>
             </div>
