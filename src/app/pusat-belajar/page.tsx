@@ -314,56 +314,8 @@ export default function PusatBelajar() {
             </button>
           </div>
 
-          <div className="grid lg:grid-cols-2 gap-6 md:gap-8">
-            {/* Spotlight Article */}
-            {(() => {
-              const spotlightArticle = articles.find(article => article.featured) || articles[0];
-              return spotlightArticle ? (
-                <article className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow relative">
-                  {spotlightArticle.featured && (
-                    <div className="absolute top-4 right-4 z-10">
-                      <div className="bg-yellow-500 text-white px-3 py-1 rounded-full text-xs font-medium flex items-center gap-1">
-                        ⭐ Spotlight
-                      </div>
-                    </div>
-                  )}
-                  <div className="aspect-[4/3] bg-gray-200 overflow-hidden">
-                    <img 
-                      src={spotlightArticle.image_url || spotlightArticle.image} 
-                      alt={spotlightArticle.title}
-                      className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
-                    />
-                  </div>
-                  <div className="p-4 md:p-8">
-                    <div className="flex flex-wrap items-center gap-2 mb-3 md:mb-4">
-                      <span className="bg-[#1ca4bc]/10 text-[#1ca4bc] px-3 md:px-4 py-1 md:py-2 rounded-full text-xs md:text-sm font-medium">
-                        {spotlightArticle.category}
-                      </span>
-                      <span className="text-gray-400 text-xs md:text-sm">{spotlightArticle.read_time || '3 Min Read'}</span>
-                    </div>
-                    <h3 className="text-lg md:text-2xl font-bold text-gray-900 mb-3 md:mb-4 line-clamp-2">
-                      {spotlightArticle.title}
-                    </h3>
-                    <p className="text-gray-600 mb-4 md:mb-6 text-sm md:text-lg leading-relaxed line-clamp-3">
-                      {spotlightArticle.excerpt}
-                    </p>
-                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-                      <span className="text-xs md:text-sm text-gray-500">
-                        Oleh {spotlightArticle.author}
-                      </span>
-                      <button 
-                        onClick={() => window.location.href = `/pusat-belajar/artikel/${spotlightArticle.slug || spotlightArticle.id}`}
-                        className="bg-[#1ca4bc] text-white px-4 md:px-6 py-2 md:py-3 rounded-lg hover:bg-[#159bb3] transition-colors font-medium text-sm md:text-base"
-                      >
-                        Baca Artikel →
-                      </button>
-                    </div>
-                  </div>
-                </article>
-              ) : null;
-            })()}
-
-            {articles.length === 0 && (
+          <div className="space-y-6">
+            {articles.length === 0 ? (
               <div className="bg-white rounded-xl shadow-lg overflow-hidden p-6 md:p-8 text-center">
                 <div className="text-gray-400 mb-4">
                   <svg className="w-12 md:w-16 h-12 md:h-16 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -372,47 +324,69 @@ export default function PusatBelajar() {
                 </div>
                 <p className="text-gray-600 text-sm md:text-base">Belum ada artikel. Silakan tambahkan melalui admin panel.</p>
               </div>
+            ) : (
+              articles.map((article, index) => {
+                const isSpotlight = article.featured || index === 0;
+                return (
+                  <article 
+                    key={article.id} 
+                    className={`bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow flex relative ${
+                      isSpotlight ? 'h-48 md:h-56' : 'h-32 md:h-36'
+                    }`}
+                  >
+                    {isSpotlight && (
+                      <div className="absolute top-4 right-4 z-10">
+                        <div className="bg-yellow-500 text-white px-3 py-1 rounded-full text-xs font-medium flex items-center gap-1">
+                          ⭐ Spotlight
+                        </div>
+                      </div>
+                    )}
+                    <div className={`bg-gray-200 overflow-hidden flex-shrink-0 ${
+                      isSpotlight ? 'w-48 md:w-64' : 'w-32 md:w-40'
+                    }`}>
+                      <img 
+                        src={article.image_url || article.image} 
+                        alt={article.title}
+                        className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                      />
+                    </div>
+                    <div className={`flex-1 ${isSpotlight ? 'p-6 md:p-8' : 'p-4 md:p-6'}`}>
+                      <div className="flex items-center gap-2 mb-2">
+                        <span className="bg-[#1ca4bc]/10 text-[#1ca4bc] px-3 py-1 rounded-full text-xs font-medium">
+                          {article.category}
+                        </span>
+                        <span className="text-gray-400 text-xs">{article.read_time || '3 Min Read'}</span>
+                      </div>
+                      <h3 className={`font-bold text-gray-900 mb-2 line-clamp-2 ${
+                        isSpotlight ? 'text-xl md:text-2xl mb-3 md:mb-4' : 'text-lg'
+                      }`}>
+                        {article.title}
+                      </h3>
+                      <p className={`text-gray-600 mb-3 line-clamp-2 ${
+                        isSpotlight ? 'text-sm md:text-base leading-relaxed mb-4 md:mb-6' : 'text-sm'
+                      }`}>
+                        {article.excerpt}
+                      </p>
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs text-gray-500">
+                          Oleh {article.author}
+                        </span>
+                        <button 
+                          onClick={() => window.location.href = `/pusat-belajar/artikel/${article.slug || article.id}`}
+                          className={`transition-colors font-medium ${
+                            isSpotlight 
+                              ? 'bg-[#1ca4bc] text-white px-4 md:px-6 py-2 md:py-3 rounded-lg hover:bg-[#159bb3] text-sm md:text-base' 
+                              : 'text-[#1ca4bc] hover:text-[#159bb3] text-sm'
+                          }`}
+                        >
+                          {isSpotlight ? 'Baca Artikel →' : 'Baca →'}
+                        </button>
+                      </div>
+                    </div>
+                  </article>
+                );
+              })
             )}
-
-            {/* Regular Articles */}
-            <div className="space-y-6">
-              {articles.filter(article => !article.featured).slice(0, 4).map((article) => (
-                <article key={article.id} className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow flex">
-                  <div className="w-32 h-32 bg-gray-200 overflow-hidden flex-shrink-0">
-                    <img 
-                      src={article.image_url || article.image} 
-                      alt={article.title}
-                      className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
-                    />
-                  </div>
-                  <div className="p-6 flex-1">
-                    <div className="flex items-center gap-2 mb-2">
-                      <span className="bg-[#1ca4bc]/10 text-[#1ca4bc] px-3 py-1 rounded-full text-xs font-medium">
-                        {article.category}
-                      </span>
-                      <span className="text-gray-400 text-xs">{article.read_time || '3 Min Read'}</span>
-                    </div>
-                    <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                      {article.title}
-                    </h3>
-                    <p className="text-gray-600 text-sm mb-3 line-clamp-2">
-                      {article.excerpt}
-                    </p>
-                    <div className="flex items-center justify-between">
-                      <span className="text-xs text-gray-500">
-                        Oleh {article.author}
-                      </span>
-                      <button 
-                        onClick={() => window.location.href = `/pusat-belajar/artikel/${article.slug || article.id}`}
-                        className="text-[#1ca4bc] hover:text-[#159bb3] font-medium text-sm"
-                      >
-                        Baca →
-                      </button>
-                    </div>
-                  </div>
-                </article>
-              ))}
-            </div>
           </div>
         </div>
       </section>
