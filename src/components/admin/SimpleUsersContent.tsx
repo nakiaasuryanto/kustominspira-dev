@@ -17,10 +17,10 @@ function SimpleUsersContent({ users, onAdd, onUpdate, onDelete }: UsersContentPr
   // Add built-in admin user
   const builtInAdmin = {
     id: 'admin-builtin',
-    username: 'admin',
+    username: 'minspira',
     first_name: 'Kustominspira',
     last_name: 'Admin',
-    full_name: 'Kustominspira Admin',
+    full_name: 'Minspira',
     role: 'admin' as const,
     is_active: true,
     created_at: '2025-01-01'

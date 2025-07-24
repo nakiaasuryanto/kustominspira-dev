@@ -550,7 +550,7 @@ function ArticlesContent({ articles, onAdd, onUpdate, onDelete }: ArticlesConten
     title: '',
     slug: '',
     category: 'Tutorial',
-    author: 'Admin',
+    author: 'Minspira',
     read_time: '3 Min Read',
     content: '',
     excerpt: '',
@@ -587,7 +587,7 @@ function ArticlesContent({ articles, onAdd, onUpdate, onDelete }: ArticlesConten
     } else {
       onAdd(formData);
     }
-    setFormData({ title: '', slug: '', category: 'Tutorial', author: 'Admin', read_time: '3 Min Read', content: '', excerpt: '', image_url: '/assets/pusatbelajar.webp', status: 'published' });
+    setFormData({ title: '', slug: '', category: 'Tutorial', author: 'Minspira', read_time: '3 Min Read', content: '', excerpt: '', image_url: '/assets/pusatbelajar.webp', status: 'published' });
     setShowForm(false);
   };
 
@@ -629,7 +629,7 @@ function ArticlesContent({ articles, onAdd, onUpdate, onDelete }: ArticlesConten
           onClick={() => {
             setShowForm(!showForm);
             setEditingArticle(null);
-            setFormData({ title: '', slug: '', category: 'Tutorial', author: 'Admin', read_time: '3 Min Read', content: '', excerpt: '', image_url: '/assets/pusatbelajar.webp', status: 'published' });
+            setFormData({ title: '', slug: '', category: 'Tutorial', author: 'Minspira', read_time: '3 Min Read', content: '', excerpt: '', image_url: '/assets/pusatbelajar.webp', status: 'published' });
           }}
           className="bg-[#1ca4bc] text-white px-6 py-2 rounded-lg hover:bg-[#159bb3] transition-colors"
         >

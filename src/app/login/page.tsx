@@ -21,12 +21,12 @@ export default function Login() {
       console.log('Attempting login for username:', username);
       
       // Simple admin login for testing
-      if (username === 'admin' && password === 'admin123') {
+      if (username === 'minspira' && password === 'admin123') {
         console.log('Admin login successful');
         localStorage.setItem('isAdminLoggedIn', 'true');
-        localStorage.setItem('adminUsername', 'admin');
+        localStorage.setItem('adminUsername', 'minspira');
         localStorage.setItem('adminRole', 'admin');
-        localStorage.setItem('adminName', 'Kustominspira Admin');
+        localStorage.setItem('adminName', 'Minspira');
         
         console.log('Redirecting to admin dashboard');
         router.push('/admin');
@@ -85,7 +85,7 @@ export default function Login() {
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1ca4bc] focus:border-[#1ca4bc] transition-colors text-gray-900"
-                placeholder="username"
+                placeholder="minspira"
                 required
               />
             </div>
