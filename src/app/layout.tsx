@@ -16,7 +16,7 @@ export const metadata: Metadata = {
   title: "Kustominspira - #DariKainJadiKarya",
   description: "Belajar dan praktek langsung di Kustominspira. Platform edukasi fashion dan menjahit terpercaya dengan artikel, video tutorial, workshop, dan seminar.",
   icons: {
-    icon: '/assets/favicon.ico',
+    icon: '/public/assets/favicon.ico',
   },
 };
 

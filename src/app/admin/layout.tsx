@@ -4,7 +4,7 @@ export const metadata: Metadata = {
   title: 'Admin Dashboard - Kustom Inspira',
   description: 'Administrator dashboard for managing Kustom Inspira content',
   icons: {
-    icon: '/assets/favicon.ico',
+    icon: '/public/assets/favicon.ico',
   },
   robots: {
     index: false,

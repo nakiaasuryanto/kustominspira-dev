@@ -16,7 +16,7 @@ export const metadata: Metadata = {
     'indonesian fashion'
   ],
   icons: {
-    icon: '/assets/favicon.ico',
+    icon: '/public/assets/favicon.ico',
   },
   authors: [{ name: 'Kustom Inspira' }],
   creator: 'Kustom Inspira',
