@@ -142,17 +142,9 @@ export default function TemuBelajar() {
             />
           </Link>
           
-          <div className="hidden md:flex items-center space-x-6 lg:space-x-8">
-            <Link href="/" className="text-gray-600 hover:text-gray-900 transition-colors text-sm lg:text-base">Home</Link>
-            <Link href="/pusat-belajar" className="text-gray-600 hover:text-gray-900 transition-colors text-sm lg:text-base">Pusat Belajar</Link>
-            <Link href="/temu-belajar" className="text-[#1ca4bc] font-medium text-sm lg:text-base">Temu Belajar</Link>
-            <Link href="/gallery" className="text-gray-600 hover:text-gray-900 transition-colors text-sm lg:text-base">Gallery</Link>
-            <a href="https://kustompedia.com" target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-gray-900 transition-colors text-sm lg:text-base">Kustompedia</a>
-          </div>
-
           <button 
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="md:hidden w-8 h-8 flex flex-col justify-center items-center"
+            className="w-8 h-8 flex flex-col justify-center items-center hover:scale-110 transition-transform"
           >
             <div className="w-4 h-px bg-gray-900 mb-1"></div>
             <div className="w-4 h-px bg-gray-900 mb-1"></div>
@@ -161,8 +153,8 @@ export default function TemuBelajar() {
         </div>
       </nav>
 
-      {/* Fullscreen Mobile Menu */}
-      <div className={`fixed inset-0 z-50 transform transition-transform duration-500 ease-in-out md:hidden ${isMenuOpen ? 'translate-x-0' : 'translate-x-full'}`}>
+      {/* Fullscreen Menu */}
+      <div className={`fixed inset-0 z-50 transform transition-transform duration-500 ease-in-out ${isMenuOpen ? 'translate-x-0' : 'translate-x-full'}`}>
         <div className="absolute inset-0 bg-black">
           <div className="absolute inset-0 bg-gradient-to-br from-[#1ca4bc]/20 via-black to-gray-800"></div>
         </div>
@@ -688,9 +680,16 @@ export default function TemuBelajar() {
               {/* Description */}
               <div className="mb-8">
                 <h3 className="text-lg font-semibold text-gray-900 mb-3">Deskripsi Event</h3>
-                <p className="text-gray-600 leading-relaxed">
-                  {selectedEvent.description || 'Deskripsi event akan segera ditambahkan.'}
-                </p>
+                <div className="text-gray-600 leading-relaxed space-y-3">
+                  {selectedEvent.description ? 
+                    selectedEvent.description.split('\n').map((paragraph, index) => (
+                      <p key={index} className="text-gray-600 leading-relaxed">
+                        {paragraph.trim()}
+                      </p>
+                    )) : 
+                    <p className="text-gray-500 italic">Deskripsi event akan segera ditambahkan.</p>
+                  }
+                </div>
               </div>
               
               {/* Action Buttons */}
