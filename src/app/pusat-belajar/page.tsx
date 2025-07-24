@@ -437,7 +437,7 @@ export default function PusatBelajar() {
                     <article 
                       key={article.id} 
                       className={`bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow flex relative ${
-                        isSpotlight ? 'h-48' : 'h-32'
+                        isSpotlight ? 'h-48' : 'h-24'
                       }`}
                     >
                       {isSpotlight && (
@@ -448,7 +448,7 @@ export default function PusatBelajar() {
                         </div>
                       )}
                       <div className={`bg-gray-200 overflow-hidden flex-shrink-0 ${
-                        isSpotlight ? 'w-48' : 'w-32'
+                        isSpotlight ? 'w-48' : 'w-24'
                       }`}>
                         <img 
                           src={article.image_url || article.image} 
@@ -456,7 +456,7 @@ export default function PusatBelajar() {
                           className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
                         />
                       </div>
-                      <div className={`flex-1 ${isSpotlight ? 'p-6' : 'p-4'}`}>
+                      <div className={`flex-1 ${isSpotlight ? 'p-6' : 'p-3'}`}>
                         <div className="flex items-center gap-2 mb-2">
                           <span className="bg-[#1ca4bc]/10 text-[#1ca4bc] px-3 py-1 rounded-full text-xs font-medium">
                             {article.category}
@@ -499,19 +499,21 @@ export default function PusatBelajar() {
       </section>
 
       {/* Video Section */}
-      <section id="videos" className="py-16 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="flex justify-between items-center mb-12">
+      <section id="videos" className="py-12 md:py-16 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 md:px-6">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 md:mb-12 gap-4">
             <div>
-              <h2 className="text-3xl font-bold text-gray-900 mb-4">Video Tutorial</h2>
-              <p className="text-gray-600">Belajar menjahit dengan panduan video step-by-step</p>
+              <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2 md:mb-4">Video Tutorial</h2>
+              <p className="text-gray-600 text-sm md:text-base">Belajar menjahit dengan panduan video step-by-step</p>
             </div>
-            <button className="text-[#1ca4bc] hover:text-[#159bb3] font-medium">
+            <button className="text-[#1ca4bc] hover:text-[#159bb3] font-medium text-sm md:text-base">
               Lihat Semua →
             </button>
           </div>
 
-          <div className="grid lg:grid-cols-2 gap-8">
+          {/* Desktop Layout */}
+          <div className="hidden md:block">
+            <div className="grid lg:grid-cols-2 gap-8">
             {/* Spotlight Video */}
             {(() => {
               const spotlightVideo = videos.find(video => video.featured) || videos[0];
@@ -612,6 +614,85 @@ export default function PusatBelajar() {
                   </div>
                 </div>
               ))}
+            </div>
+          </div>
+
+          {/* Mobile Layout */}
+          <div className="block md:hidden">
+            <div className="space-y-4">
+              {videos.length === 0 ? (
+                <div className="bg-white rounded-xl shadow-lg overflow-hidden p-6 text-center">
+                  <div className="text-gray-400 mb-4">
+                    <svg className="w-12 h-12 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                    </svg>
+                  </div>
+                  <p className="text-gray-600 text-sm">Belum ada video. Silakan tambahkan melalui admin panel.</p>
+                </div>
+              ) : (
+                videos.map((video, index) => {
+                  const isSpotlight = video.featured || index === 0;
+                  return (
+                    <div 
+                      key={video.id}
+                      onClick={() => {
+                        const videoUrl = video.videoUrl || video.video_url;
+                        if (videoUrl) {
+                          window.open(videoUrl, '_blank');
+                        }
+                      }}
+                      className={`bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow cursor-pointer flex relative ${
+                        isSpotlight ? 'h-32' : 'h-20'
+                      }`}
+                    >
+                      {isSpotlight && (
+                        <div className="absolute top-2 right-2 z-10">
+                          <div className="bg-yellow-500 text-white px-2 py-1 rounded-full text-xs font-medium flex items-center gap-1">
+                            ⭐ Spotlight
+                          </div>
+                        </div>
+                      )}
+                      <div className={`bg-gray-200 relative overflow-hidden flex-shrink-0 ${
+                        isSpotlight ? 'w-48' : 'w-28'
+                      }`}>
+                        <img 
+                          src={video.thumbnail} 
+                          alt={video.title}
+                          className="w-full h-full object-cover"
+                        />
+                        <div className="absolute inset-0 bg-black/30 flex items-center justify-center">
+                          <div className={`bg-white/90 rounded-full flex items-center justify-center ${
+                            isSpotlight ? 'w-12 h-12' : 'w-8 h-8'
+                          }`}>
+                            <div className={`w-0 h-0 border-l-gray-900 border-t-transparent border-b-transparent ml-0.5 ${
+                              isSpotlight ? 'border-l-4 border-t-2 border-b-2' : 'border-l-3 border-t-1.5 border-b-1.5'
+                            }`}></div>
+                          </div>
+                        </div>
+                        <div className={`absolute bottom-1 right-1 bg-black/70 text-white px-1 py-0.5 rounded ${
+                          isSpotlight ? 'text-xs' : 'text-[10px]'
+                        }`}>
+                          {video.duration}
+                        </div>
+                      </div>
+                      <div className={`flex-1 ${isSpotlight ? 'p-4' : 'p-3'}`}>
+                        <h3 className={`font-bold text-gray-900 mb-1 line-clamp-2 ${
+                          isSpotlight ? 'text-base mb-2' : 'text-sm'
+                        }`}>
+                          {video.title}
+                        </h3>
+                        <div className="flex items-center justify-between">
+                          <span className={`bg-red-100 text-red-600 px-2 py-1 rounded-full font-medium ${
+                            isSpotlight ? 'text-xs' : 'text-[10px]'
+                          }`}>
+                            Video Tutorial
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })
+              )}
             </div>
           </div>
         </div>

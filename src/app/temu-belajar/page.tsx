@@ -642,7 +642,7 @@ export default function TemuBelajar() {
                 Part of
               </h2>
               <img 
-                src="/assets/kustompedia.png" 
+                src="/assets/Kustompedia.png" 
                 alt="Kustompedia" 
                 className="h-12 md:h-16 w-auto cursor-pointer hover:scale-105 transition-transform duration-300 bg-white/20 px-4 py-2 rounded-lg"
                 onClick={() => window.open('https://kustompedia.com', '_blank')}

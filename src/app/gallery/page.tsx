@@ -664,43 +664,119 @@ export default function Gallery() {
                 <img
                   src={selectedImage.image_url}
                   alt={selectedImage.title}
-                  className="w-full h-auto max-h-[60vh] md:max-h-[70vh] object-contain"
+                  className="w-full h-auto max-h-[50vh] md:max-h-[70vh] object-contain"
                 />
                 
-                {/* Image Info Overlay */}
-                <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent p-3 md:p-6 text-white">
+                {/* Mobile: Separate Info Section */}
+                <div className="block md:hidden p-4 bg-white">
+                  <h3 className="text-lg font-bold text-gray-900 mb-2">{selectedImage.title}</h3>
+                  <p className="text-gray-600 mb-3 text-sm">{selectedImage.description}</p>
+                  
+                  {/* Category and Tags */}
+                  <div className="flex items-center flex-wrap gap-2 mb-4">
+                    <span className="px-3 py-1 bg-[#1ca4bc] text-white rounded-full text-xs font-medium">
+                      {selectedImage.category.charAt(0).toUpperCase() + selectedImage.category.slice(1)}
+                    </span>
+                    {selectedImage.tags && selectedImage.tags.slice(0, 3).map((tag, index) => (
+                      <span key={index} className="px-2 py-1 bg-gray-100 text-gray-700 rounded-full text-xs">
+                        #{tag}
+                      </span>
+                    ))}
+                  </div>
+                  
+                  {/* Mobile Action Buttons - Horizontal Layout */}
+                  <div className="flex flex-wrap gap-2">
+                    <button 
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleLike(selectedImage.id!);
+                      }}
+                      className={`flex items-center space-x-1 px-3 py-2 rounded-lg transition-all duration-300 text-sm ${
+                        likedItems.has(selectedImage.id!) 
+                          ? 'bg-red-500 text-white shadow-lg' 
+                          : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                      }`}
+                    >
+                      <svg className={`w-4 h-4 transition-all duration-300 ${likedItems.has(selectedImage.id!) ? 'fill-current scale-110' : ''}`} fill={likedItems.has(selectedImage.id!) ? 'currentColor' : 'none'} stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                      </svg>
+                      <span className="font-medium">
+                        {likeCounts[selectedImage.id!] || 10}
+                      </span>
+                    </button>
+                    
+                    <button 
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleShare(selectedImage);
+                      }}
+                      disabled={isSharing}
+                      className={`flex items-center space-x-1 px-3 py-2 rounded-lg transition-colors text-sm ${
+                        isSharing 
+                          ? 'bg-gray-400 cursor-not-allowed text-white' 
+                          : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                      }`}
+                    >
+                      {isSharing ? (
+                        <div className="w-4 h-4 border-2 border-gray-600 border-t-transparent rounded-full animate-spin"></div>
+                      ) : (
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z" />
+                        </svg>
+                      )}
+                      <span className="font-medium">
+                        Share
+                      </span>
+                    </button>
+                    
+                    <Link 
+                      href={`/gallery/${selectedImage.id}`}
+                      className="flex items-center space-x-1 bg-[#1ca4bc] text-white px-3 py-2 rounded-lg transition-all duration-300 font-medium text-sm"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                      </svg>
+                      <span>Details</span>
+                    </Link>
+                  </div>
+                </div>
+                
+                {/* Desktop: Image Info Overlay */}
+                <div className="hidden md:block absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent p-6 text-white">
                   <div className="max-w-2xl">
-                    <h3 className="text-lg md:text-2xl font-bold mb-1 md:mb-2">{selectedImage.title}</h3>
-                    <p className="text-gray-200 mb-2 md:mb-4 text-sm md:text-base">{selectedImage.description}</p>
+                    <h3 className="text-2xl font-bold mb-2">{selectedImage.title}</h3>
+                    <p className="text-gray-200 mb-4 text-base">{selectedImage.description}</p>
                     
                     {/* Category and Tags */}
-                    <div className="flex items-center flex-wrap gap-2 md:gap-3">
-                      <span className="px-2 md:px-3 py-1 bg-[#1ca4bc] rounded-full text-xs md:text-sm font-medium">
+                    <div className="flex items-center flex-wrap gap-3">
+                      <span className="px-3 py-1 bg-[#1ca4bc] rounded-full text-sm font-medium">
                         {selectedImage.category.charAt(0).toUpperCase() + selectedImage.category.slice(1)}
                       </span>
                       {selectedImage.tags && selectedImage.tags.slice(0, 4).map((tag, index) => (
-                        <span key={index} className="px-2 md:px-3 py-1 bg-white/20 backdrop-blur-sm rounded-full text-xs md:text-sm">
+                        <span key={index} className="px-3 py-1 bg-white/20 backdrop-blur-sm rounded-full text-sm">
                           #{tag}
                         </span>
                       ))}
                     </div>
                   </div>
                   
-                  {/* Action Buttons */}
-                  <div className="flex flex-col md:flex-row items-start md:items-center justify-between mt-3 md:mt-6 gap-3 md:gap-0">
-                    <div className="flex flex-wrap gap-2 md:gap-3">
+                  {/* Desktop Action Buttons */}
+                  <div className="flex flex-row items-center justify-between mt-6 gap-0">
+                    <div className="flex gap-3">
                       <button 
                         onClick={(e) => {
                           e.stopPropagation();
                           handleLike(selectedImage.id!);
                         }}
-                        className={`flex items-center space-x-1 md:space-x-2 backdrop-blur-sm px-3 md:px-6 py-2 md:py-3 rounded-lg md:rounded-xl transition-all duration-300 text-sm md:text-base ${
+                        className={`flex items-center space-x-2 backdrop-blur-sm px-6 py-3 rounded-xl transition-all duration-300 text-base ${
                           likedItems.has(selectedImage.id!) 
                             ? 'bg-red-500/80 hover:bg-red-600/80 text-white shadow-lg' 
                             : 'bg-white/20 hover:bg-white/30 text-white'
                         }`}
                       >
-                        <svg className={`w-4 md:w-5 h-4 md:h-5 transition-all duration-300 ${likedItems.has(selectedImage.id!) ? 'fill-current scale-110' : ''}`} fill={likedItems.has(selectedImage.id!) ? 'currentColor' : 'none'} stroke="currentColor" viewBox="0 0 24 24">
+                        <svg className={`w-5 h-5 transition-all duration-300 ${likedItems.has(selectedImage.id!) ? 'fill-current scale-110' : ''}`} fill={likedItems.has(selectedImage.id!) ? 'currentColor' : 'none'} stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
                         </svg>
                         <span className="font-medium">
@@ -714,16 +790,16 @@ export default function Gallery() {
                           handleShare(selectedImage);
                         }}
                         disabled={isSharing}
-                        className={`flex items-center space-x-1 md:space-x-2 backdrop-blur-sm px-3 md:px-6 py-2 md:py-3 rounded-lg md:rounded-xl transition-colors text-sm md:text-base ${
+                        className={`flex items-center space-x-2 backdrop-blur-sm px-6 py-3 rounded-xl transition-colors text-base ${
                           isSharing 
                             ? 'bg-gray-400/50 cursor-not-allowed' 
                             : 'bg-white/20 hover:bg-white/30'
                         }`}
                       >
                         {isSharing ? (
-                          <div className="w-4 md:w-5 h-4 md:h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                          <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
                         ) : (
-                          <svg className="w-4 md:w-5 h-4 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z" />
                           </svg>
                         )}
@@ -732,13 +808,12 @@ export default function Gallery() {
                         </span>
                       </button>
                       
-                      {/* View Details Button */}
                       <Link 
                         href={`/gallery/${selectedImage.id}`}
-                        className="flex items-center space-x-1 md:space-x-2 bg-[#1ca4bc]/80 hover:bg-[#1ca4bc] text-white backdrop-blur-sm px-3 md:px-6 py-2 md:py-3 rounded-lg md:rounded-xl transition-all duration-300 font-medium text-sm md:text-base"
+                        className="flex items-center space-x-2 bg-[#1ca4bc]/80 hover:bg-[#1ca4bc] text-white backdrop-blur-sm px-6 py-3 rounded-xl transition-all duration-300 font-medium text-base"
                         onClick={(e) => e.stopPropagation()}
                       >
-                        <svg className="w-4 md:w-5 h-4 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                         </svg>
@@ -746,64 +821,62 @@ export default function Gallery() {
                       </Link>
                     </div>
                     
-                    {/* Copy Link Button */}
-                    <button
-                      onClick={async (e) => {
-                        e.stopPropagation();
-                        const currentUrl = `${window.location.origin}/gallery/${selectedImage.id}`;
-                        try {
-                          await navigator.clipboard.writeText(currentUrl);
-                          // Show success notification
-                          const notification = document.createElement('div');
-                          notification.textContent = '🔗 Link copied!';
-                          notification.style.cssText = `
-                            position: fixed;
-                            top: 20px;
-                            right: 20px;
-                            background: #10b981;
-                            color: white;
-                            padding: 12px 20px;
-                            border-radius: 8px;
-                            font-size: 14px;
-                            font-weight: 500;
-                            z-index: 10001;
-                            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-                          `;
-                          document.body.appendChild(notification);
-                          setTimeout(() => notification.remove(), 2000);
-                        } catch {
-                          // Fallback for older browsers
-                          prompt('Copy this link:', currentUrl);
-                        }
-                      }}
-                      className="flex items-center space-x-2 bg-white/20 hover:bg-white/30 backdrop-blur-sm px-6 py-3 rounded-xl transition-colors"
-                    >
-                      <svg className="w-4 md:w-5 h-4 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.102m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
-                      </svg>
-                      <span className="font-medium">Copy Link</span>
-                    </button>
-                    
-                    {/* Download Button */}
-                    <a
-                      href={selectedImage.image_url}
-                      download={`${selectedImage.title}.jpg`}
-                      onClick={(e) => e.stopPropagation()}
-                      className="flex items-center space-x-2 bg-white/20 hover:bg-white/30 backdrop-blur-sm px-6 py-3 rounded-xl transition-colors"
-                    >
-                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                      </svg>
-                      <span className="font-medium">Download</span>
-                    </a>
+                    {/* Desktop Copy Link and Download */}
+                    <div className="flex gap-3">
+                      <button
+                        onClick={async (e) => {
+                          e.stopPropagation();
+                          const currentUrl = `${window.location.origin}/gallery/${selectedImage.id}`;
+                          try {
+                            await navigator.clipboard.writeText(currentUrl);
+                            const notification = document.createElement('div');
+                            notification.textContent = '🔗 Link copied!';
+                            notification.style.cssText = `
+                              position: fixed;
+                              top: 20px;
+                              right: 20px;
+                              background: #10b981;
+                              color: white;
+                              padding: 12px 20px;
+                              border-radius: 8px;
+                              font-size: 14px;
+                              font-weight: 500;
+                              z-index: 10001;
+                              box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                            `;
+                            document.body.appendChild(notification);
+                            setTimeout(() => notification.remove(), 2000);
+                          } catch {
+                            prompt('Copy this link:', currentUrl);
+                          }
+                        }}
+                        className="flex items-center space-x-2 bg-white/20 hover:bg-white/30 backdrop-blur-sm px-6 py-3 rounded-xl transition-colors"
+                      >
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.102m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                        </svg>
+                        <span className="font-medium">Copy Link</span>
+                      </button>
+                      
+                      <a
+                        href={selectedImage.image_url}
+                        download={`${selectedImage.title}.jpg`}
+                        onClick={(e) => e.stopPropagation()}
+                        className="flex items-center space-x-2 bg-white/20 hover:bg-white/30 backdrop-blur-sm px-6 py-3 rounded-xl transition-colors"
+                      >
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                        </svg>
+                        <span className="font-medium">Download</span>
+                      </a>
+                    </div>
                   </div>
                 </div>
               </div>
               
-              {/* Navigation Arrows */}
+              {/* Navigation Arrows - Adjusted for mobile */}
               {filteredItems.length > 1 && (
                 <>
-                  {/* Previous Button */}
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
@@ -811,15 +884,14 @@ export default function Gallery() {
                       const prevIndex = currentIndex > 0 ? currentIndex - 1 : filteredItems.length - 1;
                       setSelectedImage(filteredItems[prevIndex]);
                     }}
-                    className="absolute left-4 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-3 rounded-full transition-colors backdrop-blur-sm"
+                    className="absolute left-2 md:left-4 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-2 md:p-3 rounded-full transition-colors backdrop-blur-sm"
                     aria-label="Previous image"
                   >
-                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-5 md:w-6 h-5 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
                     </svg>
                   </button>
                   
-                  {/* Next Button */}
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
@@ -827,10 +899,10 @@ export default function Gallery() {
                       const nextIndex = currentIndex < filteredItems.length - 1 ? currentIndex + 1 : 0;
                       setSelectedImage(filteredItems[nextIndex]);
                     }}
-                    className="absolute right-4 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-3 rounded-full transition-colors backdrop-blur-sm"
+                    className="absolute right-2 md:right-4 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-2 md:p-3 rounded-full transition-colors backdrop-blur-sm"
                     aria-label="Next image"
                   >
-                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-5 md:w-6 h-5 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                     </svg>
                   </button>
@@ -839,7 +911,7 @@ export default function Gallery() {
               
               {/* Image Counter */}
               {filteredItems.length > 1 && (
-                <div className="absolute -bottom-12 left-1/2 -translate-x-1/2 bg-black/50 backdrop-blur-sm text-white px-4 py-2 rounded-full text-sm">
+                <div className="absolute -bottom-8 md:-bottom-12 left-1/2 -translate-x-1/2 bg-black/50 backdrop-blur-sm text-white px-3 md:px-4 py-1 md:py-2 rounded-full text-xs md:text-sm">
                   {filteredItems.findIndex(item => item.id === selectedImage.id) + 1} of {filteredItems.length}
                 </div>
               )}
