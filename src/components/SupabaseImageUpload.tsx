@@ -30,9 +30,9 @@ export default function SupabaseImageUpload({
       return;
     }
 
-    // Validate file size (max 5MB)
-    if (file.size > 5 * 1024 * 1024) {
-      alert('File size must be less than 5MB');
+    // Validate file size (max 2MB)
+    if (file.size > 2 * 1024 * 1024) {
+      alert('File size must be less than 2MB');
       return;
     }
 
@@ -171,7 +171,7 @@ export default function SupabaseImageUpload({
                 Click to upload image
               </p>
               <p className="text-xs text-gray-400 mt-1">
-                PNG, JPG, GIF up to 5MB
+                PNG, JPG, GIF up to 2MB
               </p>
             </div>
           </div>

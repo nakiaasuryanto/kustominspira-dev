@@ -19,7 +19,6 @@ export default function ArticlePage() {
   // Interactive counters
   const [viewCount, setViewCount] = useState(0);
   const [likeCount, setLikeCount] = useState(0);
-  const [commentCount, setCommentCount] = useState(0);
   const [hasLiked, setHasLiked] = useState(false);
   const [hasViewed, setHasViewed] = useState(false);
   
@@ -51,7 +50,6 @@ export default function ArticlePage() {
           const maxLikes = Math.min(baseLikes, finalViews - 10); // Ensure likes < views
           setViewCount(finalViews);
           setLikeCount(parseInt(foundArticle.likes as string) || Math.max(maxLikes, 70));
-          setCommentCount(0); // Real comment count starts at 0
           
           // Auto-increment view count when article loads (user viewed it)
           if (!hasViewed) {
@@ -391,59 +389,105 @@ export default function ArticlePage() {
           <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
             
             {/* Article Stats & Interaction Bar */}
-            <div className="flex items-center justify-between bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-[#1ca4bc]/20 mb-12">
-              <div className="flex items-center gap-6">
-                <div className="flex items-center gap-2 text-[#1ca4bc]">
-                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                    <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
-                    <path fillRule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clipRule="evenodd" />
-                  </svg>
-                  <span className="font-semibold">{viewCount}</span>
-                  <span className="text-sm text-gray-500">views</span>
+            <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-3 md:p-6 shadow-lg border border-[#1ca4bc]/20 mb-12">
+              {/* Mobile Layout - Stack vertically */}
+              <div className="block md:hidden space-y-3">
+                {/* Stats Row */}
+                <div className="flex items-center justify-center gap-4 text-sm">
+                  <div className="flex items-center gap-1 text-[#1ca4bc]">
+                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                      <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
+                      <path fillRule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clipRule="evenodd" />
+                    </svg>
+                    <span className="font-semibold">{viewCount}</span>
+                  </div>
+                  
+                  <div className="flex items-center gap-1 text-[#1ca4bc]">
+                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd" />
+                    </svg>
+                    <span className="font-semibold">{likeCount}</span>
+                  </div>
+                  
                 </div>
                 
-                <div className="flex items-center gap-2 text-[#1ca4bc]">
-                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd" />
-                  </svg>
-                  <span className="font-semibold">{likeCount}</span>
-                  <span className="text-sm text-gray-500">likes</span>
-                </div>
-                
-                <div className="flex items-center gap-2 text-[#1ca4bc]">
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                  </svg>
-                  <span className="font-semibold">{commentCount}</span>
-                  <span className="text-sm text-gray-500">comments</span>
+                {/* Action Buttons Row */}
+                <div className="flex items-center justify-center gap-2">
+                  <button 
+                    onClick={handleLike}
+                    disabled={hasLiked}
+                    className={`flex items-center gap-1 px-3 py-2 rounded-full transition-all duration-300 ${
+                      hasLiked 
+                        ? 'bg-red-500 text-white cursor-not-allowed' 
+                        : 'bg-[#1ca4bc] text-white hover:bg-[#159bb3]'
+                    }`}
+                  >
+                    <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd" />
+                    </svg>
+                    <span className="text-xs font-medium">{hasLiked ? 'Liked!' : 'Like'}</span>
+                  </button>
+                  
+                  <button 
+                    onClick={handleShare}
+                    className="flex items-center gap-1 bg-white text-gray-700 px-3 py-2 rounded-full border border-[#1ca4bc]/30 hover:border-[#1ca4bc] hover:bg-[#1ca4bc]/5 transition-all duration-300"
+                  >
+                    <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z" />
+                    </svg>
+                    <span className="text-xs font-medium">Share</span>
+                  </button>
                 </div>
               </div>
               
-              <div className="flex items-center gap-2 md:gap-3">
-                <button 
-                  onClick={handleLike}
-                  disabled={hasLiked}
-                  className={`flex items-center gap-1 md:gap-2 px-2 md:px-4 py-1.5 md:py-2 rounded-full hover:shadow-lg transition-all duration-300 hover:scale-105 ${
-                    hasLiked 
-                      ? 'bg-red-500 text-white cursor-not-allowed' 
-                      : 'bg-[#1ca4bc] text-white hover:bg-[#159bb3]'
-                  }`}
-                >
-                  <svg className="w-3 md:w-4 h-3 md:h-4" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd" />
-                  </svg>
-                  <span className="text-xs md:text-sm font-medium">{hasLiked ? 'Liked!' : 'Like'}</span>
-                </button>
+              {/* Desktop Layout - Side by side */}
+              <div className="hidden md:flex items-center justify-between">
+                <div className="flex items-center gap-6">
+                  <div className="flex items-center gap-2 text-[#1ca4bc]">
+                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                      <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
+                      <path fillRule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clipRule="evenodd" />
+                    </svg>
+                    <span className="font-semibold">{viewCount}</span>
+                    <span className="text-sm text-gray-500">views</span>
+                  </div>
+                  
+                  <div className="flex items-center gap-2 text-[#1ca4bc]">
+                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd" />
+                    </svg>
+                    <span className="font-semibold">{likeCount}</span>
+                    <span className="text-sm text-gray-500">likes</span>
+                  </div>
+                  
+                </div>
                 
-                <button 
-                  onClick={handleShare}
-                  className="flex items-center gap-1 md:gap-2 bg-white text-gray-700 px-2 md:px-4 py-1.5 md:py-2 rounded-full border border-[#1ca4bc]/30 hover:border-[#1ca4bc] hover:bg-[#1ca4bc]/5 transition-all duration-300 hover:scale-105"
-                >
-                  <svg className="w-3 md:w-4 h-3 md:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z" />
-                  </svg>
-                  <span className="text-xs md:text-sm font-medium">Share</span>
-                </button>
+                <div className="flex items-center gap-3">
+                  <button 
+                    onClick={handleLike}
+                    disabled={hasLiked}
+                    className={`flex items-center gap-2 px-4 py-2 rounded-full hover:shadow-lg transition-all duration-300 hover:scale-105 ${
+                      hasLiked 
+                        ? 'bg-red-500 text-white cursor-not-allowed' 
+                        : 'bg-[#1ca4bc] text-white hover:bg-[#159bb3]'
+                    }`}
+                  >
+                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd" />
+                    </svg>
+                    <span className="text-sm font-medium">{hasLiked ? 'Liked!' : 'Like'}</span>
+                  </button>
+                  
+                  <button 
+                    onClick={handleShare}
+                    className="flex items-center gap-2 bg-white text-gray-700 px-4 py-2 rounded-full border border-[#1ca4bc]/30 hover:border-[#1ca4bc] hover:bg-[#1ca4bc]/5 transition-all duration-300 hover:scale-105"
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z" />
+                    </svg>
+                    <span className="text-sm font-medium">Share</span>
+                  </button>
+                </div>
               </div>
             </div>
 
@@ -743,7 +787,21 @@ export default function ArticlePage() {
         <section className="py-20 bg-gradient-to-br from-[#1ca4bc] to-[#159bb3] overflow-hidden">
           <div className="max-w-6xl mx-auto px-6 text-center">
             <div className="mb-16">
-              <div className="flex items-center justify-center gap-4 mb-6">
+              {/* Mobile Layout - Stack vertically */}
+              <div className="block md:hidden mb-6">
+                <h2 className="text-3xl font-bold text-white mb-3">
+                  Part of
+                </h2>
+                <img 
+                  src="/assets/kustompedia.png" 
+                  alt="Kustompedia" 
+                  className="h-12 w-auto mx-auto cursor-pointer hover:scale-105 transition-transform duration-300 bg-white/20 px-4 py-2 rounded-lg"
+                  onClick={() => window.open('https://kustompedia.com', '_blank')}
+                />
+              </div>
+              
+              {/* Desktop Layout - Side by side */}
+              <div className="hidden md:flex items-center justify-center gap-4 mb-6">
                 <h2 className="text-4xl md:text-5xl font-bold text-white">
                   Part of
                 </h2>
@@ -754,7 +812,8 @@ export default function ArticlePage() {
                   onClick={() => window.open('https://kustompedia.com', '_blank')}
                 />
               </div>
-              <p className="text-white text-xl md:text-2xl max-w-3xl mx-auto leading-relaxed font-medium">
+              
+              <p className="text-white text-lg md:text-xl lg:text-2xl max-w-3xl mx-auto leading-relaxed font-medium">
                 Kami membangun <span className="font-bold text-white">ekosistem</span> yang mendukung <span className="font-bold text-white">penjahit lokal</span>, mendorong <span className="font-bold text-white">inovasi produk</span>, dan mengutamakan <span className="font-bold text-white">keberlanjutan</span> di setiap langkah
               </p>
             </div>

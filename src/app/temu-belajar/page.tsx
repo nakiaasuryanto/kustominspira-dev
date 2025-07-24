@@ -12,6 +12,8 @@ export default function TemuBelajar() {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [events, setEvents] = useState<(Event & { dateObj: Date })[]>([]);
   const [loading, setLoading] = useState(true);
+  const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
+  const [showEventPopup, setShowEventPopup] = useState(false);
 
   useEffect(() => {
     // Load fresh data on component mount
@@ -100,6 +102,20 @@ export default function TemuBelajar() {
       case 'webinar': return 'Webinar';
       default: return 'Event';
     }
+  };
+
+  const handleEventDetail = (event: Event) => {
+    setSelectedEvent(event);
+    setShowEventPopup(true);
+  };
+
+  const handleRegister = (event: Event) => {
+    if (event.daftar_link) {
+      window.open(event.daftar_link, '_blank');
+    } else {
+      alert(`Pendaftaran untuk ${event.title} akan segera dibuka!`);
+    }
+    setShowEventPopup(false);
   };
 
   if (loading) {
@@ -336,17 +352,10 @@ export default function TemuBelajar() {
                           {event.spots}
                         </span>
                         <button 
-                          onClick={() => {
-                            if (event.registration_url) {
-                              window.open(event.registration_url, '_blank');
-                            } else {
-                              // Default registration action - could open a modal or redirect
-                              alert(`Pendaftaran untuk ${event.title} akan segera dibuka!`);
-                            }
-                          }}
+                          onClick={() => handleEventDetail(event)}
                           className="bg-[#1ca4bc] text-white px-6 py-2 rounded-lg hover:bg-[#159bb3] transition-colors font-medium"
                         >
-                          Daftar
+                          Detail
                         </button>
                       </div>
                     </div>
@@ -480,16 +489,10 @@ export default function TemuBelajar() {
                               </div>
                             </div>
                             <button 
-                              onClick={() => {
-                                if (event.registration_url) {
-                                  window.open(event.registration_url, '_blank');
-                                } else {
-                                  alert(`Pendaftaran untuk ${event.title} akan segera dibuka!`);
-                                }
-                              }}
+                              onClick={() => handleEventDetail(event)}
                               className="w-full mt-3 bg-[#1ca4bc] text-white py-2 rounded-lg hover:bg-[#159bb3] transition-colors text-sm"
                             >
-                              Daftar Sekarang
+                              Lihat Detail
                             </button>
                           </div>
                         ))
@@ -589,6 +592,129 @@ export default function TemuBelajar() {
           </div>
         </div>
       </section>
+
+      {/* Event Detail Popup */}
+      {showEventPopup && selectedEvent && (
+        <div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
+          {/* Backdrop */}
+          <div 
+            className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+            onClick={() => setShowEventPopup(false)}
+          ></div>
+          
+          {/* Modal */}
+          <div className="relative bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            {/* Header Image */}
+            <div className="relative h-48 md:h-64 overflow-hidden rounded-t-2xl">
+              <img 
+                src={selectedEvent.image_url || selectedEvent.image || '/assets/temubelajar.webp'} 
+                alt={selectedEvent.title}
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+              
+              {/* Close Button */}
+              <button 
+                onClick={() => setShowEventPopup(false)}
+                className="absolute top-4 right-4 w-10 h-10 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center text-white hover:bg-white/30 transition-colors"
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+              
+              {/* Category Badge */}
+              <div className="absolute top-4 left-4">
+                <span className={`px-3 py-1 rounded-full text-sm font-medium ${getCategoryColor(selectedEvent.category)}`}>
+                  {getCategoryLabel(selectedEvent.category)}
+                </span>
+              </div>
+              
+              {/* Title Overlay */}
+              <div className="absolute bottom-4 left-4 right-4">
+                <h2 className="text-2xl md:text-3xl font-bold text-white mb-2">
+                  {selectedEvent.title}
+                </h2>
+                <div className="text-white/90 font-semibold text-lg">
+                  {selectedEvent.price}
+                </div>
+              </div>
+            </div>
+            
+            {/* Content */}
+            <div className="p-6 md:p-8">
+              {/* Event Details */}
+              <div className="grid md:grid-cols-2 gap-4 mb-6">
+                <div className="space-y-3">
+                  <div className="flex items-center text-gray-600">
+                    <svg className="w-5 h-5 mr-3 text-[#1ca4bc]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                    <span className="font-medium">{selectedEvent.date}</span>
+                  </div>
+                  <div className="flex items-center text-gray-600">
+                    <svg className="w-5 h-5 mr-3 text-[#1ca4bc]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <span className="font-medium">{selectedEvent.time}</span>
+                  </div>
+                  <div className="flex items-center text-gray-600">
+                    <svg className="w-5 h-5 mr-3 text-[#1ca4bc]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                    <span className="font-medium">{selectedEvent.location}</span>
+                  </div>
+                </div>
+                
+                <div className="space-y-3">
+                  <div className="flex items-center text-gray-600">
+                    <svg className="w-5 h-5 mr-3 text-[#1ca4bc]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                    </svg>
+                    <span className="font-medium">{selectedEvent.spots} spots available</span>
+                  </div>
+                  {selectedEvent.penyelenggara && (
+                    <div className="flex items-center text-gray-600">
+                      <svg className="w-5 h-5 mr-3 text-[#1ca4bc]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                      </svg>
+                      <span className="font-medium">{selectedEvent.penyelenggara}</span>
+                    </div>
+                  )}
+                </div>
+              </div>
+              
+              {/* Description */}
+              <div className="mb-8">
+                <h3 className="text-lg font-semibold text-gray-900 mb-3">Deskripsi Event</h3>
+                <p className="text-gray-600 leading-relaxed">
+                  {selectedEvent.description || 'Deskripsi event akan segera ditambahkan.'}
+                </p>
+              </div>
+              
+              {/* Action Buttons */}
+              <div className="flex flex-col sm:flex-row gap-3">
+                <button 
+                  onClick={() => handleRegister(selectedEvent)}
+                  className="flex-1 bg-gradient-to-r from-[#1ca4bc] to-[#159bb3] text-white py-3 px-6 rounded-lg hover:from-[#159bb3] hover:to-[#1ca4bc] transition-all duration-300 font-semibold text-center flex items-center justify-center gap-2"
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                  Daftar Sekarang
+                </button>
+                <button 
+                  onClick={() => setShowEventPopup(false)}
+                  className="flex-1 sm:flex-none bg-gray-100 text-gray-700 py-3 px-6 rounded-lg hover:bg-gray-200 transition-colors font-medium"
+                >
+                  Tutup
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Footer */}
       <footer className="py-12 text-white" style={{backgroundColor: '#021013'}}>

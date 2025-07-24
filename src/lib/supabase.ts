@@ -69,7 +69,22 @@ export interface User {
 }
 
 export interface Event {
-  [key: string]: any;
+  id?: string;
+  title: string;
+  date: string;
+  time: string;
+  location: string;
+  category: string;
+  price: string;
+  spots: string;
+  description: string;
+  penyelenggara?: string; // Event organizer
+  daftar_link?: string; // Registration link for admin
+  image_url?: string;
+  status: 'upcoming' | 'ongoing' | 'completed' | 'cancelled';
+  created_at?: string;
+  updated_at?: string;
+  [key: string]: any; // For backward compatibility
 }
 
 export interface Ebook {

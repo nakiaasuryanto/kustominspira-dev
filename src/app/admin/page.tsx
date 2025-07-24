@@ -909,7 +909,7 @@ function VideosContent({ videos, onAdd, onUpdate, onDelete }: VideosContentProps
       onUpdate(editingVideo.id!, formData);
       setEditingVideo(null);
     } else {
-      onAdd({ ...formData, views: '0' });
+      onAdd({ ...formData, views: String(Math.floor(Math.random() * 96) + 5) }); // Random views between 5-100
     }
     setFormData({ title: '', duration: '', category: 'Tutorial', videoUrl: '', thumbnail: '/assets/pusatbelajar.webp', status: 'published' });
     setShowForm(false);
@@ -1459,6 +1459,8 @@ function EventsContent({ events, onAdd, onUpdate, onDelete }: EventsContentProps
     price: '',
     spots: '',
     description: '',
+    penyelenggara: '',
+    daftar_link: '',
     image_url: '/assets/temubelajar.webp',
     status: 'upcoming'
   });
@@ -1471,12 +1473,25 @@ function EventsContent({ events, onAdd, onUpdate, onDelete }: EventsContentProps
     } else {
       onAdd(formData);
     }
-    setFormData({ title: '', date: '', time: '', location: '', category: 'workshop', price: '', spots: '', description: '', image_url: '/assets/temubelajar.webp', status: 'upcoming' });
+    setFormData({ title: '', date: '', time: '', location: '', category: 'workshop', price: '', spots: '', description: '', penyelenggara: '', daftar_link: '', image_url: '/assets/temubelajar.webp', status: 'upcoming' });
     setShowForm(false);
   };
 
   const handleEdit = (event: any) => {
-    setFormData(event);
+    setFormData({
+      title: event.title || '',
+      date: event.date || '',
+      time: event.time || '',
+      location: event.location || '',
+      category: event.category || 'workshop',
+      price: event.price || '',
+      spots: event.spots || '',
+      description: event.description || '',
+      penyelenggara: event.penyelenggara || '',
+      daftar_link: event.daftar_link || '',
+      image_url: event.image_url || '/assets/temubelajar.webp',
+      status: event.status || 'upcoming'
+    });
     setEditingEvent(event);
     setShowForm(true);
   };
@@ -1503,7 +1518,7 @@ function EventsContent({ events, onAdd, onUpdate, onDelete }: EventsContentProps
           onClick={() => {
             setShowForm(!showForm);
             setEditingEvent(null);
-            setFormData({ title: '', date: '', time: '', location: '', category: 'workshop', price: '', spots: '', description: '', image_url: '/assets/temubelajar.webp', status: 'upcoming' });
+            setFormData({ title: '', date: '', time: '', location: '', category: 'workshop', price: '', spots: '', description: '', penyelenggara: '', daftar_link: '', image_url: '/assets/temubelajar.webp', status: 'upcoming' });
           }}
           className="bg-[#1ca4bc] text-white px-6 py-2 rounded-lg hover:bg-[#159bb3] transition-colors"
         >
@@ -1671,6 +1686,30 @@ function EventsContent({ events, onAdd, onUpdate, onDelete }: EventsContentProps
                 required
               ></textarea>
             </div>
+            
+            {/* New Fields */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Penyelenggara (Organizer)</label>
+                <input
+                  type="text"
+                  value={formData.penyelenggara}
+                  onChange={(e) => setFormData({ ...formData, penyelenggara: e.target.value })}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1ca4bc] focus:border-[#1ca4bc] text-gray-900"
+                  placeholder="Kustom Inspira"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Daftar Link (Registration URL)</label>
+                <input
+                  type="url"
+                  value={formData.daftar_link}
+                  onChange={(e) => setFormData({ ...formData, daftar_link: e.target.value })}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1ca4bc] focus:border-[#1ca4bc] text-gray-900"
+                  placeholder="https://forms.google.com/..."
+                />
+              </div>
+            </div>
             <button
               type="submit"
               className="bg-[#1ca4bc] text-white px-6 py-2 rounded-lg hover:bg-[#159bb3] transition-colors"
@@ -1705,6 +1744,8 @@ function EventsContent({ events, onAdd, onUpdate, onDelete }: EventsContentProps
                     <div>🕒 {event.time}</div>
                     <div>📍 {event.location}</div>
                     <div>👥 {event.spots} spots available</div>
+                    {event.penyelenggara && <div>🏢 {event.penyelenggara}</div>}
+                    {event.daftar_link && <div>🔗 <a href={event.daftar_link} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">Registration Link</a></div>}
                   </div>
                   <p className="text-sm text-gray-600 mb-4">{event.description}</p>
                   <div className="flex space-x-2">
