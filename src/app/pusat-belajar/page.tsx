@@ -402,7 +402,6 @@ export default function PusatBelajar() {
                       {spotlightVideo.title}
                     </h3>
                     <div className="flex items-center justify-between text-lg text-gray-500">
-                      <span>{spotlightVideo.views} views</span>
                       <span className="bg-red-100 text-red-600 px-4 py-2 rounded-full text-sm font-medium">
                         Video Tutorial
                       </span>
@@ -456,7 +455,6 @@ export default function PusatBelajar() {
                       {video.title}
                     </h3>
                     <div className="flex items-center justify-between text-sm text-gray-500">
-                      <span>{video.views} views</span>
                       <span className="bg-red-100 text-red-600 px-3 py-1 rounded-full text-xs font-medium">
                         Video Tutorial
                       </span>
