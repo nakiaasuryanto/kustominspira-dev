@@ -15,25 +15,9 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Kustominspira - #DariKainJadiKarya",
   description: "Belajar dan praktek langsung di Kustominspira. Platform edukasi fashion dan menjahit terpercaya dengan artikel, video tutorial, workshop, dan seminar.",
-  icons: [
-    {
-      rel: 'icon',
-      type: 'image/png',
-      sizes: '32x32',
-      url: '/assets/icon.png',
-    },
-    {
-      rel: 'icon',
-      type: 'image/png', 
-      sizes: '16x16',
-      url: '/assets/icon.png',
-    },
-    {
-      rel: 'apple-touch-icon',
-      sizes: '180x180',
-      url: '/assets/icon.png',
-    },
-  ],
+  icons: {
+    icon: '/assets/favicon.ico',
+  },
 };
 
 export default function RootLayout({

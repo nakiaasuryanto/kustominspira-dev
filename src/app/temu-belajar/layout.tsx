@@ -15,6 +15,9 @@ export const metadata: Metadata = {
     'belajar menjahit bersama',
     'acara fashion'
   ],
+  icons: {
+    icon: '/assets/favicon.ico',
+  },
   authors: [{ name: 'Kustom Inspira' }],
   creator: 'Kustom Inspira',
   publisher: 'Kustom Inspira',
