@@ -696,6 +696,7 @@ export default function PusatBelajar() {
             </div>
           </div>
         </div>
+        </div>
       </section>
 
 
